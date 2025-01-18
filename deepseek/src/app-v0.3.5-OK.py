@@ -20,20 +20,20 @@ images_dir.mkdir(exist_ok=True)
 
 DEFAULT_MODEL = "LASER"
 DEFAULT_METHOD = "Isomap"
-DEFAULT_METHODS = ["Isomap", "t-SNE",]
+DEFAULT_METHODS = ["t-SNE", "Isomap"]
 MODEL_METHOD_MAP = {
     "XLM-R" : DEFAULT_METHODS, 
     "LASER" : DEFAULT_METHODS, 
 }
 
 ST_APP_NAME = "Multilingual Embedding Explorer"
-ST_HEADER_1 = "View word embeddings in 2D space"
+ST_HEADER_1 = "Explore word embeddings in 2D space"
 
 # Set page layout
 st.set_page_config(
         layout="wide",
         page_title=ST_APP_NAME,
-        page_icon="🚩",
+        page_icon="🦈",
     )
 
 # Sidebar configuration
@@ -170,7 +170,7 @@ def plot_embeddings(embeddings, labels, colors, title):
 
     # Display the plot in Streamlit
     st.plotly_chart(fig, use_container_width=True)
-
+    
 # Main app function
 def main():
     st.subheader(ST_HEADER_1)

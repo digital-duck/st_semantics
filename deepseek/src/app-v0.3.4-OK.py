@@ -20,20 +20,20 @@ images_dir.mkdir(exist_ok=True)
 
 DEFAULT_MODEL = "LASER"
 DEFAULT_METHOD = "Isomap"
-DEFAULT_METHODS = ["Isomap", "t-SNE",]
+DEFAULT_METHODS = ["t-SNE", "Isomap"]
 MODEL_METHOD_MAP = {
     "XLM-R" : DEFAULT_METHODS, 
     "LASER" : DEFAULT_METHODS, 
 }
 
 ST_APP_NAME = "Multilingual Embedding Explorer"
-ST_HEADER_1 = "View word embeddings in 2D space"
+ST_HEADER_1 = "Explore word embeddings in 2D space"
 
 # Set page layout
 st.set_page_config(
         layout="wide",
         page_title=ST_APP_NAME,
-        page_icon="🚩",
+        page_icon="🦈",
     )
 
 # Sidebar configuration
@@ -166,6 +166,39 @@ def plot_embeddings(embeddings, labels, colors, title):
         yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),  # Add gridlines
         dragmode='pan',  # Enable panning by default
         hovermode='closest'  # Show hover info for the closest point
+    )
+
+    # Add zoom and reset buttons
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                type="buttons",
+                direction="left",
+                buttons=[
+                    dict(
+                        args=["dragmode", "pan"],  # Enable panning
+                        label="Pan",
+                        method="relayout"
+                    ),
+                    dict(
+                        args=["dragmode", "zoom"],  # Enable zooming
+                        label="Zoom",
+                        method="relayout"
+                    ),
+                    dict(
+                        args=["relayout", {"xaxis.autorange": True, "yaxis.autorange": True}],  # Reset zoom
+                        label="Reset Zoom",
+                        method="relayout"
+                    )
+                ],
+                pad={"r": 10, "t": 10},
+                showactive=True,
+                x=0.1,
+                xanchor="left",
+                y=1.1,
+                yanchor="top"
+            )
+        ]
     )
 
     # Display the plot in Streamlit

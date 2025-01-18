@@ -8,8 +8,9 @@ from sklearn.manifold import TSNE, Isomap
 from sklearn.decomposition import PCA
 import os
 from dotenv import load_dotenv
+# from datetime import datetime
 from pathlib import Path
-import re
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,20 +21,20 @@ images_dir.mkdir(exist_ok=True)
 
 DEFAULT_MODEL = "LASER"
 DEFAULT_METHOD = "Isomap"
-DEFAULT_METHODS = ["Isomap", "t-SNE",]
+DEFAULT_METHODS = ["t-SNE", "Isomap"]
 MODEL_METHOD_MAP = {
     "XLM-R" : DEFAULT_METHODS, 
     "LASER" : DEFAULT_METHODS, 
 }
 
 ST_APP_NAME = "Multilingual Embedding Explorer"
-ST_HEADER_1 = "View word embeddings in 2D space"
+ST_HEADER_1 = "Visualize word embeddings in 2D space"
 
 # Set page layout
 st.set_page_config(
         layout="wide",
         page_title=ST_APP_NAME,
-        page_icon="🚩",
+        page_icon="🦈",
     )
 
 # Sidebar configuration
@@ -46,11 +47,13 @@ def do_sidebar():
                 options=model_names, 
                 index=model_names.index(DEFAULT_MODEL), 
                 key="cfg_model_choice")
+        # st.write(model_name)
         method_names = MODEL_METHOD_MAP.get(model_name, DEFAULT_METHODS)
         method_name = st.radio("Choose Dimensionality Reduction Method", 
                 options=method_names, 
                 index=method_names.index(DEFAULT_METHOD), 
                 key="cfg_reduction_method")
+        # st.write(method_name)
 
 # Simulate login handling (for demonstration purposes)
 def check_login():
@@ -125,24 +128,6 @@ def reduce_dimensions(embeddings, method="t-SNE"):
         st.error(f"Error during dimensionality reduction: {e}")
         return None
 
-def parse_input_data(input_text):
-    """
-    Parse input text into a list of words/phrases, respecting quoted phrases.
-    Splits on spaces, commas, newlines, and semicolons.
-    """
-    # Use regex to split on delimiters but respect quoted phrases
-    pattern = re.compile(r"""
-        (?:[^"\s,;\n]+|"[^"]*")  # Match either non-delimiter sequences or quoted phrases
-    """, re.VERBOSE)
-    
-    # Find all matches
-    matches = pattern.findall(input_text)
-    
-    # Remove quotes from quoted phrases
-    parsed_words = [match.strip('"') for match in matches if match.strip()]
-    
-    return parsed_words
-
 def plot_embeddings(embeddings, labels, colors, title):
     # Create a DataFrame for Plotly
     df = pd.DataFrame({
@@ -160,16 +145,11 @@ def plot_embeddings(embeddings, labels, colors, title):
         hoverinfo='text',           # Show labels on hover
         textfont_size=10            # Adjust label font size
     )
-    fig.update_layout(
-        showlegend=False,  # Hide the legend
-        xaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),  # Add gridlines
-        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),  # Add gridlines
-        dragmode='pan',  # Enable panning by default
-        hovermode='closest'  # Show hover info for the closest point
-    )
+    fig.update_layout(showlegend=False)  # Hide the legend
 
     # Display the plot in Streamlit
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
+
 
 # Main app function
 def main():
@@ -179,20 +159,19 @@ def main():
     c1, _, c2 = st.columns([3, 1, 3])
     with c1:
         chinese_words = st.text_area(
-                "Enter Chinese words/phrases:", 
-                value="""你好 男子汉 \n爱 "女子" \n天气\n书\n猫""",
+                "Enter Chinese words/phrases (one per line)", 
+                value="你好\n爱\n天气\n书\n猫",
                 height=150,
             )
     with c2:
         english_words = st.text_area(
-                "Enter English words/phrases:", 
-                value="""Hello\nLove\nWeather\nBook "Woman" "Gentle Man" \nCat""",
+                "Enter corresponding English translations (one per line)", 
+                value="Hello\nLove\nWeather\nBook\nCat",
                 height=150,
             )
 
-    # Parse input data
-    chinese_words = parse_input_data(chinese_words)
-    english_words = parse_input_data(english_words)
+    chinese_words = chinese_words.strip().split("\n")
+    english_words = english_words.strip().split("\n")
 
     # Add a button to trigger processing
     if st.button("Visualize"):
@@ -235,10 +214,12 @@ def main():
             st.stop()
 
         # Plotting
-        # st.subheader("2D Scatter Plot")
+        st.header("2D Scatter Plot")
         colors = ["red"] * len(chinese_words) + ["blue"] * len(english_words)
-        plot_title = f"Model: {model_choice}, Method: {reduction_method}"
+        plot_title = f"Model: {model_choice} => Method: {reduction_method}"
         plot_embeddings(reduced_embeddings, labels, colors, plot_title)
+
+
 
 # Run the app
 if __name__ == "__main__":

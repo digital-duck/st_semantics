@@ -258,36 +258,12 @@ def parse_input_data(input_text):
     return parsed_words
 
 # Plot embeddings in 2D
-def plot_embeddings_2d(embeddings, labels, colors, title, width=800, height=800):
-    # Create a DataFrame for Plotly
+def plot_embeddings_2d(embeddings, labels, colors, title):
     df = pd.DataFrame({"x": embeddings[:, 0], "y": embeddings[:, 1], "label": labels, "color": colors})
-
-    # Create an interactive scatter plot
     fig = px.scatter(df, x="x", y="y", text="label", color="color", title=title,
-                     color_discrete_map={"red": "red", "blue": "blue"})  # Explicit color mapping
-
-    # Update traces for better label placement and hover info
-    fig.update_traces(
-        textposition='top center',  # Position labels above points
-        hoverinfo='text',           # Show labels on hover
-        textfont_size=10            # Adjust label font size
-    )
-
-    # Update layout for a square plot
-    fig.update_layout(
-        showlegend=False,  # Hide the legend
-        xaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),  # Add gridlines
-        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),  # Add gridlines
-        dragmode='pan',  # Enable panning by default
-        hovermode='closest',  # Show hover info for the closest point
-        # Ensure the plot is square
-        width=width,  # Set a fixed width
-        height=height,  # Set the same height as width
-        xaxis_scaleanchor="y",  # Lock x-axis scale to y-axis
-        xaxis_scaleratio=1,     # Ensure 1:1 aspect ratio
-    )
-
-    # Display the plot in Streamlit
+                     color_discrete_map={"red": "red", "blue": "blue"})
+    fig.update_traces(textposition='top center', hoverinfo='text', textfont_size=10)
+    fig.update_layout(showlegend=False, dragmode='pan', hovermode='closest')
     st.plotly_chart(fig, use_container_width=True)
 
 # Plot embeddings in 3D

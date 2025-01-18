@@ -1,0 +1,10 @@
+streamlit		    # ==1.26.0
+numpy		        # ==1.23.5
+matplotlib		    # ==3.6.2
+scikit-learn		# ==1.1.3
+transformers		# ==4.28.1
+laserembeddings		# ==2.0.1
+python-dotenv		# ==0.21.1
+umap-learn		    # ==0.5.3
+plotly              # ==5.18.0
+# kaleido

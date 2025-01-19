@@ -36,7 +36,7 @@ pip install -r requirements.txt
 python -m laserembeddings download-models
 pip install laserembeddings[zh]
 pip install umap-learn
-
+pip install sentencepiece
 # check availility of CJK fonts
 # fc-list | grep "Noto Sans CJK"  # check available CJK fonts
 

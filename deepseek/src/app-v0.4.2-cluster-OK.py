@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 from sklearn.cluster import KMeans
 
@@ -41,9 +40,8 @@ else:
 
 # Default settings
 DEFAULT_N_CLUSTERS = 5
-DEFAULT_MAX_WORDS = 15
-DEFAULT_MODEL = "Sentence-BERT Multilingual" # "LaBSE" # "LASER"
-DEFAULT_METHOD = "PHATE" # "Isomap"
+DEFAULT_MODEL = "LaBSE" # "LASER"
+DEFAULT_METHOD = "Isomap"
 ST_APP_NAME = "Multilingual Embedding Explorer"
 ST_HEADER_1 = "View word embeddings in 2-3D spaces"
 
@@ -85,10 +83,10 @@ MODEL_INFO = {
         "path": "sentence-transformers/distiluse-base-multilingual-cased-v1",
         "help": "Multilingual Sentence-BERT optimized for semantic similarity tasks like clustering and retrieval."
     },
-    # "Erlangshen": {
-    #     "path": "IDEA-CCNL/Erlangshen-Roberta-110M",
-    #     "help": "A Chinese-focused multilingual model optimized for Chinese-English tasks like translation and sentiment analysis."
-    # }
+    "Erlangshen": {
+        "path": "IDEA-CCNL/Erlangshen-Roberta-110M",
+        "help": "A Chinese-focused multilingual model optimized for Chinese-English tasks like translation and sentiment analysis."
+    }
 }
 
 # Dimensionality reduction method with help text
@@ -144,7 +142,7 @@ def do_sidebar():
         st.subheader("Settings")
 
         # Model selection with help text
-        model_names = sorted(list(MODEL_INFO.keys()))
+        model_names = list(MODEL_INFO.keys())
         model_name = st.radio(
             "Choose Embedding Model",
             options=model_names,
@@ -155,7 +153,7 @@ def do_sidebar():
         # Display help text for the selected model
         st.caption(f"**{model_name}**: {MODEL_INFO[model_name]['help']}")
 
-        method_names = sorted(list(METHOD_INFO.keys()))
+        method_names = list(METHOD_INFO.keys())
         method_name = st.radio(
             "Choose Dimensionality Reduction Method",
             options=method_names,
@@ -174,22 +172,10 @@ def do_sidebar():
             key="cfg_dimensions"
         )
 
-        if dimensions == "2D":
-            # Semantic force visualization
-            # show_semantic_forces = st.checkbox("Show Semantic Forces?", value=False, key="cfg_semantic_forces")
-
-            show_semantic_forces = False  # turn it off
-
-            if show_semantic_forces:
-                max_words = st.slider("Max # Words", min_value=10, max_value=20, value=DEFAULT_MAX_WORDS, key="cfg_max_words")
-
-
-        if not show_semantic_forces:
-            # clustering
-            do_clustering = st.checkbox("Clustering?", value=False, key="cfg_clustering")
-            if do_clustering:
-                n_clusters = st.slider("# Clusters", min_value=3, max_value=10, value=DEFAULT_N_CLUSTERS, key="cfg_n_clusters")
-
+        # clustering
+        do_clustering = st.checkbox("Clustering?", value=False, key="cfg_clustering")
+        if do_clustering:
+            n_clusters = st.slider("# Clusters", min_value=3, max_value=10, value=DEFAULT_N_CLUSTERS, key="cfg_n_clusters")
 
 # Simulate login handling (for demonstration purposes)
 def check_login():
@@ -459,7 +445,7 @@ def plot_embeddings_3d_cluster(embeddings, labels, colors, title, n_clusters=DEF
 
     # Display the plot in Streamlit
     st.plotly_chart(fig, use_container_width=True)
-
+    
 def plot_embeddings_3d(embeddings, labels, colors, title):
     df = pd.DataFrame({"x": embeddings[:, 0], "y": embeddings[:, 1], "z": embeddings[:, 2], "label": labels, "color": colors})
     fig = px.scatter_3d(df, x="x", y="y", z="z", text="label", color="color", title=title,
@@ -468,74 +454,6 @@ def plot_embeddings_3d(embeddings, labels, colors, title):
     fig.update_layout(showlegend=False, dragmode='pan', hovermode='closest')
     st.plotly_chart(fig, use_container_width=True)
 
-
-
-def plot_semantic_forces(embeddings, labels, title, max_words=DEFAULT_MAX_WORDS):
-    """
-    Visualize semantic forces between words/phrases using arrows.
-
-    Parameters:
-        embeddings (np.array): The reduced 2D embeddings.
-        labels (list): The labels (words/phrases) for each embedding.
-        title (str): The title of the plot.
-        max_words (int): Maximum number of words/phrases to consider (default: 20).
-    """
-    # Limit the number of words/phrases to consider
-    if len(labels) > max_words:
-        st.warning(f"Only showing semantic forces for the first {max_words} words/phrases.")
-        embeddings = embeddings[:max_words]
-        labels = labels[:max_words]
-
-    # Create a scatter plot
-    fig = go.Figure()
-
-    # Add points for words/phrases
-    fig.add_trace(go.Scatter(
-        x=embeddings[:, 0],
-        y=embeddings[:, 1],
-        mode="markers+text",
-        text=labels,
-        textposition="top center",
-        marker=dict(size=10, color="blue")
-    ))
-
-    # Add arrows to represent semantic forces
-    for i in range(len(embeddings)):
-        for j in range(i + 1, len(embeddings)):
-            # Calculate the vector between two points
-            dx = embeddings[j, 0] - embeddings[i, 0]
-            dy = embeddings[j, 1] - embeddings[i, 1]
-            # Add an arrow
-            fig.add_annotation(
-                x=embeddings[j, 0],
-                y=embeddings[j, 1],
-                ax=embeddings[i, 0],
-                ay=embeddings[i, 1],
-                axref="x",
-                ayref="y",
-                xref="x",
-                yref="y",
-                showarrow=True,
-                arrowhead=2,
-                arrowsize=1,
-                arrowwidth=2,
-                arrowcolor="red"
-            )
-
-    # Update layout
-    fig.update_layout(
-        title=title,
-        showlegend=False,
-        xaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),
-        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),
-        width=800,
-        height=800,
-        xaxis_scaleanchor="y",
-        xaxis_scaleratio=1,
-    )
-
-    # Display the plot in Streamlit
-    st.plotly_chart(fig, use_container_width=True)
 
 # Main app function
 def main():
@@ -607,13 +525,8 @@ def main():
         do_clustering = st.session_state.get("cfg_clustering", False)
         n_clusters = st.session_state.get("cfg_n_clusters", DEFAULT_N_CLUSTERS)
 
-        show_semantic_forces = st.session_state.get("cfg_semantic_forces", False)
-
         if dimensions == 2:
-            if show_semantic_forces:
-                max_words = st.session_state.get("cfg_max_words", DEFAULT_MAX_WORDS)
-                plot_semantic_forces(reduced_embeddings, labels, plot_title, max_words=max_words)
-            elif do_clustering:
+            if do_clustering:
                 plot_embeddings_2d_cluster(reduced_embeddings, labels, colors, plot_title, n_clusters=n_clusters)
             else:
                 plot_embeddings_2d(reduced_embeddings, labels, colors, plot_title)
@@ -622,8 +535,6 @@ def main():
                 plot_embeddings_3d_cluster(reduced_embeddings, labels, colors, plot_title, n_clusters=n_clusters)
             else:
                 plot_embeddings_3d(reduced_embeddings, labels, colors, plot_title)
-
-
 
 # Run the app
 if __name__ == "__main__":

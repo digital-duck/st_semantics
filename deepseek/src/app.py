@@ -85,10 +85,12 @@ MODEL_INFO = {
         "path": "sentence-transformers/distiluse-base-multilingual-cased-v1",
         "help": "Multilingual Sentence-BERT optimized for semantic similarity tasks like clustering and retrieval."
     },
-    "ModernBERT": {
-        "path": "answerdotai/ModernBERT-base",
-        "help": "Smarter, Better, Faster, Longer: A Modern Bidirectional Encoder for Fast, Memory Efficient, and Long Context Finetuning and Inference."
-    },
+    ### ERROR: Failed building wheel for flash-attn
+    # "ModernBERT": {
+    #     "path": "answerdotai/ModernBERT-base",
+    #     "help": "Smarter, Better, Faster, Longer: A Modern Bidirectional Encoder for Fast, Memory Efficient, and Long Context Finetuning and Inference."
+    # },
+
     # "Erlangshen": {
     #     "path": "IDEA-CCNL/Erlangshen-Roberta-110M",
     #     "help": "A Chinese-focused multilingual model optimized for Chinese-English tasks like translation and sentiment analysis."

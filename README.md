@@ -37,6 +37,8 @@ python -m laserembeddings download-models
 pip install laserembeddings[zh]
 pip install umap-learn
 pip install sentencepiece
+pip install flash-attn git+https://github.com/huggingface/transformers.git
+
 # check availility of CJK fonts
 # fc-list | grep "Noto Sans CJK"  # check available CJK fonts
 

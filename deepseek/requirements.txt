@@ -9,3 +9,6 @@ umap-learn		    # ==0.5.3
 plotly              # ==5.18.0
 # kaleido
 phate
+
+# ollama support
+requests

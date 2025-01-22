@@ -1,22 +1,6 @@
-"""
-[Features]
-
-- 2025-01-22
-    - add Ollama support
-
-"""
-
 import streamlit as st
 import numpy as np
 import pandas as pd
-import requests
-
-import os
-from dotenv import load_dotenv
-from pathlib import Path
-import re
-
-
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -30,6 +14,10 @@ from sklearn.decomposition import PCA, KernelPCA
 from umap import UMAP
 from phate import PHATE
 
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -64,34 +52,6 @@ COLOR_MAP = {
     "english": "blue",
 }
 PLOT_WIDTH, PLOT_HEIGHT = 800, 800
-
-# Add Ollama model information to MODEL_INFO
-OLLAMA_MODELS = {
-    # "Llama2": {
-    #     "path": "llama2",
-    #     "help": "Llama 2 model through Ollama for embedding generation. Good for English and basic multilingual tasks."
-    # },
-    "Snowflake-Arctic-Embed2 (Ollama)": {
-        "path": "snowflake-arctic-embed2",
-        "help": "Snowflake Arctic model through Ollama offering efficient embedding generation with strong multilingual capabilities, especially for Chinese-English pairs."
-    },
-    "Snowflake-Arctic-Embed (Ollama)": {
-        "path": "snowflake-arctic-embed",
-        "help": "Original Snowflake Arctic model through Ollama for multilingual embeddings."
-    },
-    # "Nomic": {
-    #     "path": "nomic-embed-text",
-    #     "help": "Nomic's embedding model optimized for semantic text embeddings."
-    # },
-    # "Mistral (Ollama)": {
-    #     "path": "mistral",
-    #     "help": "Mistral model through Ollama offering efficient embedding generation with good multilingual capabilities."
-    # },
-    # "Neural-Chat (Ollama)": {
-    #     "path": "neural-chat",
-    #     "help": "Neural Chat model through Ollama, optimized for conversational and semantic understanding tasks."
-    # },
-}
 
 # Model information (name, Hugging Face path, and help text)
 MODEL_INFO = {
@@ -142,11 +102,6 @@ MODEL_INFO = {
     #     "help": "A Chinese-focused multilingual model optimized for Chinese-English tasks like translation and sentiment analysis."
     # }
 }
-
-
-# Update MODEL_INFO dictionary
-MODEL_INFO.update(OLLAMA_MODELS)
-
 
 # Dimensionality reduction method with help text
 METHOD_INFO = {
@@ -295,73 +250,9 @@ def get_mt5_embeddings(words):
         st.error(f"Error extracting mT5 embeddings: {e}")
         return None
     
-@st.cache_resource
-def get_ollama_session():
-    """Create a cached session for Ollama requests to improve performance"""
-    session = requests.Session()
-    return session
-
-
-@st.cache_data
-def get_ollama_embeddings(texts, model_name):
-    """
-    Get embeddings from Ollama API with improved performance.
-    
-    Args:
-        texts (list): List of text strings to embed
-        model_name (str): Name of the Ollama model to use
-        
-    Returns:
-        numpy.ndarray: Array of embeddings
-    """
-    embeddings = []
-    model_path = MODEL_INFO[model_name]["path"]
-    session = get_ollama_session()
-    
-    try:
-        # Add a progress bar for longer lists of texts
-        progress_bar = st.progress(0)
-        for idx, text in enumerate(texts):
-            # Make request to Ollama API using cached session
-            response = session.post(
-                "http://localhost:11434/api/embeddings",
-                json={
-                    "model": model_path,
-                    "prompt": text
-                }
-            )
-            
-            if response.status_code == 200:
-                embedding = response.json().get("embedding")
-                if embedding:
-                    embeddings.append(embedding)
-                # Update progress
-                progress_bar.progress((idx + 1) / len(texts))
-            else:
-                st.error(f"Error getting embedding for text: {text}. Status code: {response.status_code}")
-                return None
-                
-        progress_bar.empty()  # Clear progress bar when done
-        return np.array(embeddings)
-    
-    except requests.exceptions.ConnectionError:
-        st.error("Could not connect to Ollama. Please ensure Ollama is running locally (http://localhost:11434)")
-        return None
-    except Exception as e:
-        st.error(f"Error getting Ollama embeddings: {e}")
-        return None
-    
 @st.cache_data
 def get_embeddings(words, model_name, lang="en"):
-    """
-    Get embeddings using the selected model.
-    """
     try:
-        # Check if using an Ollama model
-        if model_name in OLLAMA_MODELS:
-            return get_ollama_embeddings(words, model_name)
-        
-        # Original embedding logic for other models
         if model_name == "LASER":
             laser = Laser()
             return laser.embed_sentences(words, lang=lang)

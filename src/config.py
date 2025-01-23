@@ -32,8 +32,8 @@ SAMPLE_DATA = {
 # File Paths
 PATHS = {
     "images_dir": Path("images"),
-    "chinese_file": Path("chn.txt"),
-    "english_file": Path("enu.txt")
+    "chinese_file": Path("data/chn.txt"),
+    "english_file": Path("data/enu.txt")
 }
 
 # Cache Settings

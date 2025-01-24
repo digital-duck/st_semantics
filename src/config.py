@@ -42,8 +42,8 @@ SAMPLE_DATA = {
 # File Paths
 FILE_PATHS = {
     "images_dir": Path("images"),
-    "chinese_file": Path("data/chn.txt"),
-    "english_file": Path("data/enu.txt")
+    "chinese_file": Path("data/data-1-chn.txt"),
+    "english_file": Path("data/data-1-enu.txt")
 }
 
 file_path_chn = FILE_PATHS["chinese_file"]

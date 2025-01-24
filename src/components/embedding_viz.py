@@ -5,7 +5,8 @@ from typing import List, Optional, Tuple
 
 from config import (
     MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD,
-    COLOR_MAP, PLOT_WIDTH, PLOT_HEIGHT
+    COLOR_MAP, 
+    sample_chn_input_data, sample_enu_input_data
 )
 from models.model_manager import get_model
 from utils.error_handling import handle_errors
@@ -62,16 +63,23 @@ class EmbeddingVisualizer:
 
     def render_input_areas(self) -> Tuple[List[str], List[str], List[str]]:
         """Render text input areas and return processed words"""
-        col1, col_check1, col2, col_check2 = st.columns([5, 1, 5, 1])
+        col1, col2, col_check12 = st.columns([5, 5, 1])
         
         with col1:
-            chinese_text = st.text_area("Chinese Words/Phrases:", height=150)
-        with col_check1:
-            chinese_selected = st.checkbox("Include", value=True, key="chinese")
+            chinese_text = st.text_area(
+                "Chinese Words/Phrases:", 
+                value=sample_chn_input_data,
+                height=150)
+
         with col2:
-            english_text = st.text_area("English Words/Phrases:", height=150)
-        with col_check2:
-            english_selected = st.checkbox("Include", value=True, key="english")
+            english_text = st.text_area(
+                "English Words/Phrases:",
+                value=sample_enu_input_data,
+                height=150)
+        with col_check12:
+            st.write("Toggle Lang:")
+            chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
+            english_selected = st.checkbox("English", value=True, key="english")
 
         chinese_words = self.process_text(chinese_text) if chinese_selected else []
         english_words = self.process_text(english_text) if english_selected else []
@@ -80,8 +88,9 @@ class EmbeddingVisualizer:
             [COLOR_MAP["chinese"]] * len(chinese_words) +
             [COLOR_MAP["english"]] * len(english_words)
         )
-
-    def get_embeddings(self, words: List[str], model_name: str, lang: str) -> np.ndarray:
+    
+    @st.cache_data
+    def get_embeddings(_self, words: List[str], model_name: str, lang: str) -> np.ndarray:
         """Get embeddings for words using specified model"""
         model = get_model(model_name)
         return model.get_embeddings(words, lang)
@@ -137,9 +146,10 @@ class EmbeddingVisualizer:
                     dimensions, do_clustering, n_clusters):
         """Create and display the plot"""
         plot_title = f"[Model] {model_name}, [Method] {method_name}"
-        
+        plot_mgr = PlotManager()
+
         if dimensions == "2D":
-            PlotManager.plot_2d(
+            plot_mgr.plot_2d(
                 embeddings=embeddings,
                 labels=labels,
                 colors=colors,
@@ -148,7 +158,7 @@ class EmbeddingVisualizer:
                 n_clusters=n_clusters if do_clustering else None
             )
         else:
-            PlotManager.plot_3d(
+            plot_mgr.plot_3d(
                 embeddings=embeddings,
                 labels=labels,
                 colors=colors,

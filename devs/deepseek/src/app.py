@@ -22,7 +22,7 @@ import plotly.graph_objects as go
 
 from sklearn.cluster import KMeans
 
-from transformers import AutoTokenizer, AutoModel, T5Tokenizer, T5Model, T5EncoderModel
+from transformers import AutoTokenizer, AutoModel, T5Tokenizer, T5EncoderModel
 from laserembeddings import Laser
 
 from sklearn.manifold import LocallyLinearEmbedding, MDS, SpectralEmbedding, TSNE, Isomap

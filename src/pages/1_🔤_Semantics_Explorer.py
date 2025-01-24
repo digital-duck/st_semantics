@@ -1,28 +1,25 @@
 import streamlit as st
+import numpy as np
 from components.embedding_viz import EmbeddingVisualizer
 from components.dimension_reduction import DimensionReducer
-from utils.error_handling import check_login
+
 from config import (
-    ST_APP_NAME,
     ST_HEADER_1,
-    DEFAULT_MODEL,
-    DEFAULT_METHOD,
-    sample_chn_input_data,
-    sample_enu_input_data
+    check_login
 )
 
-# Page config
-st.set_page_config(
-    page_title="Semantics Explorer",
-    page_icon="🔤",
-    layout="wide"
-)
+# # Page config
+# st.set_page_config(
+#     page_title="Semantics Explorer",
+#     page_icon="🔤",
+#     layout="wide"
+# )
 
 def main():
     # Check login status
     check_login()
     
-    st.title(ST_HEADER_1)
+    st.header(ST_HEADER_1)
     
     # Initialize components
     visualizer = EmbeddingVisualizer()

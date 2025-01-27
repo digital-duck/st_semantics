@@ -67,10 +67,14 @@ CACHE_CONFIG = {
 
 # Add Ollama model information to MODEL_INFO
 OLLAMA_MODELS = {
-    # "Llama2": {
-    #     "path": "llama2",
-    #     "help": "Llama 2 model through Ollama for embedding generation. Good for English and basic multilingual tasks."
-    # },
+    "BGE-M3 (Ollama)": {
+        "path": "bge-m3",
+        "help": "BGE-M3 is a new model from BAAI distinguished for its versatility in Multi-Functionality, Multi-Linguality, and Multi-Granularity."
+    },
+    "Paraphrase-Multilingual (Ollama)": {
+        "path": "paraphrase-multilingual",
+        "help": "Sentence-transformers model (multilingual) that can be used for tasks like clustering or semantic search."
+    },
     "Snowflake-Arctic-Embed2 (Ollama)": {
         "path": "snowflake-arctic-embed2",
         "help": "Snowflake Arctic model through Ollama offering efficient embedding generation with strong multilingual capabilities, especially for Chinese-English pairs."

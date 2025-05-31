@@ -8,12 +8,12 @@ from config import (
     check_login
 )
 
-# # Page config
-# st.set_page_config(
-#     page_title="Semantics Explorer",
-#     page_icon="🔤",
-#     layout="wide"
-# )
+# Page config
+st.set_page_config(
+    page_title="Semantics Explorer",
+    page_icon="🔤",
+    layout="wide"
+)
 
 def main():
     # Check login status

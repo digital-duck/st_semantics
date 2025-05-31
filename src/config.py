@@ -15,15 +15,20 @@ ST_ICON = "🚩"
 
 # Default Settings
 DEFAULT_N_CLUSTERS = 5
+DEFAULT_MIN_CLUSTERS = 2
+DEFAULT_MAX_CLUSTERS = 10
 DEFAULT_MAX_WORDS = 15 
 DEFAULT_MODEL = "Sentence-BERT Multilingual"
 DEFAULT_METHOD = "PHATE"
 DEFAULT_DIMENSIONS = "2D"
+DEFAULT_WIDTH = 800
+DEFAULT_HEIGHT = 800
+
 
 # Plot Settings
 PLOT_CONFIG = {
-    "width": 800,
-    "height": 800,
+    "width": DEFAULT_WIDTH,
+    "height": DEFAULT_HEIGHT,
     "color_map": {
         "chinese": "red",
         "english": "blue"

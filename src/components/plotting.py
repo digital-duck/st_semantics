@@ -5,12 +5,16 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, calinski_harabasz_score
-from config import PLOT_WIDTH, PLOT_HEIGHT, DEFAULT_N_CLUSTERS, DEFAULT_MAX_WORDS
+from config import (
+       PLOT_WIDTH, PLOT_HEIGHT, 
+       DEFAULT_N_CLUSTERS, DEFAULT_MIN_CLUSTERS, DEFAULT_MAX_CLUSTERS,
+       DEFAULT_MAX_WORDS
+)
 
 class PlotManager:
     def __init__(self):
-        self.min_clusters = 2
-        self.max_clusters = 10
+        self.min_clusters = DEFAULT_MIN_CLUSTERS
+        self.max_clusters = DEFAULT_MAX_CLUSTERS
 
     def plot_2d(self, embeddings, labels, colors, title, clustering=False, n_clusters=DEFAULT_N_CLUSTERS, 
                 semantic_forces=False, max_words=DEFAULT_MAX_WORDS):
@@ -67,7 +71,7 @@ class PlotManager:
                 help="Sum of squared distances to nearest cluster center. Lower is better."
             )
 
-    def _plot_2d_cluster(self, embeddings, labels, colors, title, n_clusters):
+    def _plot_2d_cluster(self, embeddings, labels, colors, title, n_clusters, textfont_size=12, point_size=4):
         # Add dynamic controls for clustering
         boundary_threshold = st.slider(
             "Cluster Boundary Threshold",
@@ -121,8 +125,9 @@ class PlotManager:
             mode='markers+text',
             text=df["label"],
             textposition="top center",
+            textfont_size=textfont_size,
             marker=dict(
-                size=10,
+                size=point_size,
                 color=df["cluster"],
                 colorscale='Viridis',
                 showscale=True
@@ -144,7 +149,7 @@ class PlotManager:
 
         st.plotly_chart(fig, use_container_width=True)
 
-    def _plot_2d_simple(self, embeddings, labels, colors, title):
+    def _plot_2d_simple(self, embeddings, labels, colors, title, textfont_size=12, point_size=4):
         df = pd.DataFrame({"x": embeddings[:, 0], "y": embeddings[:, 1], 
                           "label": labels, "color": colors})
         
@@ -154,7 +159,12 @@ class PlotManager:
         fig.update_traces(
             textposition='top center',
             hoverinfo='text',
-            textfont_size=10
+            textfont_size=textfont_size,
+            # Add marker properties to control point size
+            marker=dict(
+                size=point_size, # Use the point_size parameter here
+                opacity=0.8 # Optional: adjust opacity if needed
+            )
         )
         
         fig.update_layout(
@@ -221,7 +231,7 @@ class PlotManager:
         st.plotly_chart(fig, use_container_width=True)
 
     @staticmethod
-    def _plot_3d_simple(embeddings, labels, colors, title, textfont_size=10, point_size=5):
+    def _plot_3d_simple(embeddings, labels, colors, title, textfont_size=12, point_size=4):
         df = pd.DataFrame({
             "x": embeddings[:, 0],
             "y": embeddings[:, 1],
@@ -266,7 +276,7 @@ class PlotManager:
         st.plotly_chart(fig, use_container_width=True)
 
     @staticmethod
-    def _plot_3d_cluster(embeddings, labels, colors, title, n_clusters):
+    def _plot_3d_cluster(embeddings, labels, colors, title, n_clusters, textfont_size=12, point_size=4):
         kmeans = KMeans(n_clusters=n_clusters, random_state=42)
         clusters = kmeans.fit_predict(embeddings)
         
@@ -291,7 +301,12 @@ class PlotManager:
         fig.update_traces(
             textposition='top center',
             hoverinfo='text',
-            textfont_size=10
+            textfont_size=textfont_size,
+            # Add marker properties to control point size
+            marker=dict(
+                size=point_size, # Use the point_size parameter here
+                opacity=0.8 # Optional: adjust opacity if needed
+            )
         )
         
         fig.update_layout(

@@ -13,7 +13,6 @@ from config import (
 from transformers import (
     AutoTokenizer, AutoModel, T5Tokenizer, T5EncoderModel,
 )
-from laserembeddings import Laser
 
 @st.cache_resource
 def get_ollama_session():
@@ -36,16 +35,19 @@ class OllamaModel(EmbeddingModel):
     def get_embeddings(self, texts: List[str], lang: str = "en") -> Optional[np.ndarray]:
         embeddings = []
         for idx, text in enumerate(texts):
-            response = self.session.post(
-                "http://localhost:11434/api/embeddings",
-                json={"model": self.model_name, "prompt": text}
-            )
-            if response.status_code == 200:
-                embedding = response.json().get("embedding")
-                if embedding:
-                    embeddings.append(embedding)
-            else:
-                raise EmbeddingError(f"Failed to get embedding for text: {text}")
+            try:
+                response = self.session.post(
+                    "http://localhost:11434/api/embeddings",
+                    json={"model": self.model_name, "prompt": text}
+                )
+                if response.status_code == 200:
+                    embedding = response.json().get("embedding")
+                    if embedding:
+                        embeddings.append(embedding)
+                else:
+                    st.warning(f"Failed to get embedding for text: {text}")
+            except Exception as e:
+                st.error(str(e))
                     
         return np.array(embeddings) if embeddings else None
 
@@ -69,8 +71,13 @@ class HuggingFaceModel(EmbeddingModel):
     @handle_errors
     def get_embeddings(self, texts: List[str], lang: str = "en") -> Optional[np.ndarray]:
         if self.model_name == "LASER":
-            laser = Laser()
-            return laser.embed_sentences(texts, lang=lang)
+            try:
+                from laserembeddings import Laser
+                laser = Laser()
+                return laser.embed_sentences(texts, lang=lang)
+            except Exception as e:
+                st.error(f"Unsupported model: {self.model_name}")
+                return None
                   
         self._lazy_load()
         embeddings = []

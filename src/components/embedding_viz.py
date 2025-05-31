@@ -22,11 +22,10 @@ class EmbeddingVisualizer:
         """Render sidebar controls and return settings"""
         with st.sidebar:
             st.header("Visualization Settings")
-            st.write("Ollama model is slower")
 
             # Model selection
             model_name = st.radio(
-                "Choose Embedding Model",
+                "Choose Embedding Model (Ollama is slower)",
                 options=self.model_names,
                 index=self.model_names.index(DEFAULT_MODEL),
                 help="Select a multilingual embedding model"

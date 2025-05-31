@@ -221,7 +221,7 @@ class PlotManager:
         st.plotly_chart(fig, use_container_width=True)
 
     @staticmethod
-    def _plot_3d_simple(embeddings, labels, colors, title):
+    def _plot_3d_simple(embeddings, labels, colors, title, textfont_size=10, point_size=5):
         df = pd.DataFrame({
             "x": embeddings[:, 0],
             "y": embeddings[:, 1],
@@ -242,7 +242,12 @@ class PlotManager:
         fig.update_traces(
             textposition='top center',
             hoverinfo='text',
-            textfont_size=10
+            textfont_size=textfont_size,
+            # Add marker properties to control point size
+            marker=dict(
+                size=point_size, # Use the point_size parameter here
+                opacity=0.8 # Optional: adjust opacity if needed
+            )
         )
         
         fig.update_layout(

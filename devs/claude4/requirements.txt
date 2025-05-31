@@ -1,0 +1,7 @@
+streamlit 
+sentence-transformers 
+transformers 
+torch 
+plotly 
+umap-learn 
+phate

@@ -103,39 +103,40 @@ OLLAMA_MODELS = {
 }
 
 # Model information (name, Hugging Face path, and help text)
+# Temporarily disabled due to torch compatibility issues
 MODEL_INFO = {
-    "XLM-R": {
-        "path": "xlm-roberta-base",
-        "help": "A robust multilingual model trained on 100+ languages. Great for cross-lingual tasks like text classification and NER."
-    },
-    "LASER": {
-        "path": None,  # LASER uses its own library
-        "help": "Language-agnostic sentence embeddings for 100+ languages. Efficient for multilingual tasks like sentence similarity."
-    },
-    "mBERT": {
-        "path": "bert-base-multilingual-cased",
-        "help": "Multilingual BERT trained on 104 languages. Widely used for cross-lingual transfer learning."
-    },
-    "LaBSE": {
-        "path": "sentence-transformers/LaBSE",
-        "help": "Language-agnostic BERT sentence embeddings for 109 languages. Excellent for sentence similarity and paraphrase detection."
-    },
-    "DistilBERT Multilingual": {
-        "path": "distilbert-base-multilingual-cased",
-        "help": "A lightweight version of mBERT. Faster and more efficient, suitable for real-time applications."
-    },
-    "XLM": {
-        "path": "xlm-mlm-100-1280",
-        "help": "Cross-lingual language model trained using masked and translation language modeling. Good for translation tasks."
-    },
-    "InfoXLM": {
-        "path": "microsoft/infoxlm-base",
-        "help": "An extension of XLM-R with improved cross-lingual transferability. Great for low-resource languages."
-    },
-    "mT5": {
-        "path": "google/mt5-small",
-        "help": "Multilingual T5 model trained on 101 languages. Versatile for text generation and embedding tasks."
-    },
+    # "XLM-R": {
+    #     "path": "xlm-roberta-base",
+    #     "help": "A robust multilingual model trained on 100+ languages. Great for cross-lingual tasks like text classification and NER."
+    # },
+    # "LASER": {
+    #     "path": None,  # LASER uses its own library - Disabled due to torch compatibility
+    #     "help": "Language-agnostic sentence embeddings for 100+ languages. Efficient for multilingual tasks like sentence similarity."
+    # },
+    # "mBERT": {
+    #     "path": "bert-base-multilingual-cased",
+    #     "help": "Multilingual BERT trained on 104 languages. Widely used for cross-lingual transfer learning."
+    # },
+    # "LaBSE": {
+    #     "path": "sentence-transformers/LaBSE",
+    #     "help": "Language-agnostic BERT sentence embeddings for 109 languages. Excellent for sentence similarity and paraphrase detection."
+    # },
+    # "DistilBERT Multilingual": {
+    #     "path": "distilbert-base-multilingual-cased",
+    #     "help": "A lightweight version of mBERT. Faster and more efficient, suitable for real-time applications."
+    # },
+    # "XLM": {
+    #     "path": "xlm-mlm-100-1280",
+    #     "help": "Cross-lingual language model trained using masked and translation language modeling. Good for translation tasks."
+    # },
+    # "InfoXLM": {
+    #     "path": "microsoft/infoxlm-base",
+    #     "help": "An extension of XLM-R with improved cross-lingual transferability. Great for low-resource languages."
+    # },
+    # "mT5": {
+    #     "path": "google/mt5-small",  # Disabled due to torch compatibility
+    #     "help": "Multilingual T5 model trained on 101 languages. Versatile for text generation and embedding tasks."
+    # },
     "Sentence-BERT Multilingual": {
         "path": "sentence-transformers/distiluse-base-multilingual-cased-v1",
         "help": "Multilingual Sentence-BERT optimized for semantic similarity tasks like clustering and retrieval."

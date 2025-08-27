@@ -2,6 +2,9 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from typing import List, Optional, Tuple
+import os
+import re
+from pathlib import Path
 
 from config import (
     MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD,
@@ -17,10 +20,20 @@ class EmbeddingVisualizer:
     def __init__(self):
         self.model_names = sorted(list(MODEL_INFO.keys()))
         self.method_names = sorted(list(METHOD_INFO.keys()))
+        self.input_dir = Path("data/input")
+        self.images_dir = Path("data/images")
+        
+        # Initialize session state for plot rotation
+        if 'plot_rotation' not in st.session_state:
+            st.session_state.plot_rotation = 0
+        if 'current_figure' not in st.session_state:
+            st.session_state.current_figure = None
 
     def render_sidebar(self) -> Tuple[str, str, str, bool, Optional[int]]:
         """Render sidebar controls and return settings"""
         with st.sidebar:
+            st.divider()
+            
             with st.expander("Visualization Settings", expanded=False):
 
                 # Model selection
@@ -71,35 +84,155 @@ class EmbeddingVisualizer:
         text = text.replace("\n", " ").replace(",", " ").replace(";", " ").replace("，", " ").replace("；", " ")
         return [w.strip('"') for w in text.split() if w.strip('"')]
 
+    def get_available_inputs(self) -> List[str]:
+        """Get list of available input names from data/input directory"""
+        if not self.input_dir.exists():
+            return ["sample_1"]
+        
+        input_names = set()
+        for file_path in self.input_dir.glob("*-*.txt"):
+            # Extract input name from filename (before first dash)
+            name_part = file_path.stem.split("-")[0]
+            input_names.add(name_part)
+        
+        return sorted(list(input_names)) if input_names else ["sample_1"]
+    
+    def load_text_from_file(self, input_name: str, language: str) -> str:
+        """Load text content from file"""
+        file_path = self.input_dir / f"{input_name}-{language}.txt"
+        if file_path.exists():
+            try:
+                return file_path.read_text(encoding='utf-8').strip()
+            except Exception as e:
+                st.error(f"Error reading file {file_path}: {e}")
+        return ""
+    
+    def save_text_to_file(self, input_name: str, chinese_text: str, english_text: str):
+        """Save text content to files"""
+        # Ensure input directory exists
+        self.input_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Sanitize filename using the proper method
+        safe_name = self.sanitize_filename(input_name)
+        
+        success_count = 0
+        
+        # Save Chinese text if provided
+        if chinese_text.strip():
+            chn_file = self.input_dir / f"{safe_name}-chn.txt"
+            try:
+                chn_file.write_text(chinese_text.strip(), encoding='utf-8')
+                success_count += 1
+            except Exception as e:
+                st.error(f"Error saving Chinese text: {e}")
+        
+        # Save English text if provided
+        if english_text.strip():
+            enu_file = self.input_dir / f"{safe_name}-enu.txt"
+            try:
+                enu_file.write_text(english_text.strip(), encoding='utf-8')
+                success_count += 1
+            except Exception as e:
+                st.error(f"Error saving English text: {e}")
+        
+        if success_count > 0:
+            st.success(f"Saved {success_count} text file(s) as '{safe_name}'")
+            st.rerun()  # Refresh to update the selectbox options
+        else:
+            st.warning("No text to save")
+
     def render_input_areas(self) -> Tuple[List[str], List[str], List[str]]:
         """Render text input areas and return processed words"""
         with st.sidebar:
             with st.expander("Enter Words/Phrases", expanded=True):
+
+                col_input_select, col_load_txt = st.columns([2, 1])
+                with col_input_select:
+                    available_inputs = self.get_available_inputs()
+                    input_name_selected = st.selectbox(
+                        "Select Input",
+                        options=available_inputs,
+                        index=0,
+                        key="cfg_input_text_selected"
+                    )
+                with col_load_txt:
+                    btn_load_txt = st.button("Load Text", help="Load input texts")
+
+                # Initialize text areas with default or loaded content
+                default_chinese = sample_chn_input_data
+                default_english = sample_enu_input_data
+                
+                # Load text if button is clicked
+                if btn_load_txt:
+                    loaded_chinese = self.load_text_from_file(input_name_selected, "chn")
+                    loaded_english = self.load_text_from_file(input_name_selected, "enu")
+                    
+                    if loaded_chinese:
+                        default_chinese = loaded_chinese
+                        st.session_state.chinese_text_area = loaded_chinese
+                    
+                    if loaded_english:
+                        default_english = loaded_english
+                        st.session_state.english_text_area = loaded_english
+                    
+                    if not loaded_chinese and not loaded_english:
+                        st.warning(f"No text files found for '{input_name_selected}'")
+
                 c1, c2 = st.columns(2)
                 with c1:
                     chinese_text = st.text_area(
                         "Chinese:", 
-                        value=sample_chn_input_data,
-                        height=200)
+                        value=st.session_state.get('chinese_text_area', default_chinese),
+                        height=200,
+                        key='chinese_text_input'
+                    )
                     chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
                     chinese_words = self.process_text(chinese_text) if chinese_selected else []
 
                 with c2:
                     english_text = st.text_area(
                         "English:",
-                        value=sample_enu_input_data,
-                        height=200)
+                        value=st.session_state.get('english_text_area', default_english),
+                        height=200,
+                        key='english_text_input'
+                    )
                     english_selected = st.checkbox("English", value=True, key="english")
                     english_words = self.process_text(english_text) if english_selected else []
-                
-            _, col_btn, _ = st.columns([2, 4, 1])
-            with col_btn:
-                btn_visualize = st.button("Visualize", type="primary")
 
-            return btn_visualize, chinese_words, english_words, (
+                # User can enter a name for the input and save the texts 
+                col_input_enter, col_save_txt = st.columns([2, 1])
+                with col_input_enter:
+                    input_name_raw = st.text_input(
+                        "Name Input",
+                        value="untitled",
+                        key="cfg_input_text_entered",
+                        help="Name will be automatically sanitized for filename compatibility"
+                    )
+                    # Show sanitized preview
+                    sanitized_preview = self.sanitize_filename(input_name_raw)
+                    if sanitized_preview != input_name_raw.lower():
+                        st.caption(f"📝 Preview: `{sanitized_preview}`")
+                        
+                with col_save_txt:
+                    btn_save_txt = st.button("Save Text", help="Save input texts")
+                    
+                # Handle save text
+                if btn_save_txt:
+                    self.save_text_to_file(input_name_raw, chinese_text, english_text)
+
+            col_vis, col_rotate, col_save_png = st.columns([1, 1, 1])
+            with col_vis:
+                btn_visualize = st.button("Visualize", type="primary")
+            with col_rotate:
+                btn_rotate_90 = st.button("Rotate", help="Rotate 2D plot by 90°")
+            with col_save_png:
+                btn_save_png = st.button("Save Image", help="Save current plot as PNG image")
+            btn_actions = (btn_visualize, btn_rotate_90, btn_save_png)
+
+            return btn_actions, chinese_words, english_words, (
                 [COLOR_MAP["chinese"]] * len(chinese_words) +
                 [COLOR_MAP["english"]] * len(english_words)
-            )
+            ), chinese_selected, english_selected
     
     @st.cache_data
     def get_embeddings(_self, words: List[str], model_name: str, lang: str) -> np.ndarray:
@@ -154,14 +287,67 @@ class EmbeddingVisualizer:
                 n_clusters
             )
 
+    def sanitize_filename(self, text: str) -> str:
+        """Sanitize text for use in filename"""
+        # Convert to lowercase and replace spaces/special chars with underscores
+        sanitized = re.sub(r'[^a-z0-9]+', '_', text.lower().strip())
+        # Remove duplicate underscores
+        sanitized = re.sub(r'_+', '_', sanitized)
+        # Remove leading/trailing underscores
+        sanitized = sanitized.strip('_')
+        return sanitized if sanitized else "untitled"
+    
+    def save_plot_image(self, input_name: str, model_name: str, method_name: str, chinese_selected: bool, english_selected: bool):
+        """Save the current plot as PNG image with language tags"""
+        if st.session_state.current_figure is None:
+            st.warning("No plot to save. Please generate a visualization first.")
+            return
+            
+        # Ensure images directory exists
+        self.images_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create sanitized filename
+        safe_input = self.sanitize_filename(input_name)
+        safe_model = self.sanitize_filename(model_name)
+        safe_method = self.sanitize_filename(method_name)
+        
+        # Add language tags
+        lang_tags = []
+        if chinese_selected:
+            lang_tags.append("chn")
+        if english_selected:
+            lang_tags.append("enu")
+        
+        lang_suffix = "-".join(lang_tags) if lang_tags else "none"
+        
+        filename = f"{safe_input}-{safe_model}-{safe_method}-{lang_suffix}.png"
+        file_path = self.images_dir / filename
+        
+        try:
+            # Save the figure as PNG
+            st.session_state.current_figure.write_image(str(file_path), width=1200, height=800, scale=2)
+            st.success(f"Image saved as: {filename}")
+        except Exception as e:
+            st.error(f"Error saving image: {e}")
+
     def create_plot(self, embeddings, labels, colors, model_name, method_name, 
                     dimensions, do_clustering, n_clusters):
         """Create and display the plot"""
         plot_title = f"[Model] {model_name}, [Method] {method_name}"
         plot_mgr = PlotManager()
+        
+        # Apply rotation if needed (only for 2D plots)
+        if dimensions == "2D" and st.session_state.plot_rotation > 0:
+            # Apply rotation transformation
+            angle = np.radians(st.session_state.plot_rotation)
+            rotation_matrix = np.array([
+                [np.cos(angle), -np.sin(angle)],
+                [np.sin(angle), np.cos(angle)]
+            ])
+            embeddings = embeddings @ rotation_matrix.T
 
         if dimensions == "2D":
-            plot_mgr.plot_2d(
+            fig = plot_mgr.plot_2d(
                 embeddings=embeddings,
                 labels=labels,
                 colors=colors,
@@ -170,7 +356,7 @@ class EmbeddingVisualizer:
                 n_clusters=n_clusters if do_clustering else None
             )
         else:
-            plot_mgr.plot_3d(
+            fig = plot_mgr.plot_3d(
                 embeddings=embeddings,
                 labels=labels,
                 colors=colors,
@@ -178,3 +364,61 @@ class EmbeddingVisualizer:
                 clustering=do_clustering,
                 n_clusters=n_clusters if do_clustering else None
             )
+        
+        # Store the figure in session state for saving
+        st.session_state.current_figure = fig
+        
+    def display_saved_images(self):
+        """Display all saved images in the images directory"""
+        if not self.images_dir.exists():
+            st.info("No images saved yet. Generate a visualization and click 'Save Image'.")
+            return
+            
+        image_files = list(self.images_dir.glob("*.png"))
+        
+        if not image_files:
+            st.info("No images found in the images directory.")
+            return
+            
+        # Sort by modification time (newest first)
+        image_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+        
+        st.write(f"Found {len(image_files)} saved images:")
+        
+        # Display images in a grid
+        cols = st.columns(2)  # 2 columns for images
+        
+        for idx, image_file in enumerate(image_files):
+            col = cols[idx % 2]
+            
+            with col:
+                # Display filename
+                st.write(f"**{image_file.name}**")
+                
+                # Display image
+                try:
+                    st.image(str(image_file), caption=image_file.stem, use_container_width=True)
+                    
+                    # Add download button
+                    with open(image_file, "rb") as file:
+                        st.download_button(
+                            label=f"Download {image_file.name}",
+                            data=file.read(),
+                            file_name=image_file.name,
+                            mime="image/png",
+                            key=f"download_{image_file.stem}_{idx}"
+                        )
+                        
+                    # Add delete button
+                    if st.button(f"Delete", key=f"delete_{image_file.stem}_{idx}", help=f"Delete {image_file.name}"):
+                        try:
+                            image_file.unlink()
+                            st.success(f"Deleted {image_file.name}")
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Error deleting {image_file.name}: {e}")
+                    
+                    st.divider()
+                    
+                except Exception as e:
+                    st.error(f"Error displaying {image_file.name}: {e}")

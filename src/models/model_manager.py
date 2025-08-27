@@ -10,9 +10,14 @@ from utils.error_handling import (
 from config import (
     OLLAMA_MODELS, MODEL_INFO,
 )
-from transformers import (
-    AutoTokenizer, AutoModel, T5Tokenizer, T5EncoderModel,
-)
+try:
+    from transformers import AutoTokenizer, AutoModel
+except ImportError as e:
+    import streamlit as st
+    st.error(f"Failed to import transformers: {e}")
+    # Fallback - only support Ollama models
+    AutoTokenizer = None
+    AutoModel = None
 
 @st.cache_resource
 def get_ollama_session():
@@ -60,24 +65,29 @@ class HuggingFaceModel(EmbeddingModel):
         
     def _lazy_load(self):
         if not self.tokenizer:
-            if self.model_name == "mT5":
-                # Load the mT5 tokenizer and encoder model
-                self.tokenizer = T5Tokenizer.from_pretrained("google/mt5-small")
-                self.model = T5EncoderModel.from_pretrained("google/mt5-small")
-            else:
-                self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
-                self.model = AutoModel.from_pretrained(self.model_path)
+            if AutoTokenizer is None or AutoModel is None:
+                raise ImportError("Transformers library not available due to compatibility issues")
+            
+            # T5 models disabled due to torch compatibility issues
+            # if self.model_name == "mT5":
+            #     # Load the mT5 tokenizer and encoder model
+            #     self.tokenizer = T5Tokenizer.from_pretrained("google/mt5-small")
+            #     self.model = T5EncoderModel.from_pretrained("google/mt5-small")
+            # else:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+            self.model = AutoModel.from_pretrained(self.model_path)
             
     @handle_errors
     def get_embeddings(self, texts: List[str], lang: str = "en") -> Optional[np.ndarray]:
-        if self.model_name == "LASER":
-            try:
-                from laserembeddings import Laser
-                laser = Laser()
-                return laser.embed_sentences(texts, lang=lang)
-            except Exception as e:
-                st.error(f"Unsupported model: {self.model_name}")
-                return None
+        # LASER support disabled due to torch compatibility issues
+        # if self.model_name == "LASER":
+        #     try:
+        #         from laserembeddings import Laser
+        #         laser = Laser()
+        #         return laser.embed_sentences(texts, lang=lang)
+        #     except Exception as e:
+        #         st.error(f"Unsupported model: {self.model_name}")
+        #         return None
                   
         self._lazy_load()
         embeddings = []

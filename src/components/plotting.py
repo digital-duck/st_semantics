@@ -148,6 +148,7 @@ class PlotManager:
         )
 
         st.plotly_chart(fig, use_container_width=True)
+        return fig
 
     def _plot_2d_simple(self, embeddings, labels, colors, title, textfont_size=12, point_size=4):
         df = pd.DataFrame({"x": embeddings[:, 0], "y": embeddings[:, 1], 
@@ -180,6 +181,7 @@ class PlotManager:
         )
         
         st.plotly_chart(fig, use_container_width=True)
+        return fig
 
     def _plot_semantic_forces(self, embeddings, labels, title, max_words=DEFAULT_MAX_WORDS):
         """Visualize semantic forces between words/phrases using arrows"""
@@ -229,6 +231,7 @@ class PlotManager:
         )
 
         st.plotly_chart(fig, use_container_width=True)
+        return fig
 
     @staticmethod
     def _plot_3d_simple(embeddings, labels, colors, title, textfont_size=12, point_size=4):
@@ -274,6 +277,7 @@ class PlotManager:
         )
         
         st.plotly_chart(fig, use_container_width=True)
+        return fig
 
     @staticmethod
     def _plot_3d_cluster(embeddings, labels, colors, title, n_clusters, textfont_size=12, point_size=4):
@@ -323,3 +327,4 @@ class PlotManager:
         )
         
         st.plotly_chart(fig, use_container_width=True)
+        return fig

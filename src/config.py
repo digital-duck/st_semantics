@@ -40,8 +40,8 @@ PLOT_WIDTH, PLOT_HEIGHT = PLOT_CONFIG["width"], PLOT_CONFIG["height"]
 
 # Sample Data
 SAMPLE_DATA = {
-    "chinese": """你好 男子汉 \n爱 "女子" \n天气\n书\n猫""",
-    "english": """Hello\nLove\nWeather\nBook "Woman" "Gentle Man" \nCat"""
+    "chinese": """你好\n天气""",
+    "english": """Hello\nWeather"""
 }
 
 # File Paths
@@ -76,22 +76,22 @@ OLLAMA_MODELS = {
         "path": "bge-m3",
         "help": "BGE-M3 is a new model from BAAI distinguished for its versatility in Multi-Functionality, Multi-Linguality, and Multi-Granularity."
     },
-    "Paraphrase-Multilingual (Ollama)": {
-        "path": "paraphrase-multilingual",
-        "help": "Sentence-transformers model (multilingual) that can be used for tasks like clustering or semantic search."
-    },
+    # "Paraphrase-Multilingual (Ollama)": {
+    #     "path": "paraphrase-multilingual",
+    #     "help": "Sentence-transformers model (multilingual) that can be used for tasks like clustering or semantic search."
+    # },
     "Snowflake-Arctic-Embed2 (Ollama)": {
         "path": "snowflake-arctic-embed2",
         "help": "Snowflake Arctic model through Ollama offering efficient embedding generation with strong multilingual capabilities, especially for Chinese-English pairs."
     },
-    "Snowflake-Arctic-Embed (Ollama)": {
-        "path": "snowflake-arctic-embed",
-        "help": "Original Snowflake Arctic model through Ollama for multilingual embeddings."
-    },
-    # "Nomic": {
-    #     "path": "nomic-embed-text",
-    #     "help": "Nomic's embedding model optimized for semantic text embeddings."
+    # "Snowflake-Arctic-Embed (Ollama)": {
+    #     "path": "snowflake-arctic-embed",
+    #     "help": "Original Snowflake Arctic model through Ollama for multilingual embeddings."
     # },
+    "Nomic (Ollama)": {
+        "path": "nomic-embed-text",
+        "help": "Nomic's embedding model optimized for semantic text embeddings."
+    },
     # "Mistral (Ollama)": {
     #     "path": "mistral",
     #     "help": "Mistral model through Ollama offering efficient embedding generation with good multilingual capabilities."
@@ -105,34 +105,34 @@ OLLAMA_MODELS = {
 # Model information (name, Hugging Face path, and help text)
 # Temporarily disabled due to torch compatibility issues
 MODEL_INFO = {
-    # "XLM-R": {
-    #     "path": "xlm-roberta-base",
-    #     "help": "A robust multilingual model trained on 100+ languages. Great for cross-lingual tasks like text classification and NER."
-    # },
+    "XLM-R": {
+        "path": "xlm-roberta-base",
+        "help": "A robust multilingual model trained on 100+ languages. Great for cross-lingual tasks like text classification and NER."
+    },
     # "LASER": {
     #     "path": None,  # LASER uses its own library - Disabled due to torch compatibility
     #     "help": "Language-agnostic sentence embeddings for 100+ languages. Efficient for multilingual tasks like sentence similarity."
     # },
-    # "mBERT": {
-    #     "path": "bert-base-multilingual-cased",
-    #     "help": "Multilingual BERT trained on 104 languages. Widely used for cross-lingual transfer learning."
-    # },
-    # "LaBSE": {
-    #     "path": "sentence-transformers/LaBSE",
-    #     "help": "Language-agnostic BERT sentence embeddings for 109 languages. Excellent for sentence similarity and paraphrase detection."
-    # },
-    # "DistilBERT Multilingual": {
-    #     "path": "distilbert-base-multilingual-cased",
-    #     "help": "A lightweight version of mBERT. Faster and more efficient, suitable for real-time applications."
-    # },
-    # "XLM": {
-    #     "path": "xlm-mlm-100-1280",
-    #     "help": "Cross-lingual language model trained using masked and translation language modeling. Good for translation tasks."
-    # },
-    # "InfoXLM": {
-    #     "path": "microsoft/infoxlm-base",
-    #     "help": "An extension of XLM-R with improved cross-lingual transferability. Great for low-resource languages."
-    # },
+    "mBERT": {
+        "path": "bert-base-multilingual-cased",
+        "help": "Multilingual BERT trained on 104 languages. Widely used for cross-lingual transfer learning."
+    },
+    "LaBSE": {
+        "path": "sentence-transformers/LaBSE",
+        "help": "Language-agnostic BERT sentence embeddings for 109 languages. Excellent for sentence similarity and paraphrase detection."
+    },
+    "DistilBERT Multilingual": {
+        "path": "distilbert-base-multilingual-cased",
+        "help": "A lightweight version of mBERT. Faster and more efficient, suitable for real-time applications."
+    },
+    "XLM": {
+        "path": "xlm-mlm-100-1280",
+        "help": "Cross-lingual language model trained using masked and translation language modeling. Good for translation tasks."
+    },
+    "InfoXLM": {
+        "path": "microsoft/infoxlm-base",
+        "help": "An extension of XLM-R with improved cross-lingual transferability. Great for low-resource languages."
+    },
     # "mT5": {
     #     "path": "google/mt5-small",  # Disabled due to torch compatibility
     #     "help": "Multilingual T5 model trained on 101 languages. Versatile for text generation and embedding tasks."

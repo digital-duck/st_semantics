@@ -14,6 +14,11 @@ st.set_page_config(
     layout="wide"
 )
 
+@st.fragment 
+def save_plot_image(visualizer, current_input, model_name, method_name, chinese_selected, english_selected):
+    return visualizer.save_plot_image(current_input, model_name, method_name, chinese_selected, english_selected)
+
+@st.fragment
 def generate_visualization(visualizer, reducer, chinese_words, english_words, colors, model_name, method_name, dimensions, do_clustering, n_clusters):
     """Generate embeddings and visualization"""
     if not (chinese_words or english_words):
@@ -97,13 +102,14 @@ def main():
     visualizer = EmbeddingVisualizer()
     reducer = DimensionReducer()
 
+
+    # Get settings from sidebar
+    model_name, method_name, dimensions, do_clustering, n_clusters = visualizer.render_sidebar()
+
     # Get input words
     btn_actions, chinese_words, english_words, colors, chinese_selected, english_selected = visualizer.render_input_areas()
     btn_visualize, btn_rotate_90, btn_save_png = btn_actions
 
-    # Get settings from sidebar
-    model_name, method_name, dimensions, do_clustering, n_clusters = visualizer.render_sidebar()
-    
     # Handle rotate button - reuse existing visualization data
     if btn_rotate_90:
         st.session_state.plot_rotation = (st.session_state.plot_rotation + 90) % 360
@@ -127,10 +133,19 @@ def main():
     if btn_save_png:
         # Get current input name
         current_input = st.session_state.get('cfg_input_text_selected', 'untitled')
-        visualizer.save_plot_image(current_input, model_name, method_name, chinese_selected, english_selected)
-    
+        # visualizer.save_plot_image(current_input, model_name, method_name, chinese_selected, english_selected)
+        file_png = save_plot_image(visualizer, current_input, model_name, method_name, chinese_selected, english_selected)
+        if file_png:
+            st.sidebar.success(f"Image saved as: {file_png}")
+            st.image(f"data/images/{file_png}", caption=f"{file_png}", use_column_width=True)
+        else:
+            st.error("Failed to save image.")
+
+    # Handle visualize button
     if btn_visualize:
         generate_visualization(visualizer, reducer, chinese_words, english_words, colors, model_name, method_name, dimensions, do_clustering, n_clusters)
+
+
 
 if __name__ == "__main__":
     main()

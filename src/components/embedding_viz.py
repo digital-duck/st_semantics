@@ -5,6 +5,7 @@ from typing import List, Optional, Tuple
 import os
 import re
 from pathlib import Path
+import unicodedata
 
 from config import (
     MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD,
@@ -16,9 +17,19 @@ from utils.error_handling import handle_errors
 
 from components.plotting import PlotManager
 
+def rearrange_by_ollama(models):
+    l1 = []
+    l2 = []
+    for i in models:
+        if "(Ollama)" in i:
+            l2.append(i)
+        else:
+            l1.append(i)
+    return l1 + l2
+
 class EmbeddingVisualizer:
     def __init__(self):
-        self.model_names = sorted(list(MODEL_INFO.keys()))
+        self.model_names = rearrange_by_ollama(sorted(list(MODEL_INFO.keys())))
         self.method_names = sorted(list(METHOD_INFO.keys()))
         self.input_dir = Path("data/input")
         self.images_dir = Path("data/images")
@@ -32,7 +43,6 @@ class EmbeddingVisualizer:
     def render_sidebar(self) -> Tuple[str, str, str, bool, Optional[int]]:
         """Render sidebar controls and return settings"""
         with st.sidebar:
-            st.divider()
             
             with st.expander("Visualization Settings", expanded=False):
 
@@ -79,12 +89,15 @@ class EmbeddingVisualizer:
                 return model_name, method_name, dimensions, do_clustering, n_clusters
 
     @handle_errors
-    def process_text(self, text: str) -> List[str]:
-        """Process input text into list of words"""
+    def process_text(self, text: str, dedup: bool = True) -> List[str]:
+        """Process input text into list of words
+        
+        """
         text = text.replace("\n", " ").replace(",", " ").replace(";", " ").replace("，", " ").replace("；", " ")
-        return [w.strip('"') for w in text.split() if w.strip('"')]
+        results = [w.strip('"') for w in text.split() if w.strip('"')]
+        return list(set(results)) if dedup else results
 
-    @st.cache_data(show_spinner=False, ttl=300)  # Cache for 5 minutes
+    # @st.cache_data(show_spinner=False, ttl=300)  # Cache for 5 minutes
     def get_available_inputs(self) -> List[str]:
         """Get list of available input names from data/input directory"""
         if not self.input_dir.exists():
@@ -106,9 +119,12 @@ class EmbeddingVisualizer:
                 return file_path.read_text(encoding='utf-8').strip()
             except Exception as e:
                 st.error(f"Error reading file {file_path}: {e}")
+        else:
+            st.warning(f"File not found: {file_path}")
         return ""
     
-    def save_text_to_file(self, input_name: str, chinese_text: str, english_text: str):
+    def save_text_to_file(self, input_name: str, chinese_text: str, english_text: str, 
+                          chinese_selected: bool, english_selected: bool):
         """Save text content to files"""
         # Ensure input directory exists
         self.input_dir.mkdir(parents=True, exist_ok=True)
@@ -119,7 +135,7 @@ class EmbeddingVisualizer:
         success_count = 0
         
         # Save Chinese text if provided
-        if chinese_text.strip():
+        if chinese_selected and chinese_text.strip():
             chn_file = self.input_dir / f"{safe_name}-chn.txt"
             try:
                 chn_file.write_text(chinese_text.strip(), encoding='utf-8')
@@ -128,7 +144,7 @@ class EmbeddingVisualizer:
                 st.error(f"Error saving Chinese text: {e}")
         
         # Save English text if provided
-        if english_text.strip():
+        if english_selected and english_text.strip():
             enu_file = self.input_dir / f"{safe_name}-enu.txt"
             try:
                 enu_file.write_text(english_text.strip(), encoding='utf-8')
@@ -145,19 +161,19 @@ class EmbeddingVisualizer:
     def render_input_areas(self) -> Tuple[List[str], List[str], List[str]]:
         """Render text input areas and return processed words"""
         with st.sidebar:
-            with st.expander("Enter Words/Phrases", expanded=True):
+            with st.expander("Enter Text Data (Word/Phrase):", expanded=True):
 
                 col_input_select, col_load_txt = st.columns([2, 1])
                 with col_input_select:
                     available_inputs = self.get_available_inputs()
                     input_name_selected = st.selectbox(
                         "Select Input",
-                        options=available_inputs,
+                        options=[""] + available_inputs,
                         index=0,
                         key="cfg_input_text_selected"
                     )
                 with col_load_txt:
-                    btn_load_txt = st.button("Load Text", help="Load input texts")
+                    btn_load_txt = st.button("Load Text", help="Load input texts", disabled=not input_name_selected)
 
                 # Initialize text areas with default or loaded content
                 default_chinese = sample_chn_input_data
@@ -205,7 +221,7 @@ class EmbeddingVisualizer:
                 with col_input_enter:
                     input_name_raw = st.text_input(
                         "Name Input",
-                        value="untitled",
+                        value=input_name_selected if input_name_selected else "untitled",
                         key="cfg_input_text_entered",
                         help="Name will be automatically sanitized for filename compatibility"
                     )
@@ -219,7 +235,7 @@ class EmbeddingVisualizer:
                     
                 # Handle save text
                 if btn_save_txt:
-                    self.save_text_to_file(input_name_raw, chinese_text, english_text)
+                    self.save_text_to_file(input_name_raw, chinese_text, english_text, chinese_selected, english_selected)
 
             col_vis, col_rotate, col_save_png = st.columns([1, 1, 1])
             with col_vis:
@@ -288,21 +304,44 @@ class EmbeddingVisualizer:
                 n_clusters
             )
 
+    # def sanitize_filename(self, text: str) -> str:
+    #     """Sanitize text for use in filename"""
+    #     # Convert to lowercase and replace spaces/special chars with underscores
+    #     sanitized = re.sub(r'[^a-z0-9]+', '_', text.lower().strip())
+    #     # Remove duplicate underscores
+    #     sanitized = re.sub(r'_+', '_', sanitized)
+    #     # Remove leading/trailing underscores
+    #     sanitized = sanitized.strip('_')
+    #     return sanitized if sanitized else "untitled"
+    
     def sanitize_filename(self, text: str) -> str:
         """Sanitize text for use in filename"""
-        # Convert to lowercase and replace spaces/special chars with underscores
-        sanitized = re.sub(r'[^a-z0-9]+', '_', text.lower().strip())
+
+
+        # Normalize unicode characters
+        text = unicodedata.normalize('NFKC', text)
+
+        # Remove or replace characters that are problematic in filenames
+        # Keep alphanumeric, Chinese/CJK characters, hyphens, underscores, and spaces
+        sanitized = re.sub(r'[^\w\s\u4e00-\u9fff\u3400-\u4dbf\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2b820-\u2ceaf-]', '', text)
+
+        # Replace multiple whitespace with single underscore
+        sanitized = re.sub(r'\s+', '_', sanitized.strip())
+
         # Remove duplicate underscores
         sanitized = re.sub(r'_+', '_', sanitized)
+
         # Remove leading/trailing underscores
         sanitized = sanitized.strip('_')
+
         return sanitized if sanitized else "untitled"
+
     
     def save_plot_image(self, input_name: str, model_name: str, method_name: str, chinese_selected: bool, english_selected: bool):
         """Save the current plot as PNG image with language tags"""
         if st.session_state.current_figure is None:
             st.warning("No plot to save. Please generate a visualization first.")
-            return
+            return ""
             
         # Ensure images directory exists
         self.images_dir.mkdir(parents=True, exist_ok=True)
@@ -327,9 +366,11 @@ class EmbeddingVisualizer:
         try:
             # Save the figure as PNG
             st.session_state.current_figure.write_image(str(file_path), width=1200, height=800, scale=2)
-            st.success(f"Image saved as: {filename}")
+            # st.success(f"Image saved as: {filename}")
+            return filename
         except Exception as e:
             st.error(f"Error saving image: {e}")
+            return ""
 
     def create_plot(self, embeddings, labels, colors, model_name, method_name, 
                     dimensions, do_clustering, n_clusters):

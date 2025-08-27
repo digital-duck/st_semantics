@@ -57,6 +57,10 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
     
     if reduced_embeddings is None:
         return False
+    
+    # Clear previous visualization data to prevent memory buildup
+    if 'current_figure' in st.session_state:
+        st.session_state.current_figure = None
         
     # Store data in session state for rotation
     st.session_state.visualization_data = {

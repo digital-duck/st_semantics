@@ -1,160 +1,265 @@
-# Multilingual Embedding Explorer
+# Multilingual Embedding Explorer 🧠✨
 
-A Streamlit application for visualizing and exploring multilingual word embeddings in 2D and 3D spaces.
+**Geometry of Meaning: Visualizing Semantic Structure Across Languages**
 
-## Significance and Applications
+A powerful Streamlit application for exploring multilingual word embeddings through interactive 2D and 3D visualizations. Discover how meaning has geometric structure using cutting-edge embedding models and manifold learning techniques.
+
+*This Streamlit app is built with love in close collaboration with **Claude Code** ❤️*
+
+## 🌟 Significance and Applications
 
 This tool serves multiple important purposes across different domains:
 
-### Research Applications
-- **Cross-lingual Studies**: Enables researchers to visualize and analyze semantic relationships between different languages
-- **Linguistic Research**: Helps understand how different embedding models capture semantic meaning across languages
-- **Model Evaluation**: Provides visual insights into the performance of different multilingual embedding models
-- **Semantic Analysis**: Facilitates the study of semantic spaces and word relationships in multiple languages
+### 🔬 **Research Applications**
+- **Cross-lingual Studies**: Visualize and analyze semantic relationships between different languages
+- **Linguistic Research**: Understand how embedding models capture semantic meaning across languages
+- **Model Evaluation**: Visual insights into multilingual embedding model performance
+- **Semantic Analysis**: Study semantic spaces and word relationships in multiple languages
+- **"Geometry of Meaning"**: Discover linear patterns in numbers, branching in colors, clustering in concepts
 
-### Educational Uses
-- **Language Learning**: Helps students visualize relationships between words in different languages, making abstract concepts more concrete
-- **Linguistics Education**: Demonstrates concepts like semantic similarity, word vectors, and cross-lingual relationships
-- **Data Science Teaching**: Serves as a practical example of dimensionality reduction and visualization techniques
-- **AI/ML Education**: Illustrates how neural networks understand and represent language
+### 🎓 **Educational Applications**
+- **Language Learning**: Visualize relationships between words in different languages
+- **Linguistics Education**: Demonstrate semantic similarity, word vectors, and cross-lingual relationships
+- **Data Science Teaching**: Practical examples of dimensionality reduction and visualization
+- **AI/ML Education**: Show how neural networks understand and represent language
+- **Interactive Discovery**: Students can explore semantic patterns independently
 
-### Practical Applications
-- **Translation Work**: Assists translators in understanding semantic equivalences between languages
-- **Content Analysis**: Helps content creators ensure consistent meaning across multiple languages
-- **Cultural Studies**: Reveals how different languages encode similar concepts
-- **Educational Material Development**: Supports creation of multilingual educational resources
+### 🌍 **Practical Applications**
+- **Translation Work**: Understand semantic equivalences between languages
+- **Content Analysis**: Ensure consistent meaning across multiple languages
+- **Cultural Studies**: Reveal how different languages encode similar concepts
+- **Educational Material Development**: Create multilingual educational resources
+## 🚀 Key Features
 
+### 🔤 **Semantics Explorer**
+- **Multiple Embedding Models**: Sentence-BERT Multilingual (fast), Ollama models (Snowflake-Arctic-Embed2, BGE-M3)
+- **Advanced Dimensionality Reduction**: PHATE, t-SNE, UMAP, Isomap, PCA, MDS, LLE, Kernel PCA, Spectral Embedding
+- **Interactive Visualizations**: 2D/3D plotting with clustering analysis and color-coded languages
+- **Real-time Rotation**: 90° plot rotation for different perspectives
+- **Smart File Management**: Load/save text datasets with sanitized filenames
+- **Language Tags**: Automatic filename tagging (chn, enu, chn-enu)
+- **Session Caching**: Improved performance with cached embeddings
 
-## Integration Possibilities
+### 🖼️ **Review Images** (New!)
+- **Multi-image Comparison**: Side-by-side visualization analysis
+- **Flexible Layouts**: 1, 2, or 3 images per row
+- **Full Filename Visibility**: Complete filenames displayed in main panel
+- **Batch Operations**: Select All/Clear All functionality
+- **Download & Delete**: Manage saved visualizations efficiently
+- **Smart Organization**: Sort by newest first
 
-This semantic exploration tool is designed to be part of a larger ecosystem of language learning and analysis tools:
+### 🌐 **DeepL Translator** (New!)
+- **Professional Translation**: High-quality DeepL API integration for 30+ languages
+- **Auto-detection**: Smart source language identification
+- **Research-focused**: Perfect for creating semantic datasets across languages
+- **Save Translations**: Store translation pairs for reference
+- **Editable Results**: Refine translations for research accuracy
 
-### Current Integrations
-- **Translation Services**: Works alongside st_translator app which provides:
-  - Google Translate integration
-  - Text-to-speech capabilities
-  - Real-time translation visualization
+## 📊 Pre-built Semantic Categories
 
-### Planned Integrations
-- **Interactive Learning**:
-  - Chatbot assistance for language learning
-  - Note-taking system for vocabulary and semantic relationships
-  - Personalized learning paths based on semantic relationships
+Explore the "Geometry of Meaning" with included datasets:
 
-### Potential Extensions
-- **Advanced Analysis**:
-  - Semantic relationship tracking over time
-  - Custom vocabulary list building with semantic grouping
-  - Cross-language idiom and expression matching
-- **Educational Tools**:
-  - Lesson planning based on semantic relationships
-  - Student progress tracking through semantic space
-  - Interactive exercises using semantic relationships
+- **🎨 Colors** - Perfect branching patterns (warm/cool, light/dark families)
+- **🔢 Numbers** - **Linear sequence relationships** (major discovery!)
+- **😊 Emotions** - Positive/negative clustering patterns
+- **🐾 Animals** - Taxonomic family structures (pets, wild, insects)
+- **🍎 Food** - Category-based groupings (grains, fruits, meats)
 
-### Integration Benefits
-- **Comprehensive Learning Environment**: Combines semantic understanding with practical translation
-- **Enhanced User Experience**: Seamless transition between different language learning tools
-- **Deeper Understanding**: Links theoretical semantic relationships with practical language use
-- **Personalized Learning**: Adapts to user's learning style and progress
+## 🛠️ Installation
 
-## Features
+### Quick Setup
 
-- Support for multiple embedding models:
-  - Hugging Face models (BERT, XLM-R, etc.)
-  - LASER embeddings
-  - Local Ollama models (Snowflake-Arctic-Embed2)
-- Multiple dimensionality reduction methods:
-  - PHATE
-  - t-SNE
-  - UMAP
-  - Isomap
-  - And more
-- Interactive visualizations:
-  - 2D and 3D plotting
-  - Clustering visualization
-  - Color-coded language differentiation
-- Support for Chinese-English word pairs
-- Progress tracking for embedding generation
-- Cached sessions for improved performance
-- Error handling and logging
-
-## Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/multilingual-embedding-explorer.git
-cd multilingual-embedding-explorer
-```
+# Clone and navigate
+git clone git@github.com:digital-duck/st_semantics.git
+cd st_semantics
 
-2. Initialize project structure (this will create all necessary directories and files):
-```bash
-./init_project.sh
-```
-
-3. Install dependencies:
-```bash
+# Create conda environment
 conda create -n zinets python=3.11
 conda activate zinets
-pip install -r requirements.txt
-```
 
-4. Download required LASER models and Chinese support:
-```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# For PyTorch compatibility
+pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu121
+
+# Optional: Download LASER models
 python -m laserembeddings download-models
 ```
 
-5. Install Ollama (optional, for local embedding models):
-Visit [Ollama's website](https://ollama.ai/) and follow installation instructions.
+### Optional: Ollama Models
 
-6. Pull required Ollama models (if using Ollama):
 ```bash
+# Install Ollama (visit https://ollama.ai)
 ollama pull snowflake-arctic-embed2
-ollama pull snowflake-arctic-embed
+ollama pull bge-m3
+ollama pull paraphrase-multilingual
 ```
 
-## Project Structure
-```
-project/
-├── config.py              # Configuration settings
-├── utils/                 # Utility functions
-│   ├── __init__.py
-│   └── error_handling.py
-├── models/               # Model management
-│   ├── __init__.py
-│   └── model_manager.py
-├── app.py               # Main Streamlit application
-├── requirements.txt     # Project dependencies
-└── README.md           # Project documentation
-```
+### API Keys Setup
 
-## Usage
+Create `.env` file in project root:
 
-1. Start the Streamlit app:
 ```bash
-streamlit run app.py
+# For Hugging Face models (optional)
+HF_API_KEY="<your_hugging_face_key>"
+
+# For DeepL Translator (optional)
+DEEPL_AUTH_KEY="<your_deepl_key>"
 ```
 
-2. Enter Chinese and English words/phrases in the respective text areas.
+## 🚀 Usage
 
-3. Choose your preferred:
-   - Embedding model
-   - Dimensionality reduction method
-   - Visualization type (2D/3D)
-   - Clustering options
+### Launch Application
 
-4. Click "Visualize" to generate the embedding visualization.
+```bash
+cd src
+streamlit run Welcome.py
+```
 
-## Model Performance Notes
+### Basic Workflow
 
-- **Snowflake-Arctic-Embed2**: Best performance for Chinese-English pairs, showing strong semantic alignment
-- **LASER**: Good performance for multilingual embeddings, especially with longer phrases
-- **Sentence-BERT Multilingual**: Fast and reliable for general use
-- **Other Ollama models** (Neural-Chat, Mistral): Not recommended for multilingual tasks
+1. **Semantics Explorer**: Enter Chinese/English words → Choose model & method → Visualize
+2. **Review Images**: Compare multiple visualizations side-by-side
+3. **Translator**: Create multilingual datasets using professional translation
 
-## Contributing
+### Advanced Features
 
-Feel free to open issues or submit pull requests with improvements.
+- **Load Text**: Use pre-built semantic categories or load custom datasets
+- **Save Text**: Create named datasets with automatic sanitization
+- **Rotate**: Adjust plot orientation for better pattern visibility
+- **Save Image**: Export high-quality visualizations with descriptive filenames
+- **Cross-compare**: Analyze multiple semantic categories simultaneously
 
-## License
+## 🔬 Model Performance Notes
 
-[Your chosen license]
+- **Sentence-BERT Multilingual**: Recommended default - fast, reliable, excellent cross-lingual alignment
+- **Snowflake-Arctic-Embed2**: Best performance for Chinese-English pairs
+- **PHATE**: Excellent for revealing semantic manifold structures and branching patterns
+- **Cross-lingual Discovery**: Chinese 红色 and English "Red" align geometrically in embedding space
+
+## 📁 Project Structure
+
+```
+st_semantics/
+├── src/
+│   ├── Welcome.py                      # Main entry point
+│   ├── pages/
+│   │   ├── 1_🔤_Semantics_Explorer.py  # Core visualization
+│   │   ├── 2_🖼️_Review_Images.py       # Image comparison (NEW)
+│   │   └── 3_🌐_Translator.py          # DeepL translation (NEW)
+│   ├── components/                     # Reusable UI components
+│   │   ├── embedding_viz.py
+│   │   ├── dimension_reduction.py
+│   │   ├── plotting.py
+│   │   └── clustering.py
+│   ├── models/                         # Model management
+│   │   └── model_manager.py
+│   ├── services/                       # External integrations
+│   ├── utils/                          # Utility functions
+│   ├── config.py                       # Configuration settings
+│   └── data/
+│       ├── input/                      # Text datasets (colors, numbers, etc.)
+│       ├── images/                     # Saved visualizations
+│       └── translations/               # Translation pairs
+├── requirements.txt
+├── init_project.sh
+├── README.md
+└── LICENSE
+```
+
+## 🎯 Recent Enhancements (Version 2.0)
+
+### Major New Features
+- ✅ **Dedicated Review Images page** with multi-select comparison
+- ✅ **DeepL Translator integration** for international researchers  
+- ✅ **Enhanced filename management** with language tags and sanitization
+- ✅ **Real-time plot rotation** (90° increments)
+- ✅ **Improved UI/UX** with better organization and full filename visibility
+
+### Technical Improvements
+- ✅ **Fixed torch compatibility** issues (torch 2.x support)
+- ✅ **Streamlined model selection** (removed problematic models)
+- ✅ **Better error handling** and user feedback
+- ✅ **Session state persistence** for seamless workflow
+- ✅ **Professional code architecture** with component separation
+- ✅ **Performance optimizations** with smart caching (dimensionality reduction, file I/O)
+- ✅ **Memory management** improvements for cleaner resource usage
+
+### Research Impact
+- ✅ **"Geometry of Meaning" discovery** - numbers form linear patterns!
+- ✅ **Cross-lingual semantic alignment** visualization
+- ✅ **Educational applications** for language learning
+- ✅ **Publication-ready** visualizations and methodology
+
+## 🌐 Integration Ecosystem
+
+This tool is designed as part of a larger language analysis ecosystem:
+
+### Current Integration
+- **Translation Services**: Built-in DeepL translator for dataset creation
+- **Cross-platform Export**: High-quality visualizations for papers/presentations
+
+### Potential Extensions
+- **Semantic Relationship Tracking**: Monitor concept evolution over time
+- **Custom Vocabulary Building**: Create domain-specific semantic maps
+- **Educational Tools**: Lesson planning based on semantic relationships
+- **Interactive Learning**: Personalized paths through semantic space
+
+## Legacy Features
+
+- Support for multiple embedding models (BERT, XLM-R, LASER, Ollama)
+- Multiple dimensionality reduction methods (PHATE, t-SNE, UMAP, Isomap)
+- Interactive 2D/3D visualizations with clustering
+- Chinese-English word pair support
+- Progress tracking and session caching
+- Comprehensive error handling and logging
+
+
+## 🤝 Contributing
+
+We welcome contributions! Priority areas:
+- Additional embedding models and evaluation
+- New dimensionality reduction techniques
+- Enhanced clustering algorithms
+- More semantic category datasets
+- Educational curriculum integration
+- Performance optimizations
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Streamlit** for the intuitive web application framework ❤️
+- **Claude Code** for development collaboration and discussions 🤖
+- **DeepL** for professional translation API
+- **Hugging Face** for transformer models and embeddings
+- **Plotly** for interactive visualization framework
+- **PHATE** algorithm developers for manifold learning
+- **Ollama** for local model serving
+- **Open source community** for foundational tools
+
+## 📚 Citation
+
+If you use this tool in your research, please cite:
+
+```bibtex
+@software{semantics_explorer_2025,
+  title={Multilingual Embedding Explorer: Geometry of Meaning Visualization},
+  author={Digital Duck Project},
+  year={2025},
+  url={https://github.com/digital-duck/st_semantics},
+  note={Streamlit application for cross-lingual semantic analysis}
+}
+```
+
+---
+
+**Discover the hidden geometry of human meaning!** 🧠✨
+
+*"Just as Descartes gave us coordinates for physical space, embeddings give us coordinates for mental space."*
+
+> **The Numbers Discovery**: Chinese numerical concepts (零, 一, 二, 三...) form perfect linear patterns in semantic space, revealing the mathematical structure underlying human language cognition.

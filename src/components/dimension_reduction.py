@@ -20,6 +20,7 @@ class DimensionReducer:
             "PHATE": self._get_phate
         }
 
+    @st.cache_data(show_spinner=False)
     @handle_errors
     def reduce_dimensions(self, embeddings: np.ndarray, method: str, dimensions: int = 2) -> np.ndarray:
         """Reduce dimensions of embeddings using specified method"""

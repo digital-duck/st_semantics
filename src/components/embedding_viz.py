@@ -84,6 +84,7 @@ class EmbeddingVisualizer:
         text = text.replace("\n", " ").replace(",", " ").replace(";", " ").replace("，", " ").replace("；", " ")
         return [w.strip('"') for w in text.split() if w.strip('"')]
 
+    @st.cache_data(show_spinner=False, ttl=300)  # Cache for 5 minutes
     def get_available_inputs(self) -> List[str]:
         """Get list of available input names from data/input directory"""
         if not self.input_dir.exists():

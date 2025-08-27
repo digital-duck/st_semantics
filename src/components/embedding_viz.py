@@ -21,73 +21,85 @@ class EmbeddingVisualizer:
     def render_sidebar(self) -> Tuple[str, str, str, bool, Optional[int]]:
         """Render sidebar controls and return settings"""
         with st.sidebar:
-            st.header("Visualization Settings")
+            with st.expander("Visualization Settings", expanded=False):
 
-            # Model selection
-            model_name = st.radio(
-                "Choose Embedding Model (Ollama is slower)",
-                options=self.model_names,
-                index=self.model_names.index(DEFAULT_MODEL),
-                help="Select a multilingual embedding model"
-            )
-            st.caption(f"**{model_name}**: {MODEL_INFO[model_name]['help']}")
+                # Model selection
+                model_name = st.radio(
+                    "Choose Embedding Model (Ollama is slower)",
+                    options=self.model_names,
+                    index=self.model_names.index(DEFAULT_MODEL),
+                    help="Select a multilingual embedding model",
+                    key="cfg_embed_model_name"
+                )
+                st.caption(f"**{model_name}**: {MODEL_INFO[model_name]['help']}")
 
-            # Method selection
-            method_name = st.radio(
-                "Choose Dimensionality Reduction Method",
-                options=self.method_names,
-                index=self.method_names.index(DEFAULT_METHOD),
-                help="Select a dimensionality reduction method"
-            )
-            st.caption(f"**{method_name}**: {METHOD_INFO[method_name]['help']}")
+                # Method selection
+                method_name = st.radio(
+                    "Choose Dimensionality Reduction Method",
+                    options=self.method_names,
+                    index=self.method_names.index(DEFAULT_METHOD),
+                    help="Select a dimensionality reduction method",
+                    key="cfg_dim_reduc_method_name"
+                )
+                st.caption(f"**{method_name}**: {METHOD_INFO[method_name]['help']}")
 
-            # Dimensions
-            dimensions = st.radio(
-                "Choose Dimensions",
-                options=["2D", "3D"],
-                index=0
-            )
+                # Dimensions
+                dimensions = st.radio(
+                    "Choose Dimensions",
+                    options=["2D", "3D"],
+                    index=0,
+                    help="Select 2D or 3D visualization",
+                    key="cfg_vis_dimensions"
+                )
 
-            # Clustering
-            do_clustering = st.checkbox("Enable Clustering?", value=False)
-            n_clusters = None
-            if do_clustering:
-                n_clusters = st.slider("Number of Clusters", min_value=3, max_value=10, value=5)
+                # Clustering
+                do_clustering = st.checkbox(
+                    "Enable Clustering?", 
+                    value=False,
+                    help="Toggle clustering of points in the visualization",
+                    key="cfg_enable_clustering"
+                )
+                n_clusters = None
+                if do_clustering:
+                    n_clusters = st.slider("Number of Clusters", min_value=3, max_value=10, value=5)
 
-            return model_name, method_name, dimensions, do_clustering, n_clusters
+                return model_name, method_name, dimensions, do_clustering, n_clusters
 
     @handle_errors
     def process_text(self, text: str) -> List[str]:
         """Process input text into list of words"""
+        text = text.replace("\n", " ").replace(",", " ").replace(";", " ").replace("，", " ").replace("；", " ")
         return [w.strip('"') for w in text.split() if w.strip('"')]
 
     def render_input_areas(self) -> Tuple[List[str], List[str], List[str]]:
         """Render text input areas and return processed words"""
-        col1, col2, col_check12 = st.columns([5, 5, 1])
-        
-        with col1:
-            chinese_text = st.text_area(
-                "Chinese Words/Phrases:", 
-                value=sample_chn_input_data,
-                height=150)
+        with st.sidebar:
+            with st.expander("Enter Words/Phrases", expanded=True):
+                c1, c2 = st.columns(2)
+                with c1:
+                    chinese_text = st.text_area(
+                        "Chinese:", 
+                        value=sample_chn_input_data,
+                        height=200)
+                    chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
+                    chinese_words = self.process_text(chinese_text) if chinese_selected else []
 
-        with col2:
-            english_text = st.text_area(
-                "English Words/Phrases:",
-                value=sample_enu_input_data,
-                height=150)
-        with col_check12:
-            st.write("Toggle Lang:")
-            chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
-            english_selected = st.checkbox("English", value=True, key="english")
+                with c2:
+                    english_text = st.text_area(
+                        "English:",
+                        value=sample_enu_input_data,
+                        height=200)
+                    english_selected = st.checkbox("English", value=True, key="english")
+                    english_words = self.process_text(english_text) if english_selected else []
+                
+            _, col_btn, _ = st.columns([2, 4, 1])
+            with col_btn:
+                btn_visualize = st.button("Visualize", type="primary")
 
-        chinese_words = self.process_text(chinese_text) if chinese_selected else []
-        english_words = self.process_text(english_text) if english_selected else []
-        
-        return chinese_words, english_words, (
-            [COLOR_MAP["chinese"]] * len(chinese_words) +
-            [COLOR_MAP["english"]] * len(english_words)
-        )
+            return btn_visualize, chinese_words, english_words, (
+                [COLOR_MAP["chinese"]] * len(chinese_words) +
+                [COLOR_MAP["english"]] * len(english_words)
+            )
     
     @st.cache_data
     def get_embeddings(_self, words: List[str], model_name: str, lang: str) -> np.ndarray:

@@ -10,7 +10,7 @@ load_dotenv()
 
 # App Constants
 ST_APP_NAME = "Multilingual Embedding Explorer"
-ST_HEADER_1 = "View word embeddings in 2-3D spaces"
+
 ST_ICON = "🚩"
 
 # Default Settings
@@ -22,7 +22,7 @@ DEFAULT_MODEL = "Sentence-BERT Multilingual"
 DEFAULT_METHOD = "PHATE"
 DEFAULT_DIMENSIONS = "2D"
 DEFAULT_WIDTH = 800
-DEFAULT_HEIGHT = 800
+DEFAULT_HEIGHT = 1200
 
 
 # Plot Settings

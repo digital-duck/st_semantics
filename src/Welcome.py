@@ -11,15 +11,16 @@ st.set_page_config(
 # Title and introduction
 st.title(f"{ST_ICON} {ST_APP_NAME}")
 
-st.markdown("""
-## Welcome to the Multilingual Language Learning Suite
+# ## Welcome to the Multilingual Language Learning Suite
+# - 🌐 **Translation**: Translate text with audio support
+# - 🤖 **Language Assistant**: Interactive learning with AI
+# - 📝 **Notes**: Track your learning progress
+
+welcome_text = """
 
 This application helps you explore and understand languages through:
 
 - 🔤 **Semantic Analysis**: Visualize word relationships across languages
-- 🌐 **Translation**: Translate text with audio support
-- 🤖 **Language Assistant**: Interactive learning with AI
-- 📝 **Notes**: Track your learning progress
 
 ### Getting Started
 
@@ -29,7 +30,9 @@ Select a feature from the sidebar to begin exploring!
 - Added Snowflake Arctic models for improved multilingual embeddings
 - Enhanced visualization options with clustering
 - Improved performance with session caching
-""")
+"""
+
+st.markdown(welcome_text)
 
 # Optional: Add quick access buttons or recent activity
 col1, col2 = st.columns(2)

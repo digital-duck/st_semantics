@@ -4,6 +4,7 @@ from components.embedding_viz import EmbeddingVisualizer
 from components.dimension_reduction import DimensionReducer
 
 from config import (
+    ST_HEADER_1,
     check_login
 )
 
@@ -18,19 +19,19 @@ def main():
     # Check login status
     check_login()
     
-    st.subheader(f"View word/phrase embeddings in {st.session_state.get('cfg_vis_dimensions', '2D')} spaces")
+    st.header(ST_HEADER_1)
+    
     # Initialize components
     visualizer = EmbeddingVisualizer()
     reducer = DimensionReducer()
-
-    # Get input words
-    btn_visualize, chinese_words, english_words, colors = visualizer.render_input_areas()
-
+    
     # Get settings from sidebar
     model_name, method_name, dimensions, do_clustering, n_clusters = visualizer.render_sidebar()
     
+    # Get input words
+    chinese_words, english_words, colors = visualizer.render_input_areas()
     
-    if btn_visualize:
+    if st.button("Visualize"):
         if not (chinese_words or english_words):
             st.warning("Please enter at least one word or phrase.")
             return

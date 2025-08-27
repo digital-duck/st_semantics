@@ -93,6 +93,8 @@ cd multilingual-embedding-explorer
 
 3. Install dependencies:
 ```bash
+conda create -n zinets python=3.11
+conda activate zinets
 pip install -r requirements.txt
 ```
 

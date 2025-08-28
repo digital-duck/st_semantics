@@ -40,8 +40,14 @@ PLOT_WIDTH, PLOT_HEIGHT = PLOT_CONFIG["width"], PLOT_CONFIG["height"]
 
 # Sample Data
 SAMPLE_DATA = {
-    "chinese": """你好\n天气""",
-    "english": """Hello\nWeather"""
+    "chinese": """你好
+天气
+晴朗
+""",
+    "english": """Hello
+Weather
+Sunny
+"""
 }
 
 # File Paths
@@ -103,16 +109,31 @@ OLLAMA_MODELS = {
 }
 
 # Model information (name, Hugging Face path, and help text)
-# Temporarily disabled due to torch compatibility issues
+# Updated with 2025 MTEB leaderboard top performers for Chinese character analysis
 MODEL_INFO = {
+    # === TOP 2025 MTEB PERFORMERS (NEW ADDITIONS) ===
+    "GTE-Multilingual-Base": {
+        "path": "Alibaba-NLP/gte-multilingual-base",
+        "help": "Leading multilingual embedding model on MTEB 2025. 305M params, 70+ languages, 8192 tokens, 10x faster inference. Optimal for cross-lingual Chinese character analysis."
+    },
+    "BGE-Multilingual-Gemma2": {
+        "path": "BAAI/bge-multilingual-gemma2",
+        "help": "SOTA on C-MTEB Chinese benchmark. Based on Gemma-2-9B, specialized for Chinese-Japanese-Korean-English. Excellent cross-lingual capabilities."
+    },
+    "Jina-Embeddings-v2-ZH": {
+        "path": "jinaai/jina-embeddings-v2-base-zh",
+        "help": "Chinese-English bilingual specialist. 570M params, 8192 tokens, JinaBERT architecture. No Chinese-English bias, perfect for mixed input."
+    },
+    "BGE-Base-ZH-v1.5": {
+        "path": "BAAI/bge-base-zh-v1.5",
+        "help": "Chinese-optimized BGE model with high C-MTEB performance. Specialized for character-level Chinese semantics and traditional character analysis."
+    },
+    
+    # === EXISTING PROVEN MODELS (KEPT FROM ORIGINAL) ===
     "XLM-R": {
         "path": "xlm-roberta-base",
         "help": "A robust multilingual model trained on 100+ languages. Great for cross-lingual tasks like text classification and NER."
     },
-    # "LASER": {
-    #     "path": None,  # LASER uses its own library - Disabled due to torch compatibility
-    #     "help": "Language-agnostic sentence embeddings for 100+ languages. Efficient for multilingual tasks like sentence similarity."
-    # },
     "mBERT": {
         "path": "bert-base-multilingual-cased",
         "help": "Multilingual BERT trained on 104 languages. Widely used for cross-lingual transfer learning."
@@ -133,22 +154,24 @@ MODEL_INFO = {
         "path": "microsoft/infoxlm-base",
         "help": "An extension of XLM-R with improved cross-lingual transferability. Great for low-resource languages."
     },
-    # "mT5": {
-    #     "path": "google/mt5-small",  # Disabled due to torch compatibility
-    #     "help": "Multilingual T5 model trained on 101 languages. Versatile for text generation and embedding tasks."
-    # },
     "Sentence-BERT Multilingual": {
-        "path": "sentence-transformers/distiluse-base-multilingual-cased-v1",
-        "help": "Multilingual Sentence-BERT optimized for semantic similarity tasks like clustering and retrieval."
+        "path": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "help": "Proven baseline from cross-lingual research. MPNet architecture, 50+ languages. Excellent for semantic similarity tasks."
     },
-    ### ERROR: Failed building wheel for flash-attn
+    
+    # === ADDITIONAL CHINESE-FOCUSED MODELS ===
+    "Universal-Sentence-Encoder-Multilingual": {
+        "path": "sentence-transformers/distiluse-base-multilingual-cased-v2",
+        "help": "Google's multilingual sentence encoder. Strong performance across languages with efficient inference."
+    },
+    
+    # === EXPERIMENTAL/RESEARCH MODELS ===
     # "ModernBERT": {
     #     "path": "answerdotai/ModernBERT-base",
     #     "help": "Smarter, Better, Faster, Longer: A Modern Bidirectional Encoder for Fast, Memory Efficient, and Long Context Finetuning and Inference."
     # },
-
     # "Erlangshen": {
-    #     "path": "IDEA-CCNL/Erlangshen-Roberta-110M",
+    #     "path": "IDEA-CCNL/Erlangshen-Roberta-110M", 
     #     "help": "A Chinese-focused multilingual model optimized for Chinese-English tasks like translation and sentiment analysis."
     # }
 }

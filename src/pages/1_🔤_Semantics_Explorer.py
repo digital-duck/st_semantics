@@ -97,7 +97,7 @@ def main():
     # Check login status
     check_login()
     
-    st.subheader(f"View word/phrase embeddings in {st.session_state.get('cfg_vis_dimensions', '2D')} spaces")
+    st.subheader(f"🔤 Explore Word/Phrase Embeddings in {st.session_state.get('cfg_vis_dimensions', '2D')} Spaces")
     # Initialize components
     visualizer = EmbeddingVisualizer()
     reducer = DimensionReducer()

@@ -54,7 +54,7 @@ class EmbeddingVisualizer:
                     help="Select a multilingual embedding model",
                     key="cfg_embed_model_name"
                 )
-                st.caption(f"**{model_name}**: {MODEL_INFO[model_name]['help']}")
+                st.info(f"**{model_name}**: {MODEL_INFO[model_name]['help']}")
 
                 # Method selection
                 method_name = st.radio(
@@ -64,7 +64,7 @@ class EmbeddingVisualizer:
                     help="Select a dimensionality reduction method",
                     key="cfg_dim_reduc_method_name"
                 )
-                st.caption(f"**{method_name}**: {METHOD_INFO[method_name]['help']}")
+                st.info(f"**{method_name}**: {METHOD_INFO[method_name]['help']}")
 
                 # Dimensions
                 dimensions = st.radio(
@@ -92,21 +92,31 @@ class EmbeddingVisualizer:
     def process_text(self, text: str, dedup: bool = True) -> List[str]:
         """Process input text into list of words
         
+        Args:
+            text: Input text string
+            dedup: Whether to remove duplicates
+            
+        Returns:
+            List of processed words, ignoring comment lines starting with #
         """
-        text = text.replace("\n", " ").replace(",", " ").replace(";", " ").replace("，", " ").replace("；", " ")
-        results = [w.strip('"') for w in text.split() if w.strip('"')]
+        # Split into lines and filter out comment lines starting with #
+        lines = text.split('\n')
+        filtered_lines = [line for line in lines if not line.strip().startswith('#')]
+        
+        # Join back and process as before
+        filtered_text = '\n'.join(filtered_lines)
+        filtered_text = filtered_text.replace("\n", " ").replace(",", " ").replace(";", " ").replace("，", " ").replace("；", " ")
+        results = [w.strip('"') for w in filtered_text.split() if w.strip('"')]
         return list(set(results)) if dedup else results
 
-    # @st.cache_data(show_spinner=False, ttl=300)  # Cache for 5 minutes
     def get_available_inputs(self) -> List[str]:
         """Get list of available input names from data/input directory"""
         if not self.input_dir.exists():
             return ["sample_1"]
         
         input_names = set()
-        for file_path in self.input_dir.glob("*-*.txt"):
-            # Extract input name from filename (before first dash)
-            name_part = file_path.stem.split("-")[0]
+        for file_path in self.input_dir.glob("*.txt"):
+            name_part = file_path.stem.replace("-chn", "").replace("-enu", "")
             input_names.add(name_part)
         
         return sorted(list(input_names)) if input_names else ["sample_1"]
@@ -163,7 +173,7 @@ class EmbeddingVisualizer:
         with st.sidebar:
             with st.expander("Enter Text Data (Word/Phrase):", expanded=True):
 
-                col_input_select, col_load_txt = st.columns([2, 1])
+                col_input_select, col_load_txt = st.columns([3, 1])
                 with col_input_select:
                     available_inputs = self.get_available_inputs()
                     input_name_selected = st.selectbox(
@@ -173,7 +183,9 @@ class EmbeddingVisualizer:
                         key="cfg_input_text_selected"
                     )
                 with col_load_txt:
-                    btn_load_txt = st.button("Load Text", help="Load input texts", disabled=not input_name_selected)
+                    btn_load_txt = st.button("Load Text", type="primary", 
+                                             help="Load input texts", 
+                                             disabled=not input_name_selected)
 
                 # Initialize text areas with default or loaded content
                 default_chinese = sample_chn_input_data
@@ -217,7 +229,7 @@ class EmbeddingVisualizer:
                     english_words = self.process_text(english_text) if english_selected else []
 
                 # User can enter a name for the input and save the texts 
-                col_input_enter, col_save_txt = st.columns([2, 1])
+                col_input_enter, col_save_txt = st.columns([3, 1])
                 with col_input_enter:
                     input_name_raw = st.text_input(
                         "Name Input",
@@ -231,7 +243,9 @@ class EmbeddingVisualizer:
                         st.caption(f"📝 Preview: `{sanitized_preview}`")
                         
                 with col_save_txt:
-                    btn_save_txt = st.button("Save Text", help="Save input texts")
+                    btn_save_txt = st.button("Save Text", type="primary", 
+                                             help="Save input texts", 
+                                             disabled=(input_name_raw=="untitled"))
                     
                 # Handle save text
                 if btn_save_txt:

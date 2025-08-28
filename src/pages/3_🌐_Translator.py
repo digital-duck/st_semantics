@@ -67,8 +67,7 @@ def main():
     # Check login status
     check_login()
     
-    st.title("🌐 DeepL Translator")
-    st.subheader("Professional translation for semantic research")
+    st.subheader("🌐 Professional Translation by DeepL")
     
     # Check for DeepL API key
     DEEPL_AUTH_KEY = os.getenv('DEEPL_AUTH_KEY')
@@ -92,7 +91,7 @@ def main():
     col_source, col_target = st.columns(2)
     
     with col_source:
-        st.subheader("Source Language")
+        # st.subheader("Source Language")
         
         # Source language selection
         source_langs = ['auto'] + list(source_languages.keys())
@@ -113,7 +112,7 @@ def main():
         source_lang = source_langs[selected_source_idx]
         
     with col_target:
-        st.subheader("Target Language")
+        # st.subheader("Target Language")
         
         # Target language selection  
         target_langs = list(target_languages.keys())
@@ -141,9 +140,9 @@ def main():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("📝 Source Text")
+        # st.subheader("📝 Source Text")
         source_text = st.text_area(
-            "Enter text to translate:",
+            "📝 Enter text to translate:",
             height=300,
             placeholder="Type or paste your text here...",
             key="source_text_input"
@@ -163,10 +162,10 @@ def main():
                 st.rerun()
     
     with col2:
-        st.subheader("🔄 Translation")
+        # st.subheader("🔄 Translation")
         
         # Translation button
-        if st.button("🚀 Translate", type="primary", use_container_width=True):
+        if st.button("🔄 Translate", type="primary", use_container_width=False):
             if not source_text.strip():
                 st.warning("Please enter text to translate.")
             else:
@@ -236,26 +235,27 @@ def main():
                 placeholder="Click 'Translate' to see results..."
             )
     
-    st.divider()
+    # st.divider()
     
     # Usage tips
-    with st.expander("💡 Usage Tips", expanded=False):
-        st.markdown("""
-        ### 🎯 For Semantic Research:
-        - **Translate concept lists** to explore cross-lingual patterns
-        - **Use consistent terminology** for better semantic alignment
-        - **Compare translations** to understand cultural differences
-        
-        ### 🔧 DeepL Features:
-        - **High-quality translations** for research purposes
-        - **Automatic language detection** for unknown text
-        - **Supports 30+ languages** including Chinese, Japanese, Korean
-        
-        ### 📚 Research Applications:
-        - Translate semantic categories (colors, emotions, animals)
-        - Create multilingual datasets for embedding analysis  
-        - Verify cross-lingual concept alignment
-        """)
+    with st.sidebar:
+        with st.expander("💡 Usage Tips", expanded=False):
+            st.markdown("""
+            ### 🎯 For Semantic Research:
+            - **Translate concept lists** to explore cross-lingual patterns
+            - **Use consistent terminology** for better semantic alignment
+            - **Compare translations** to understand cultural differences
+            
+            ### 🔧 DeepL Features:
+            - **High-quality translations** for research purposes
+            - **Automatic language detection** for unknown text
+            - **Supports 30+ languages** including Chinese, Japanese, Korean
+            
+            ### 📚 Research Applications:
+            - Translate semantic categories (colors, emotions, animals)
+            - Create multilingual datasets for embedding analysis  
+            - Verify cross-lingual concept alignment
+            """)
     
     # Statistics
     if 'translated_text' in st.session_state and 'detected_language' in st.session_state:

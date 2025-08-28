@@ -38,7 +38,7 @@ def main():
     
     # Sidebar for selection
     with st.sidebar:
-        st.header("Select Images")
+        st.subheader("Select Images")
         
         # Initialize session state first
         if 'selected_images' not in st.session_state:
@@ -75,11 +75,10 @@ def main():
         show_delete = st.checkbox("Show delete buttons", value=False)
     
     # Main content area - Image selection
-    st.markdown("### 📋 Choose Images to Display")
-    
+   
     # Multi-select for images (moved from sidebar for better visibility)
     selected_filenames = st.multiselect(
-        "Select multiple images for comparison:",
+        "Select image(s):",
         options=[f.name for f in image_files],
         default=st.session_state.selected_images,
         help="Multiple selection enabled - filenames are fully visible here",

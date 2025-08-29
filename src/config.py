@@ -18,8 +18,9 @@ DEFAULT_N_CLUSTERS = 5
 DEFAULT_MIN_CLUSTERS = 2
 DEFAULT_MAX_CLUSTERS = 10
 DEFAULT_MAX_WORDS = 15 
-DEFAULT_MODEL = "Sentence-BERT Multilingual"
-DEFAULT_METHOD = "PHATE"
+
+DEFAULT_MODEL = f"Sentence-BERT Multilingual"
+DEFAULT_METHOD = f"PHATE"
 DEFAULT_DIMENSIONS = "2D"
 DEFAULT_WIDTH = 800
 DEFAULT_HEIGHT = 1200
@@ -154,7 +155,7 @@ MODEL_INFO = {
         "path": "microsoft/infoxlm-base",
         "help": "An extension of XLM-R with improved cross-lingual transferability. Great for low-resource languages."
     },
-    "Sentence-BERT Multilingual": {
+    f"Sentence-BERT Multilingual": {
         "path": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
         "help": "Proven baseline from cross-lingual research. MPNet architecture, 50+ languages. Excellent for semantic similarity tasks."
     },
@@ -207,7 +208,7 @@ METHOD_INFO = {
     "Spectral Embedding": {
         "help": "Spectral Embedding. Based on graph Laplacian, effective for capturing underlying data structure."
     },
-    "PHATE": {
+    f"PHATE": {
         "help": "Potential of Heat-diffusion for Affinity-based Transition Embedding. Great for visualizing complex, high-dimensional data."
     },
     # "Autoencoders": {

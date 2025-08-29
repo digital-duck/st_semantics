@@ -8,7 +8,7 @@ from pathlib import Path
 import unicodedata
 
 from config import (
-    MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD,
+    MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD, 
     COLOR_MAP, 
     sample_chn_input_data, sample_enu_input_data
 )
@@ -54,7 +54,11 @@ class EmbeddingVisualizer:
                     help="Select a multilingual embedding model",
                     key="cfg_embed_model_name"
                 )
-                st.info(f"**{model_name}**: {MODEL_INFO[model_name]['help']}")
+                if model_name == DEFAULT_MODEL:
+                    info_msg = f"**{model_name}** (default): {MODEL_INFO[model_name]['help']}"
+                else:
+                    info_msg = f"**{model_name}**: {MODEL_INFO[model_name]['help']}"
+                st.info(info_msg)
 
                 # Method selection
                 method_name = st.radio(
@@ -64,7 +68,11 @@ class EmbeddingVisualizer:
                     help="Select a dimensionality reduction method",
                     key="cfg_dim_reduc_method_name"
                 )
-                st.info(f"**{method_name}**: {METHOD_INFO[method_name]['help']}")
+                if method_name == DEFAULT_METHOD:
+                    info_msg = f"**{method_name}** (default): {METHOD_INFO[method_name]['help']}"
+                else:
+                    info_msg = f"**{method_name}**: {METHOD_INFO[method_name]['help']}"
+                st.info(info_msg)
 
                 # Dimensions
                 dimensions = st.radio(

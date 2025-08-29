@@ -17,6 +17,7 @@ spring
 summer
 autumn
 winter
+
 life
 mouse
 ox
@@ -28,6 +29,11 @@ horse
 sheep
 monkey
 rooster
+dog 
+pig
+insect
+bird
+
 dog
 pig
 one
@@ -45,12 +51,14 @@ thousand
 ten-thousand
 hundred-million
 zero
+
 second
 minute
 hour
 inch
-zhang-measure
-li-distance
+meter
+mile
+
 heart
 heart-radical
 head
@@ -91,9 +99,7 @@ female
 child
 self
 oneself
-insect
-bird
-horse
+
 
 sun
 sun moon bright

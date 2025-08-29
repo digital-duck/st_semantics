@@ -47,9 +47,9 @@ grandmother
 uncle
 aunt
 brother
-younger_brother
+younger-brother
 sister
-younger_sister
+younger-sister
 husband
 wife
 

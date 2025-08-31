@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from components.embedding_viz import EmbeddingVisualizer
 from components.dimension_reduction import DimensionReducer
+from components.geometric_analysis import GeometricAnalyzer
 from config import (
     check_login,
     PLOT_WIDTH,
@@ -208,6 +209,129 @@ class EnhancedDualViewManager:
         
         return overview_fig, detail_fig, points_in_viewport, viewport_mask
 
+def perform_dual_view_geometric_analysis(analyzer, params, embeddings, labels, model_name=None, method_name=None):
+    """Perform comprehensive geometric analysis for dual view"""
+    analysis_results = {}
+    
+    # Clustering Analysis
+    if params.get('enable_clustering', False):
+        clustering_results = analyzer.analyze_clustering(
+            embeddings, 
+            params['n_clusters'],
+            params['density_radius'],
+            labels
+        )
+        analysis_results['clustering'] = clustering_results
+    
+    # Branching Analysis
+    if params.get('enable_branching', False):
+        branching_results = analyzer.analyze_branching(
+            embeddings,
+            labels,
+            params['connectivity_threshold']
+        )
+        analysis_results['branching'] = branching_results
+    
+    # Void Analysis
+    if params.get('enable_void', False):
+        void_results = analyzer.analyze_voids(
+            embeddings,
+            params['void_confidence']
+        )
+        analysis_results['void'] = void_results
+    
+    # Store results in session state
+    st.session_state.dual_view_geometric_analysis = analysis_results
+    
+    # Save metrics to files automatically
+    try:
+        # Get input name from session state
+        input_name = st.session_state.get('cfg_input_text_entered', 'untitled')
+        if not input_name or input_name == 'untitled':
+            input_name = st.session_state.get('cfg_input_text_selected', 'dual_view')
+        
+        # Determine languages from enhanced data
+        if 'enhanced_data' in st.session_state:
+            enhanced_data = st.session_state.enhanced_data
+            colors = enhanced_data.get('colors', [])
+            languages = []
+            if 'chinese' in colors:
+                languages.append('chinese')
+            if 'english' in colors:
+                languages.append('english')
+        else:
+            languages = ['unknown']
+        
+        # Use provided model and method names, or fallback to defaults
+        if model_name is None:
+            model_name = 'dual-view-model'
+        if method_name is None:
+            method_name = 'dual-view-method'
+        
+        # Save metrics
+        save_json = params.get('save_json_files', False)
+        saved_files = analyzer.save_metrics_to_files(
+            analysis_results, input_name, model_name, method_name, languages, save_json
+        )
+        
+        # Display save status
+        analyzer.display_metrics_save_status(saved_files)
+        
+    except Exception as e:
+        st.warning(f"Could not save dual view metrics automatically: {str(e)}")
+
+def display_dual_view_geometric_analysis():
+    """Display geometric analysis results for dual view"""
+    if 'dual_view_geometric_analysis' not in st.session_state:
+        return
+    
+    results = st.session_state.dual_view_geometric_analysis
+    
+    if not results:
+        return
+    
+    with st.expander("🔬 Geometric Analysis Results - Dual View", expanded=False):
+        
+        # Create expandable sections for each analysis type
+        if 'clustering' in results:
+            with st.expander("🔍 Clustering Analysis", expanded=True):
+                from components.geometric_analysis import GeometricAnalyzer
+                analyzer = GeometricAnalyzer()
+                analyzer.display_clustering_metrics(results['clustering'])
+        
+        if 'branching' in results:
+            with st.expander("🌿 Branching Analysis", expanded=True):
+                from components.geometric_analysis import GeometricAnalyzer
+                analyzer = GeometricAnalyzer()
+                analyzer.display_branching_metrics(results['branching'])
+        
+        if 'void' in results:
+            with st.expander("🕳️ Void Analysis", expanded=True):
+                from components.geometric_analysis import GeometricAnalyzer
+                analyzer = GeometricAnalyzer()
+                analyzer.display_void_metrics(results['void'])
+        
+        # Summary visualization if multiple analyses exist
+        if len(results) > 1 and 'enhanced_data' in st.session_state:
+            with st.expander("📊 Comprehensive Analysis Visualization", expanded=False):
+                try:
+                    from components.geometric_analysis import GeometricAnalyzer
+                    analyzer = GeometricAnalyzer()
+                    
+                    enhanced_data = st.session_state.enhanced_data
+                    embeddings = enhanced_data['embeddings']
+                    labels = enhanced_data['labels']
+                    
+                    comprehensive_fig = analyzer.create_comprehensive_analysis_plot(
+                        embeddings, labels,
+                        results.get('clustering', {}),
+                        results.get('branching', {}),
+                        results.get('void', {})
+                    )
+                    st.plotly_chart(comprehensive_fig, use_container_width=True)
+                except Exception as e:
+                    st.error(f"Error creating comprehensive analysis plot: {str(e)}")
+
 def main():
     check_login()
     
@@ -217,6 +341,7 @@ def main():
     visualizer = EmbeddingVisualizer()
     reducer = DimensionReducer()
     dual_manager = EnhancedDualViewManager()
+    geometric_analyzer = GeometricAnalyzer()
     
     # Sidebar controls
     with st.sidebar:
@@ -359,6 +484,19 @@ def main():
                     st.rerun()
                 else:
                     st.warning("No text to save")
+
+        # Geometric Analysis Controls
+        with st.expander("🔬 Geometric Analysis", expanded=False):
+            enable_geometric_analysis = st.checkbox(
+                "Enable Geometric Analysis", 
+                value=True,
+                help="Perform clustering, branching, and void analysis on dual view data"
+            )
+            
+            if enable_geometric_analysis:
+                analysis_params = geometric_analyzer.render_controls()
+            else:
+                analysis_params = None
 
         # Generate button
         btn_vis_col, btn_pan_col, btn_save_img_col = st.columns([2, 2, 2])
@@ -551,6 +689,9 @@ def main():
                     if english_in_zoom:
                         st.write("**English:**")
                         st.write(", ".join(english_in_zoom))
+        
+        # Display geometric analysis results if available
+        display_dual_view_geometric_analysis()
     
     # Handle generation request
     if st.session_state.get('generate_requested', False):
@@ -608,6 +749,15 @@ def main():
                             'colors': all_colors,
                             'title': f"{model_name} + {method_name}"
                         }
+                        
+                        # Perform geometric analysis if enabled
+                        if enable_geometric_analysis and analysis_params:
+                            with st.spinner("🔬 Performing geometric analysis..."):
+                                perform_dual_view_geometric_analysis(
+                                    geometric_analyzer, analysis_params, 
+                                    reduced_embeddings, all_labels,
+                                    model_name, method_name
+                                )
                         
                         st.rerun()
                     else:

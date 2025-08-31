@@ -1,0 +1,6 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_digits,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_digits,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,step_distance_std,timestamp,transitivity
+1.0,,,,,,,ASCII-words,119,,,,PHATE,connectivity_graph,Sentence-BERT Multilingual,1,,7021,,,,,,20250831_133523,
+,1;24;55;60;79;93;102;107;108;115,0.8677,,,,,ASCII-words,,,,,PHATE,linearity_analysis,Sentence-BERT Multilingual,,,,,,0.6544,,,20250831_133523,
+,,,,,1.0,,ASCII-words,,118,118.0,,PHATE,topology_analysis,Sentence-BERT Multilingual,,,,0,,,,,20250831_133523,1.0
+,,,0;1;2;3;4;5;6;7;8;9,,,,ASCII-words,,,,0.0211,PHATE,digit_ordering,Sentence-BERT Multilingual,,10,,,,,0.3382,0.014,20250831_133523,
+,,,,a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z,,,ASCII-words,,,,0.0707,PHATE,alphabetical_ordering,Sentence-BERT Multilingual,,,,,26,,0.4705,,20250831_133523,

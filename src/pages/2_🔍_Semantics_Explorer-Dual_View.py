@@ -20,7 +20,7 @@ from pathlib import Path
 
 # Page config
 st.set_page_config(
-    page_title="Enhanced Dual Viewer v2",
+    page_title="Dual Viewer",
     page_icon="🔍",
     layout="wide"
 )
@@ -52,7 +52,7 @@ class EnhancedDualViewManager:
             'y_max': center_y + height/2
         }
 
-    def create_enhanced_dual_view(self, embeddings, labels, colors, title, zoom_params):
+    def create_enhanced_dual_view(self, embeddings, labels, colors, title, zoom_params, model_name=None, method_name=None):
         """Create separate overview and detail figures for the enhanced dual view"""
         
         # Convert center/size to bounds
@@ -189,8 +189,13 @@ class EnhancedDualViewManager:
             scaleanchor="x", scaleratio=1
         )
         
+        # Create detail view title with model and method info
+        detail_title = "🔍 Detail View"
+        if model_name and method_name:
+            detail_title = f"🔍 Detail View - [Model] {model_name}, [Method] {method_name}"
+        
         detail_fig.update_layout(
-            title="🔍 Detail View",
+            title=detail_title,
             dragmode='pan',
             hovermode='closest',
             showlegend=False,
@@ -356,16 +361,55 @@ def main():
                     st.warning("No text to save")
 
         # Generate button
-        btn_vis_col, _, btn_pan_col= st.columns([2, 2, 2])
+        btn_vis_col, btn_pan_col, btn_save_img_col = st.columns([2, 2, 2])
         with btn_vis_col:
             btn_vis = st.button("Visualize", type="primary", help="Generate visualization", key="btn_visualize")
         with btn_pan_col:
             btn_pan = st.button("Panning", type="secondary", help="Apply pan movement from zoom controls", key="btn_panning")
+        with btn_save_img_col:
+            btn_save_detail_img = st.button("Save Image", type="secondary", help="Save Detail View to Image File", key="btn_save_detail_img")
 
         if btn_vis:
             if chinese_words or english_words:
                 st.session_state.generate_requested = True
                 st.rerun()
+
+        # Handle save detail image
+        if btn_save_detail_img:
+            if 'enhanced_data' in st.session_state:
+                # Get current input name from session state or use a default
+                current_input_name = st.session_state.get('cfg_input_text_entered', 'dual-view')
+                if not current_input_name or current_input_name == 'untitled':
+                    current_input_name = 'dual-view'
+                
+                # Recreate the detail figure for saving
+                data = st.session_state.enhanced_data
+                overview_fig, detail_fig, points_count, viewport_mask = dual_manager.create_enhanced_dual_view(
+                    data['embeddings'],
+                    data['labels'], 
+                    data['colors'],
+                    data['title'],
+                    st.session_state.zoom_params,
+                    model_name,
+                    method_name
+                )
+                
+                # Save the detail view image
+                filename = visualizer.save_detail_view_image(
+                    detail_fig,
+                    current_input_name,
+                    model_name,
+                    method_name,
+                    chinese_selected,
+                    english_selected
+                )
+                
+                if filename:
+                    st.success(f"Detail view saved as: {filename}")
+                else:
+                    st.error("Failed to save detail view image")
+            else:
+                st.warning("No visualization to save. Please generate a visualization first.")
 
 
         # Zoom controls
@@ -451,7 +495,9 @@ def main():
             data['labels'],
             data['colors'],
             data['title'],
-            st.session_state.zoom_params
+            st.session_state.zoom_params,
+            model_name,
+            method_name
         )
         
         # Detail view below (no container) with pan button

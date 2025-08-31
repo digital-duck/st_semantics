@@ -343,6 +343,9 @@ class EmbeddingVisualizer:
         # Normalize unicode characters
         text = unicodedata.normalize('NFKC', text)
 
+        # Convert to lowercase for consistency
+        text = text.lower()
+        
         # Remove or replace characters that are problematic in filenames
         # Keep alphanumeric, Chinese/CJK characters, hyphens, underscores, and spaces
         sanitized = re.sub(r'[^\w\s\u4e00-\u9fff\u3400-\u4dbf\u20000-\u2a6df\u2a700-\u2b73f\u2b740-\u2b81f\u2b820-\u2ceaf-]', '', text)
@@ -392,6 +395,49 @@ class EmbeddingVisualizer:
             return filename
         except Exception as e:
             st.error(f"Error saving image: {e}")
+            return ""
+
+    def save_detail_view_image(self, detail_figure, input_name: str, model_name: str, method_name: str, chinese_selected: bool, english_selected: bool):
+        """Save the detail view plot as PNG image with zoom ID"""
+        if detail_figure is None:
+            st.warning("No detail view to save. Please generate a visualization first.")
+            return ""
+            
+        # Ensure images directory exists
+        self.images_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create sanitized filename
+        safe_input = self.sanitize_filename(input_name)
+        safe_model = self.sanitize_filename(model_name)
+        safe_method = self.sanitize_filename(method_name)
+        
+        # Add language tags
+        lang_tags = []
+        if chinese_selected:
+            lang_tags.append("chn")
+        if english_selected:
+            lang_tags.append("enu")
+        
+        lang_suffix = "-".join(lang_tags) if lang_tags else "none"
+        
+        # Initialize zoom counter if not exists
+        if 'zoom_save_counter' not in st.session_state:
+            st.session_state.zoom_save_counter = 1
+        
+        zoom_id = st.session_state.zoom_save_counter
+        filename = f"{safe_input}-{safe_model}-{safe_method}-{lang_suffix}-zoom-{zoom_id}.png"
+        file_path = self.images_dir / filename
+        
+        try:
+            # Save the detail figure as PNG with higher resolution for paper figures
+            detail_figure.write_image(str(file_path), width=1600, height=1200, scale=2)
+            
+            # Increment counter for next save
+            st.session_state.zoom_save_counter += 1
+            
+            return filename
+        except Exception as e:
+            st.error(f"Error saving detail view image: {e}")
             return ""
 
     def create_plot(self, embeddings, labels, colors, model_name, method_name, 

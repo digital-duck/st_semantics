@@ -7,7 +7,7 @@ touch pages/__init__.py components/__init__.py services/__init__.py
 
 # Create main pages
 echo -e "${GREEN}Creating application pages...${NC}"
-touch "pages/1_🔤_semantics.py"
+touch "pages/1_🧭_semantics.py"
 touch "pages/2_🌐_translator.py"
 touch "pages/3_🤖_chatbot.py"
 touch "pages/4_📝_notes.py"

@@ -13,7 +13,7 @@ from utils.download_helpers import handle_download_button
 # Page config
 st.set_page_config(
     page_title="Semantics Explorer",
-    page_icon="🔤",
+    page_icon="🧭",
     layout="wide"
 )
 
@@ -98,6 +98,25 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
         n_clusters,
         dataset_name
     )
+    
+    # Auto-save the visualization (saves user from having to click download)
+    try:
+        # Get current input name for filename
+        current_input = st.session_state.get('cfg_input_text_entered', 'untitled')
+        if not current_input or current_input == 'untitled':
+            current_input = st.session_state.get('cfg_input_text_selected', 'sample_1')
+        
+        # Determine language selections from colors
+        chinese_selected = 'chinese' in colors if colors else False
+        english_selected = 'english' in colors if colors else False
+        
+        # Auto-save the plot
+        saved_filename = visualizer.save_plot_image(current_input, model_name, method_name, chinese_selected, english_selected)
+        if saved_filename:
+            st.success(f"📸 Visualization auto-saved as: {saved_filename}")
+        
+    except Exception as auto_save_error:
+        st.warning(f"Could not auto-save visualization: {str(auto_save_error)}")
     
     return True
 
@@ -295,7 +314,7 @@ def main():
     # Check login status
     check_login()
     
-    st.subheader(f"🔤 Explore Word/Phrase Embeddings in {st.session_state.get('cfg_vis_dimensions', '2D')} Spaces")
+    st.subheader(f"🧭 Explore Word/Phrase Embeddings in {st.session_state.get('cfg_vis_dimensions', '2D')} Spaces")
     # Initialize components
     visualizer = EmbeddingVisualizer()
     reducer = DimensionReducer()

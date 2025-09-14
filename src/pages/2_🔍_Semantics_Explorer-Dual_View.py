@@ -375,6 +375,45 @@ def display_dual_view_geometric_analysis(model_name=None, method_name=None):
                 )
                 st.plotly_chart(comprehensive_fig, use_container_width=True)
                 
+                # Auto-save the clustering chart (saves user from having to click download)
+                try:
+                    # Get current input name for filename
+                    current_input = st.session_state.get('cfg_input_text_entered', 'untitled')
+                    if not current_input or current_input == 'untitled':
+                        current_input = st.session_state.get('cfg_input_text_selected', 'sample_1')
+                    
+                    # Get publication settings for proper formatting
+                    pub_settings = st.session_state.get('dual_view_publication_settings', {})
+                    textfont_size = pub_settings.get('textfont_size', 16)
+                    point_size = pub_settings.get('point_size', 12)
+                    export_dpi = pub_settings.get('export_dpi', 300)
+                    export_format = pub_settings.get('export_format', 'PNG').lower()
+                    
+                    # Create auto-save filename with clustering suffix
+                    clean_method = (method_name or "unknown-method").lower().replace(" ", "-").replace(",", "").replace("_", "-")
+                    clean_model = (model_name or "unknown-model").lower().replace(" ", "-").replace(",", "").replace("_", "-")
+                    clean_dataset = dataset_name.lower().replace(" ", "-").replace(",", "").replace("_", "-")
+                    clean_input = current_input.lower().replace(" ", "-").replace(",", "").replace("_", "-")
+                    
+                    clustering_filename = f"{clean_method}-{clean_model}-{clean_dataset}-{clean_input}-dpi-{export_dpi}-text-{textfont_size}-point-{point_size}-clustering-auto.{export_format}"
+                    
+                    # Auto-save the clustering chart
+                    from pathlib import Path
+                    images_dir = Path("data/images")
+                    images_dir.mkdir(parents=True, exist_ok=True)
+                    
+                    # Save with high quality
+                    img_bytes = comprehensive_fig.to_image(format=export_format, width=800, height=700, scale=export_dpi/96)
+                    
+                    # Write to file
+                    clustering_path = images_dir / clustering_filename
+                    clustering_path.write_bytes(img_bytes)
+                    
+                    st.success(f"📸 Clustering chart auto-saved as: {clustering_filename}")
+                    
+                except Exception as auto_save_error:
+                    st.warning(f"Could not auto-save clustering chart: {str(auto_save_error)}")
+                
                 # Add download button for clustering chart
                 handle_download_button(comprehensive_fig, model_name, method_name, dataset_name, "clustering", "dual_view")
                     

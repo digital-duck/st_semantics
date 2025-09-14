@@ -9,9 +9,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # App Constants
-ST_APP_NAME = "Multilingual Embedding Explorer"
+ST_APP_NAME = "Semantics Explorer"
 
-ST_ICON = "🚩"
+ST_ICON = "🧭"
 
 # Default Settings
 DEFAULT_N_CLUSTERS = 5

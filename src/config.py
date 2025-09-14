@@ -32,7 +32,10 @@ PLOT_CONFIG = {
     "height": DEFAULT_HEIGHT,
     "color_map": {
         "chinese": "red",
-        "english": "blue"
+        "english": "blue",
+        "french": "green", 
+        "spanish": "orange",
+        "german": "purple"
     }
 }
 

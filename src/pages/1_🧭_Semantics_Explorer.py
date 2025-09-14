@@ -338,9 +338,18 @@ def main():
             else:
                 analysis_params = None
 
-    # Get input words
-    btn_actions, chinese_words, english_words, colors, chinese_selected, english_selected = visualizer.render_input_areas()
+    # Get input words (updated for multilingual support)
+    btn_actions, chinese_words, target_words_dict, colors, chinese_selected, target_selected_dict = visualizer.render_input_areas()
     btn_visualize, btn_rotate_90, btn_save_png = btn_actions
+    
+    # Combine all target language words for backward compatibility
+    all_target_words = []
+    for words in target_words_dict.values():
+        all_target_words.extend(words)
+    
+    # For legacy compatibility, use combined target words as "english"
+    english_words = all_target_words
+    english_selected = any(target_selected_dict.values())
 
     # Handle rotate button - reuse existing visualization data
     if btn_rotate_90:

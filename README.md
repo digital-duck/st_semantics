@@ -37,9 +37,11 @@ This tool serves multiple important purposes across different domains:
 - **Multiple Embedding Models**: Sentence-BERT Multilingual (fast), Ollama models (Snowflake-Arctic-Embed2, BGE-M3)
 - **Advanced Dimensionality Reduction**: PHATE, t-SNE, UMAP, Isomap, PCA, MDS, LLE, Kernel PCA, Spectral Embedding
 - **Interactive Visualizations**: 2D/3D plotting with clustering analysis and color-coded languages
+- **Multilingual Support**: Chinese (source) + selectable target languages (English, French, Spanish, German)
+- **ISO Language Codes**: Standardized 3-letter codes (chn, enu, fra, spa, deu) for consistent file naming
 - **Real-time Rotation**: 90° plot rotation for different perspectives
 - **Smart File Management**: Load/save text datasets with sanitized filenames
-- **Language Tags**: Automatic filename tagging (chn, enu, chn-enu)
+- **Dynamic Language Loading**: Automatic detection and loading of available language files
 - **Session Caching**: Improved performance with cached embeddings
 - **Publication Settings**: High-DPI export with customizable formatting
 - **Geometric Analysis**: Advanced clustering, branching, and void analysis
@@ -77,6 +79,7 @@ Explore the "Geometry of Meaning" with included datasets:
 - **😊 Emotions** - Positive/negative clustering patterns
 - **🐾 Animals** - Taxonomic family structures (pets, wild, insects)
 - **🍎 Food** - Category-based groupings (grains, fruits, meats)
+- **🈵 子-network** - Chinese morpheme network with multilingual translations (fra, spa, deu, enu)
 
 ## 🛠️ Installation
 
@@ -133,17 +136,20 @@ streamlit run Welcome.py
 
 ### Basic Workflow
 
-1. **Semantics Explorer**: Enter Chinese/English words → Choose model & method → Visualize
-2. **Review Images**: Compare multiple visualizations side-by-side
-3. **Translator**: Create multilingual datasets using professional translation
+1. **Semantics Explorer**: Select target languages → Enter Chinese + target language words → Choose model & method → Visualize
+2. **Multilingual Analysis**: Compare semantic relationships across up to 5 languages simultaneously
+3. **Review Images**: Compare multiple visualizations side-by-side
+4. **Translator**: Create multilingual datasets using professional translation
 
 ### Advanced Features
 
-- **Load Text**: Use pre-built semantic categories or load custom datasets
-- **Save Text**: Create named datasets with automatic sanitization
+- **Load Text**: Use pre-built semantic categories or load custom datasets with automatic language detection
+- **Save Text**: Create named datasets with automatic sanitization and ISO language codes
+- **Language Selection**: Dynamic multi-target language support with color-coded visualization
+- **File Naming**: Standardized format: `<dataset>-<lang_code>.txt` (e.g., `子-network-fra.txt`)
 - **Rotate**: Adjust plot orientation for better pattern visibility
 - **Save Image**: Export high-quality visualizations with descriptive filenames
-- **Cross-compare**: Analyze multiple semantic categories simultaneously
+- **Cross-compare**: Analyze multiple semantic categories and languages simultaneously
 
 ## 🔬 Model Performance Notes
 
@@ -200,6 +206,8 @@ st_semantics/
 ### 🚀 Major New Features
 - ✅ **Advanced Dual View Interface** - Simultaneous overview and detail perspectives
 - ✅ **Publication-Quality Export System** - High-DPI downloads with standardized naming
+- ✅ **Multilingual Support Enhancement** - 5-language comparison with dynamic selection
+- ✅ **ISO Language Codes** - Standardized 3-letter codes for file management
 - ✅ **Geometric Analysis Integration** - Clustering, branching, and void analysis
 - ✅ **Interactive Zoom & Pan Controls** - Precise navigation through semantic space
 - ✅ **Enhanced Visualization Statistics** - Real-time metrics and word lists

@@ -183,10 +183,75 @@ class EmbeddingVisualizer:
         else:
             st.warning("No text to save")
 
+    def save_multilingual_text(self, input_name_raw: str, chinese_text: str, chinese_selected: bool, 
+                              target_words_dict: dict, target_selected_dict: dict, lang_code_map: dict):
+        """Save multilingual text content to files"""
+        # Ensure input directory exists
+        self.input_dir.mkdir(parents=True, exist_ok=True)
+        
+        safe_name = self.sanitize_filename(input_name_raw)
+        success_count = 0
+        
+        # Save Chinese text if provided
+        if chinese_selected and chinese_text.strip():
+            chn_file = self.input_dir / f"{safe_name}-chn.txt"
+            try:
+                chn_file.write_text(chinese_text.strip(), encoding='utf-8')
+                success_count += 1
+            except Exception as e:
+                st.error(f"Error saving Chinese text: {e}")
+        
+        # Save target language texts
+        reverse_lang_map = {v: k for k, v in lang_code_map.items()}  # Map lang codes back to names
+        for lang_code, selected in target_selected_dict.items():
+            if selected:
+                # Get the actual text from session state
+                lang_text = st.session_state.get(f'{lang_code}_text_area', '')
+                if lang_text.strip():
+                    lang_file = self.input_dir / f"{safe_name}-{lang_code}.txt"
+                    try:
+                        lang_file.write_text(lang_text.strip(), encoding='utf-8')
+                        success_count += 1
+                    except Exception as e:
+                        lang_name = reverse_lang_map.get(lang_code, lang_code)
+                        st.error(f"Error saving {lang_name} text: {e}")
+        
+        if success_count > 0:
+            st.success(f"Saved {success_count} text file(s) as '{safe_name}'")
+            st.rerun()  # Refresh to update the selectbox options
+        else:
+            st.warning("No text to save")
+
     def render_input_areas(self) -> Tuple[List[str], List[str], List[str]]:
         """Render text input areas and return processed words"""
         with st.sidebar:
             with st.expander("Enter Text Data (Word/Phrase):", expanded=True):
+                
+                # Language selection
+                st.markdown("**Language Configuration:**")
+                col_source, col_target = st.columns(2)
+                with col_source:
+                    st.info("**Source:** Chinese (chn)")
+                with col_target:
+                    # Multi-target language selection
+                    target_languages = st.multiselect(
+                        "**Target Language(s)**",
+                        options=["English", "French", "Spanish", "German"],
+                        default=st.session_state.get('target_languages', ["English"]),
+                        help="Select target languages for comparison with Chinese",
+                        key='target_languages'
+                    )
+                
+                # Language code mapping
+                lang_code_map = {
+                    "English": "enu", 
+                    "French": "fra", 
+                    "Spanish": "spa", 
+                    "German": "deu"
+                }
+                target_lang_codes = [lang_code_map[lang] for lang in target_languages]
+                
+                st.divider()
 
                 col_input_select, col_load_txt = st.columns([3, 1])
                 with col_input_select:
@@ -203,45 +268,74 @@ class EmbeddingVisualizer:
                                              disabled=not input_name_selected)
 
                 # Initialize text areas with default or loaded content
-                default_chinese = sample_chn_input_data
-                default_english = sample_enu_input_data
+                default_texts = {
+                    "chn": sample_chn_input_data,
+                    "enu": sample_enu_input_data,
+                    "fra": "rouge\nbleu\nvert\njaune\norange",  # Sample French
+                    "spa": "rojo\nazul\nverde\namarillo\nnaranja",  # Sample Spanish  
+                    "deu": "rot\nblau\ngrün\ngelb\norange"  # Sample German
+                }
                 
                 # Load text if button is clicked
                 if btn_load_txt:
+                    files_found = 0
+                    # Load Chinese (source)
                     loaded_chinese = self.load_text_from_file(input_name_selected, "chn")
-                    loaded_english = self.load_text_from_file(input_name_selected, "enu")
-                    
                     if loaded_chinese:
-                        default_chinese = loaded_chinese
+                        default_texts["chn"] = loaded_chinese
                         st.session_state.chinese_text_area = loaded_chinese
+                        files_found += 1
                     
-                    if loaded_english:
-                        default_english = loaded_english
-                        st.session_state.english_text_area = loaded_english
+                    # Load target languages
+                    for lang_code in target_lang_codes:
+                        loaded_text = self.load_text_from_file(input_name_selected, lang_code)
+                        if loaded_text:
+                            default_texts[lang_code] = loaded_text
+                            st.session_state[f'{lang_code}_text_area'] = loaded_text
+                            files_found += 1
                     
-                    if not loaded_chinese and not loaded_english:
+                    if files_found == 0:
                         st.warning(f"No text files found for '{input_name_selected}'")
 
-                c1, c2 = st.columns(2)
-                with c1:
+                # Dynamic text areas based on selected languages
+                num_languages = 1 + len(target_languages)  # Chinese + target languages
+                cols = st.columns(min(num_languages, 3))  # Max 3 columns for readability
+                
+                # Chinese (source) - always first
+                with cols[0]:
                     chinese_text = st.text_area(
-                        "Chinese:", 
-                        value=st.session_state.get('chinese_text_area', default_chinese),
+                        "Chinese (chn):", 
+                        value=st.session_state.get('chinese_text_area', default_texts["chn"]),
                         height=200,
                         key='chinese_text_input'
                     )
                     chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
                     chinese_words = self.process_text(chinese_text) if chinese_selected else []
 
-                with c2:
-                    english_text = st.text_area(
-                        "English:",
-                        value=st.session_state.get('english_text_area', default_english),
-                        height=200,
-                        key='english_text_input'
-                    )
-                    english_selected = st.checkbox("English", value=True, key="english")
-                    english_words = self.process_text(english_text) if english_selected else []
+                # Target languages
+                target_words_dict = {}
+                target_selected_dict = {}
+                col_idx = 1
+                
+                for i, (lang_name, lang_code) in enumerate(zip(target_languages, target_lang_codes)):
+                    # Use appropriate column (wrap around if more than 3 languages)
+                    col_to_use = cols[col_idx % len(cols)]
+                    
+                    with col_to_use:
+                        text_area_key = f'{lang_code}_text_input'
+                        checkbox_key = f'{lang_code}_selected'
+                        
+                        lang_text = st.text_area(
+                            f"{lang_name} ({lang_code}):",
+                            value=st.session_state.get(f'{lang_code}_text_area', default_texts.get(lang_code, "")),
+                            height=200,
+                            key=text_area_key
+                        )
+                        lang_selected = st.checkbox(lang_name, value=True, key=checkbox_key)
+                        target_words_dict[lang_code] = self.process_text(lang_text) if lang_selected else []
+                        target_selected_dict[lang_code] = lang_selected
+                    
+                    col_idx += 1
 
                 # User can enter a name for the input and save the texts 
                 col_input_enter, col_save_txt = st.columns([3, 1])
@@ -264,7 +358,8 @@ class EmbeddingVisualizer:
                     
                 # Handle save text
                 if btn_save_txt:
-                    self.save_text_to_file(input_name_raw, chinese_text, english_text, chinese_selected, english_selected)
+                    self.save_multilingual_text(input_name_raw, chinese_text, chinese_selected, 
+                                               target_words_dict, target_selected_dict, lang_code_map)
 
             col_vis, col_rotate, col_save_png = st.columns([1, 1, 1])
             with col_vis:
@@ -275,10 +370,26 @@ class EmbeddingVisualizer:
                 btn_save_png = st.button("Save Image", help="Save current plot as PNG image")
             btn_actions = (btn_visualize, btn_rotate_90, btn_save_png)
 
-            return btn_actions, chinese_words, english_words, (
-                [COLOR_MAP["chinese"]] * len(chinese_words) +
-                [COLOR_MAP["english"]] * len(english_words)
-            ), chinese_selected, english_selected
+            # Combine all words and create corresponding colors
+            all_words = chinese_words.copy()
+            all_colors = [COLOR_MAP["chinese"]] * len(chinese_words)
+            
+            # Map language codes to color map keys
+            lang_color_map = {
+                "enu": "english",
+                "fra": "french", 
+                "spa": "spanish",
+                "deu": "german"
+            }
+            
+            # Add target language words and colors
+            for lang_code, words in target_words_dict.items():
+                if words:  # Only add if there are words
+                    all_words.extend(words)
+                    color_key = lang_color_map.get(lang_code, "english")
+                    all_colors.extend([COLOR_MAP[color_key]] * len(words))
+            
+            return btn_actions, chinese_words, target_words_dict, all_colors, chinese_selected, target_selected_dict
     
     @st.cache_data
     def get_embeddings(_self, words: List[str], model_name: str, lang: str) -> np.ndarray:

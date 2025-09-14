@@ -18,6 +18,7 @@ from config import (
     sample_enu_input_data
 )
 from pathlib import Path
+from utils.download_helpers import handle_download_button
 
 # Page config
 st.set_page_config(
@@ -53,7 +54,7 @@ class EnhancedDualViewManager:
             'y_max': center_y + height/2
         }
 
-    def create_enhanced_dual_view(self, embeddings, labels, colors, title, zoom_params, model_name=None, method_name=None):
+    def create_enhanced_dual_view(self, embeddings, labels, colors, title, zoom_params, model_name=None, method_name=None, dataset_name=None):
         """Create separate overview and detail figures for the enhanced dual view"""
         
         # Convert center/size to bounds
@@ -75,7 +76,7 @@ class EnhancedDualViewManager:
                 x=embeddings[chinese_mask, 0],
                 y=embeddings[chinese_mask, 1],
                 mode='markers',
-                marker=dict(size=6, color='crimson', opacity=0.8, line=dict(width=1, color='white')),
+                marker=dict(size=6, color='red', opacity=0.8, line=dict(width=1, color='white')),
                 text=[labels[i] for i in range(len(labels)) if chinese_mask[i]],
                 hovertemplate='<b>%{text}</b><br>中文<br>x: %{x:.3f}<br>y: %{y:.3f}<extra></extra>',
                 name="中文",
@@ -87,7 +88,7 @@ class EnhancedDualViewManager:
                 x=embeddings[english_mask, 0],
                 y=embeddings[english_mask, 1],
                 mode='markers',
-                marker=dict(size=6, color='steelblue', opacity=0.8, line=dict(width=1, color='white')),
+                marker=dict(size=6, color='blue', opacity=0.8, line=dict(width=1, color='white')),
                 text=[labels[i] for i in range(len(labels)) if english_mask[i]],
                 hovertemplate='<b>%{text}</b><br>English<br>x: %{x:.3f}<br>y: %{y:.3f}<extra></extra>',
                 name="English",
@@ -111,23 +112,47 @@ class EnhancedDualViewManager:
         
         overview_fig.update_xaxes(
             range=[data_x_min - x_padding, data_x_max + x_padding],
-            title_text="X",
-            gridcolor='lightgray'
+            title_text="x",
+            showgrid=True, 
+            gridwidth=1,
+            gridcolor='#D0D0D0',
+            griddash='dot'
         )
         overview_fig.update_yaxes(
             range=[data_y_min - y_padding, data_y_max + y_padding],
-            title_text="Y",
-            gridcolor='lightgray',
+            title_text="y",
+            showgrid=True, 
+            gridwidth=1,
+            gridcolor='#D0D0D0',
+            griddash='dot',
             scaleanchor="x", scaleratio=1
         )
         
+        # Create overview title with standardized format
+        title_parts = []
+        if method_name:
+            title_parts.append(f"[Method] {method_name}")
+        if model_name:
+            title_parts.append(f"[Model] {model_name}")
+        if dataset_name:
+            title_parts.append(f"[Dataset] {dataset_name}")
+        overview_title = ", ".join(title_parts) if title_parts else "Overview"
+        
         overview_fig.update_layout(
-            title="📊 Overview",
+            title=dict(
+                text=overview_title,
+                font=dict(size=18, family='Arial, sans-serif'),
+                x=0.5,  # Center align title
+                xanchor='center'
+            ),
             dragmode='pan',
             hovermode='closest',
             showlegend=False,
-            height=500,
-            plot_bgcolor='rgba(250, 250, 250, 0.8)'
+            height=700,  # More square aspect ratio
+            width=800,   # Controlled width to reduce white space
+            plot_bgcolor='white',
+            font=dict(family='Arial, sans-serif'),
+            margin=dict(l=60, r=60, t=80, b=60)
         )
         
         # Create detail figure
@@ -149,10 +174,10 @@ class EnhancedDualViewManager:
                 x=embeddings[chinese_viewport, 0],
                 y=embeddings[chinese_viewport, 1],
                 mode='markers+text',
-                marker=dict(size=16, color='crimson', opacity=1.0, line=dict(width=2, color='white')),
+                marker=dict(size=16, color='red', opacity=1.0, line=dict(width=2, color='white')),
                 text=[labels[i] for i in range(len(labels)) if chinese_viewport[i]],
                 textposition="top center",
-                textfont=dict(size=16, color='darkred', family='Arial Black'),
+                textfont=dict(size=16, color='red', family='Arial Black'),
                 hovertemplate='<b>%{text}</b><br>中文 (Detail)<br>x: %{x:.3f}<br>y: %{y:.3f}<extra></extra>',
                 name="中文",
                 showlegend=False
@@ -163,10 +188,10 @@ class EnhancedDualViewManager:
                 x=embeddings[english_viewport, 0],
                 y=embeddings[english_viewport, 1],
                 mode='markers+text',
-                marker=dict(size=16, color='steelblue', opacity=1.0, line=dict(width=2, color='white')),
+                marker=dict(size=16, color='blue', opacity=1.0, line=dict(width=2, color='white')),
                 text=[labels[i] for i in range(len(labels)) if english_viewport[i]],
                 textposition="top center",
-                textfont=dict(size=16, color='darkblue', family='Arial Black'),
+                textfont=dict(size=16, color='blue', family='Arial Black'),
                 hovertemplate='<b>%{text}</b><br>English (Detail)<br>x: %{x:.3f}<br>y: %{y:.3f}<extra></extra>',
                 name="English",
                 showlegend=False
@@ -180,28 +205,46 @@ class EnhancedDualViewManager:
         
         detail_fig.update_xaxes(
             range=[viewport_coords['x_min'] - x_margin, viewport_coords['x_max'] + x_margin],
-            title_text="Zoom - X",
-            gridcolor='lightgray'
+            title_text="x",
+            showgrid=True, 
+            gridwidth=1,
+            gridcolor='#D0D0D0',
+            griddash='dot'
         )
         detail_fig.update_yaxes(
             range=[viewport_coords['y_min'] - y_margin, viewport_coords['y_max'] + y_margin],
-            title_text="Zoom - Y",
-            gridcolor='lightgray',
+            title_text="y",
+            showgrid=True, 
+            gridwidth=1,
+            gridcolor='#D0D0D0',
+            griddash='dot',
             scaleanchor="x", scaleratio=1
         )
         
-        # Create detail view title with model and method info
-        detail_title = "🔍 Detail View"
-        if model_name and method_name:
-            detail_title = f"🔍 Detail View - [Model] {model_name}, [Method] {method_name}"
+        # Create detail view title with standardized format
+        title_parts = []
+        if method_name:
+            title_parts.append(f"[Method] {method_name}")
+        if model_name:
+            title_parts.append(f"[Model] {model_name}")
+        if dataset_name:
+            title_parts.append(f"[Dataset] {dataset_name}")
+        detail_title = ", ".join(title_parts) if title_parts else "Detail View"
         
         detail_fig.update_layout(
-            title=detail_title,
+            title=dict(
+                text=detail_title,
+                font=dict(size=18, family='Arial, sans-serif'),
+                x=0.5,  # Center align title
+                xanchor='center'
+            ),
             dragmode='pan',
             hovermode='closest',
             showlegend=False,
             height=900,
-            plot_bgcolor='rgba(250, 250, 250, 0.8)'
+            plot_bgcolor='white',
+            font=dict(family='Arial, sans-serif'),
+            margin=dict(l=60, r=60, t=80, b=60)
         )
         
         # Count points in viewport
@@ -280,7 +323,7 @@ def perform_dual_view_geometric_analysis(analyzer, params, embeddings, labels, m
     except Exception as e:
         st.warning(f"Could not save dual view metrics automatically: {str(e)}")
 
-def display_dual_view_geometric_analysis():
+def display_dual_view_geometric_analysis(model_name=None, method_name=None):
     """Display geometric analysis results for dual view"""
     if 'dual_view_geometric_analysis' not in st.session_state:
         return
@@ -292,45 +335,50 @@ def display_dual_view_geometric_analysis():
     
     with st.expander("🔬 Geometric Analysis Results - Dual View", expanded=False):
         
-        # Create expandable sections for each analysis type
+        # Display analysis results without nested expanders
+        from components.geometric_analysis import GeometricAnalyzer
+        analyzer = GeometricAnalyzer()
+        
         if 'clustering' in results:
-            with st.expander("🔍 Clustering Analysis", expanded=True):
-                from components.geometric_analysis import GeometricAnalyzer
-                analyzer = GeometricAnalyzer()
-                analyzer.display_clustering_metrics(results['clustering'])
+            st.subheader("🔍 Clustering Analysis")
+            analyzer.display_clustering_metrics(results['clustering'])
         
         if 'branching' in results:
-            with st.expander("🌿 Branching Analysis", expanded=True):
-                from components.geometric_analysis import GeometricAnalyzer
-                analyzer = GeometricAnalyzer()
-                analyzer.display_branching_metrics(results['branching'])
+            st.subheader("🌿 Branching Analysis")
+            analyzer.display_branching_metrics(results['branching'])
         
         if 'void' in results:
-            with st.expander("🕳️ Void Analysis", expanded=True):
-                from components.geometric_analysis import GeometricAnalyzer
-                analyzer = GeometricAnalyzer()
-                analyzer.display_void_metrics(results['void'])
+            st.subheader("🕳️ Void Analysis")
+            analyzer.display_void_metrics(results['void'])
         
         # Summary visualization if multiple analyses exist
         if len(results) > 1 and 'enhanced_data' in st.session_state:
-            with st.expander("📊 Comprehensive Analysis Visualization", expanded=False):
-                try:
-                    from components.geometric_analysis import GeometricAnalyzer
-                    analyzer = GeometricAnalyzer()
+            st.subheader("📊 Comprehensive Analysis Visualization")
+            try:
+                from components.geometric_analysis import GeometricAnalyzer
+                analyzer = GeometricAnalyzer()
+                
+                enhanced_data = st.session_state.enhanced_data
+                embeddings = enhanced_data['embeddings']
+                labels = enhanced_data['labels']
+                
+                # Get dataset information for consistent title
+                dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
+                
+                comprehensive_fig = analyzer.create_comprehensive_analysis_plot(
+                    embeddings, labels,
+                    results.get('clustering', {}),
+                    results.get('branching', {}),
+                    results.get('void', {}),
+                    model_name, method_name, dataset_name
+                )
+                st.plotly_chart(comprehensive_fig, use_container_width=True)
+                
+                # Add download button for clustering chart
+                handle_download_button(comprehensive_fig, model_name, method_name, dataset_name, "clustering", "dual_view")
                     
-                    enhanced_data = st.session_state.enhanced_data
-                    embeddings = enhanced_data['embeddings']
-                    labels = enhanced_data['labels']
-                    
-                    comprehensive_fig = analyzer.create_comprehensive_analysis_plot(
-                        embeddings, labels,
-                        results.get('clustering', {}),
-                        results.get('branching', {}),
-                        results.get('void', {})
-                    )
-                    st.plotly_chart(comprehensive_fig, use_container_width=True)
-                except Exception as e:
-                    st.error(f"Error creating comprehensive analysis plot: {str(e)}")
+            except Exception as e:
+                st.error(f"Error creating comprehensive analysis plot: {str(e)}")
 
 def main():
     check_login()
@@ -348,7 +396,7 @@ def main():
         st.header("🎛️ Settings")
         
         # Model and method selection
-        with st.expander("Model & Method", expanded=False):
+        with st.expander("Visualization Settings", expanded=False):
             model_name = st.selectbox(
                 "Embedding Model:",
                 options=list(MODEL_INFO.keys()),
@@ -361,8 +409,63 @@ def main():
                 index=list(METHOD_INFO.keys()).index(DEFAULT_METHOD)
             )
         
+        # Publication Settings
+        with st.expander("📊 Publication Settings", expanded=False):
+            publication_mode = st.checkbox("Publication Mode", value=False, 
+                                         help="Enable high-quality settings for publication")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                if publication_mode:
+                    textfont_size = st.number_input("Text Size", min_value=12, max_value=24, value=16, step=1, 
+                                                   help="Font size for labels (12-24pt). Suggested: 16pt for publication, 18pt for presentations")
+                    point_size = st.number_input("Point Size", min_value=8, max_value=20, value=12, step=1, 
+                                                help="Size of data points (8-20pt). Suggested: 12pt for publication, 14-16pt for presentations")
+                else:
+                    textfont_size = st.number_input("Text Size", min_value=8, max_value=20, value=16, step=1, 
+                                                   help="Font size for labels (8-20pt). Default: 16pt for better readability")
+                    point_size = st.number_input("Point Size", min_value=2, max_value=12, value=12, step=1, 
+                                                help="Size of data points (2-12pt). Default: 12pt for clear visibility")
+            
+            with col2:
+                if publication_mode:
+                    plot_width = st.number_input("Width", min_value=800, max_value=1600, value=1000, step=50, 
+                                                help="Plot width in pixels (800-1600px). Suggested: 1000px for papers, 1200px for posters")
+                    plot_height = st.number_input("Height", min_value=600, max_value=1200, value=800, step=50, 
+                                                 help="Plot height in pixels (600-1200px). Suggested: 800px for square plots, 600px for wide plots")
+                else:
+                    plot_width = st.number_input("Width", min_value=600, max_value=1000, value=800, step=50, 
+                                                help="Plot width in pixels (600-1000px). Suggested: 800px for standard view, 900px for detailed analysis")
+                    plot_height = st.number_input("Height", min_value=500, max_value=900, value=700, step=50, 
+                                                 help="Plot height in pixels (500-900px). Suggested: 700px for square plots, 600px for wide plots")
+            
+            # Export options
+            if publication_mode:
+                st.markdown("**Export Options**")
+                col_exp1, col_exp2 = st.columns(2)
+                with col_exp1:
+                    export_format = st.selectbox("Format", ["PNG", "SVG", "PDF"], index=0,
+                                               help="Export format: PNG (raster, good for most uses), SVG (vector, scalable), PDF (vector, publication-ready)")
+                with col_exp2:
+                    export_dpi = st.number_input("DPI", min_value=150, max_value=600, value=300, step=50, 
+                                               help="Dots per inch (150-600). Suggested: 300 DPI for journals, 150-200 for web, 600 for high-quality prints")
+            else:
+                export_format = "PNG"
+                export_dpi = 150
+            
+            # Store settings in session state for potential future use
+            st.session_state.dual_view_publication_settings = {
+                'publication_mode': publication_mode,
+                'textfont_size': textfont_size,
+                'point_size': point_size,
+                'plot_width': plot_width,
+                'plot_height': plot_height,
+                'export_format': export_format,
+                'export_dpi': export_dpi
+            }
+        
         # Text input areas - same as Semantics Explorer
-        with st.expander("Text Input", expanded=False):
+        with st.expander("Enter Text Data (Word/Phrase):", expanded=False):
             input_dir = Path("data/input")
             
             # File loading section
@@ -522,6 +625,9 @@ def main():
                 
                 # Recreate the detail figure for saving
                 data = st.session_state.enhanced_data
+                # Get dataset name
+                dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
+                
                 overview_fig, detail_fig, points_count, viewport_mask = dual_manager.create_enhanced_dual_view(
                     data['embeddings'],
                     data['labels'], 
@@ -529,7 +635,8 @@ def main():
                     data['title'],
                     st.session_state.zoom_params,
                     model_name,
-                    method_name
+                    method_name,
+                    dataset_name
                 )
                 
                 # Save the detail view image
@@ -560,7 +667,7 @@ def main():
             if 'zoom_params' not in st.session_state:
                 st.session_state.zoom_params = {
                     'center_x': 0.0, 'center_y': 0.0,
-                    'width': global_width * 0.1, 'height': global_height * 0.1,  # 10% of global
+                    'width': 0.05, 'height': 0.05,  # Default zoom box size
                     'delta_x': 0.005, 'delta_y': 0.005  # Fixed panning step
                 }
             
@@ -605,7 +712,7 @@ def main():
                 if st.button("🎯 Reset Zoom"):
                     st.session_state.zoom_params = {
                         'center_x': 0.0, 'center_y': 0.0,
-                        'width': global_width * 0.1, 'height': global_height * 0.1,  # 10% of global
+                        'width': 0.05, 'height': 0.05,  # Default zoom box size
                         'delta_x': 0.005, 'delta_y': 0.005  # Fixed panning step
                     }
                     st.rerun()
@@ -628,6 +735,9 @@ def main():
         data = st.session_state.enhanced_data
         
         # Create visualization
+        # Get dataset name
+        dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
+        
         overview_fig, detail_fig, points_count, viewport_mask = dual_manager.create_enhanced_dual_view(
             data['embeddings'],
             data['labels'],
@@ -635,11 +745,16 @@ def main():
             data['title'],
             st.session_state.zoom_params,
             model_name,
-            method_name
+            method_name,
+            dataset_name
         )
         
         # Detail view below (no container) with pan button
         st.plotly_chart(detail_fig, use_container_width=True, key="detail_view")
+        
+        # Add download button for detail view (always available)
+        handle_download_button(detail_fig, model_name, method_name, dataset_name, "detail", "dual_view")
+        
         if st.session_state.get('btn_panning', False):
             # Get current zoom params from sidebar
             current_params = st.session_state.zoom_params
@@ -691,7 +806,7 @@ def main():
                         st.write(", ".join(english_in_zoom))
         
         # Display geometric analysis results if available
-        display_dual_view_geometric_analysis()
+        display_dual_view_geometric_analysis(model_name, method_name)
     
     # Handle generation request
     if st.session_state.get('generate_requested', False):
@@ -731,14 +846,12 @@ def main():
                     if reduced_embeddings is not None:
                         # Update zoom parameters based on data range if not already set
                         if 'zoom_params' not in st.session_state:
-                            global_width = 0.8
-                            global_height = 0.3
                             x_center = reduced_embeddings[:, 0].mean()
                             y_center = reduced_embeddings[:, 1].mean()
                             
                             st.session_state.zoom_params = {
                                 'center_x': x_center, 'center_y': y_center,
-                                'width': global_width * 0.1, 'height': global_height * 0.1,  # 10% of global
+                                'width': 0.05, 'height': 0.05,  # Default zoom box size
                                 'delta_x': 0.005, 'delta_y': 0.005  # Fixed panning step
                             }
                         

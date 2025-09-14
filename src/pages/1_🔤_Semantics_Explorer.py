@@ -7,6 +7,8 @@ from components.geometric_analysis import GeometricAnalyzer
 from config import (
     check_login
 )
+from utils.download_helpers import handle_download_button
+
 
 # Page config
 st.set_page_config(
@@ -68,6 +70,9 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
     if 'current_figure' in st.session_state:
         st.session_state.current_figure = None
         
+    # Get dataset name from selected input
+    dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
+    
     # Store data in session state for rotation
     st.session_state.visualization_data = {
         'reduced_embeddings': reduced_embeddings,
@@ -77,7 +82,8 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
         'method_name': method_name,
         'dimensions': dimensions,
         'do_clustering': do_clustering,
-        'n_clusters': n_clusters
+        'n_clusters': n_clusters,
+        'dataset_name': dataset_name
     }
     
     # Create visualization
@@ -89,7 +95,8 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
         method_name,
         dimensions,
         do_clustering,
-        n_clusters
+        n_clusters,
+        dataset_name
     )
     
     return True
@@ -246,13 +253,22 @@ def display_geometric_analysis_results(analyzer, results, embeddings, labels):
                     
                     try:
                         # Create simplified clustering plot
+                        viz_data = st.session_state.visualization_data
+                        model_name = viz_data.get('model_name', 'unknown-model')
+                        method_name = viz_data.get('method_name', 'unknown-method')
+                        dataset_name = viz_data.get('dataset_name', 'User Input')
+                        
                         clustering_fig = analyzer.create_comprehensive_analysis_plot(
                             embeddings, labels, 
                             results.get('clustering', {}),
                             results.get('branching', {}),
-                            results.get('void', {})
+                            results.get('void', {}),
+                            model_name, method_name, dataset_name
                         )
                         st.plotly_chart(clustering_fig, use_container_width=True)
+                        
+                        # Add download button for clustering chart
+                        handle_download_button(clustering_fig, model_name, method_name, dataset_name, "clustering", "main")
                         
                         # Save plot as PNG
                         try:
@@ -321,7 +337,8 @@ def main():
                 viz_data['method_name'],
                 viz_data['dimensions'],
                 viz_data['do_clustering'],
-                viz_data['n_clusters']
+                viz_data['n_clusters'],
+                viz_data.get('dataset_name', 'User Input')
             )
         else:
             st.warning("Please generate a visualization first by clicking 'Visualize'")

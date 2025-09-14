@@ -762,7 +762,8 @@ class GeometricAnalyzer:
     
     def create_comprehensive_analysis_plot(self, embeddings: np.ndarray, labels: List[str],
                                          clustering_results: Dict, branching_results: Dict,
-                                         void_results: Dict) -> go.Figure:
+                                         void_results: Dict, model_name: str = None, 
+                                         method_name: str = None, dataset_name: str = None) -> go.Figure:
         """Create a simplified clustering visualization for summary"""
         
         # Create single plot focusing on clustering
@@ -783,7 +784,13 @@ class GeometricAnalyzer:
                     color=cluster_labels, 
                     colorscale='viridis', 
                     showscale=True,
-                    colorbar=dict(title="Cluster"),
+                    colorbar=dict(
+                        title="Cluster",
+                        x=1.02,  # Position to the right
+                        y=0.8,   # Position towards top
+                        len=0.6, # Shorter length to avoid overlap
+                        thickness=15  # Thinner colorbar
+                    ),
                     line=dict(width=1, color='white')
                 ),
                 textposition="top center",
@@ -820,16 +827,55 @@ class GeometricAnalyzer:
                 name="Data Points"
             ))
         
+        # Create standardized title format
+        title_parts = []
+        if method_name:
+            title_parts.append(f"[Method] {method_name}")
+        if model_name:
+            title_parts.append(f"[Model] {model_name}")
+        if dataset_name:
+            title_parts.append(f"[Dataset] {dataset_name}")
+        clustering_title = ", ".join(title_parts) if title_parts else "Clustering Analysis Visualization"
+        
         fig.update_layout(
-            title="Clustering Analysis Visualization",
-            xaxis_title="Dimension 1",
-            yaxis_title="Dimension 2", 
-            height=600,
-            showlegend=True,
+            title=dict(
+                text=clustering_title,
+                font=dict(size=18, family='Arial, sans-serif'),
+                x=0.5,  # Center align title
+                xanchor='center'
+            ),
+            dragmode='pan',
             hovermode='closest',
-            plot_bgcolor='rgba(240,240,240,0.5)',
-            xaxis=dict(gridcolor='white', gridwidth=1),
-            yaxis=dict(gridcolor='white', gridwidth=1, scaleanchor="x", scaleratio=1)
+            showlegend=True,
+            legend=dict(
+                x=1.02,  # Position to the right
+                y=0.4,   # Position towards bottom to avoid colorbar
+                xanchor='left',
+                yanchor='middle'
+            ),
+            height=700,  # More square aspect ratio to match Overview
+            width=800,   # Controlled width to reduce white space
+            plot_bgcolor='white',
+            font=dict(family='Arial, sans-serif'),
+            margin=dict(l=60, r=80, t=80, b=60)  # Increased right margin for legend/colorbar
+        )
+        
+        # Update axes with dotted grid lines and "x"/"y" labels to match Overview
+        fig.update_xaxes(
+            title_text="x",
+            showgrid=True, 
+            gridwidth=1,
+            gridcolor='#D0D0D0',
+            griddash='dot'
+        )
+        fig.update_yaxes(
+            title_text="y",
+            showgrid=True, 
+            gridwidth=1,
+            gridcolor='#D0D0D0',
+            griddash='dot',
+            scaleanchor="x", 
+            scaleratio=1
         )
         
         return fig

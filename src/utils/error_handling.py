@@ -1,6 +1,7 @@
 # utils/error_handling.py
 import streamlit as st
 import logging
+import requests
 from functools import wraps
 from typing import Callable, Any
 

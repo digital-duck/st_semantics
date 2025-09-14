@@ -6,6 +6,8 @@ A powerful Streamlit application for exploring multilingual word embeddings thro
 
 *This Streamlit app is built with love in close collaboration with **Claude Code** ❤️*
 
+> **Latest Version 3.0** - Now with publication-quality visualizations, advanced dual-view capabilities, and professional-grade code architecture!
+
 ## 🌟 Significance and Applications
 
 This tool serves multiple important purposes across different domains:
@@ -39,8 +41,19 @@ This tool serves multiple important purposes across different domains:
 - **Smart File Management**: Load/save text datasets with sanitized filenames
 - **Language Tags**: Automatic filename tagging (chn, enu, chn-enu)
 - **Session Caching**: Improved performance with cached embeddings
+- **Publication Settings**: High-DPI export with customizable formatting
+- **Geometric Analysis**: Advanced clustering, branching, and void analysis
 
-### 🖼️ **Review Images** (New!)
+### 🔍 **Semantics Explorer - Dual View** (Enhanced!)
+- **Overview + Detail Views**: Simultaneous global and zoomed perspectives
+- **Interactive Zoom Controls**: Precise navigation through semantic space
+- **Pan Functionality**: Smooth movement through embedding space
+- **Enhanced Statistics**: Real-time metrics and word lists in zoom areas
+- **Publication-Ready Export**: High-quality image downloads with standardized naming
+- **Geometric Analysis Integration**: Advanced pattern detection and visualization
+- **Professional UI**: Clean, focused interface optimized for research workflow
+
+### 🖼️ **Review Images**
 - **Multi-image Comparison**: Side-by-side visualization analysis
 - **Flexible Layouts**: 1, 2, or 3 images per row
 - **Full Filename Visibility**: Complete filenames displayed in main panel
@@ -48,8 +61,8 @@ This tool serves multiple important purposes across different domains:
 - **Download & Delete**: Manage saved visualizations efficiently
 - **Smart Organization**: Sort by newest first
 
-### 🌐 **DeepL Translator** (New!)
-- **Professional Translation**: High-quality DeepL API integration for 30+ languages
+### 🌐 **Translator**
+- **Professional Translation**: High-quality translation API integration for 30+ languages
 - **Auto-detection**: Smart source language identification
 - **Research-focused**: Perfect for creating semantic datasets across languages
 - **Save Translations**: Store translation pairs for reference
@@ -144,41 +157,62 @@ streamlit run Welcome.py
 ```
 st_semantics/
 ├── src/
-│   ├── Welcome.py                      # Main entry point
+│   ├── Welcome.py                          # Main entry point with enhanced UI
 │   ├── pages/
-│   │   ├── 1_🔤_Semantics_Explorer.py  # Core visualization
-│   │   ├── 2_🖼️_Review_Images.py       # Image comparison (NEW)
-│   │   └── 3_🌐_Translator.py          # DeepL translation (NEW)
-│   ├── components/                     # Reusable UI components
+│   │   ├── 1_🔤_Semantics_Explorer.py      # Core visualization
+│   │   ├── 2_🔍_Semantics_Explorer-Dual_View.py  # Advanced dual-view interface
+│   │   ├── 3_🖼️_Review_Images.py           # Image comparison and management
+│   │   └── 9_🌐_Translator.py              # Translation services
+│   ├── components/
+│   │   ├── shared/                         # Shared UI components (NEW)
+│   │   │   └── publication_settings.py    # Reusable publication controls
 │   │   ├── embedding_viz.py
 │   │   ├── dimension_reduction.py
 │   │   ├── plotting.py
-│   │   └── clustering.py
-│   ├── models/                         # Model management
+│   │   ├── clustering.py
+│   │   └── geometric_analysis.py           # Advanced geometric analysis
+│   ├── models/                             # Model management
 │   │   └── model_manager.py
-│   ├── services/                       # External integrations
-│   ├── utils/                          # Utility functions
-│   ├── config.py                       # Configuration settings
+│   ├── services/                           # External integrations
+│   │   ├── google_translate.py
+│   │   └── tts_service.py
+│   ├── utils/                              # Utility functions
+│   │   ├── error_handling.py               # Enhanced error handling
+│   │   ├── download_helpers.py             # Download utilities (NEW)
+│   │   └── filter_radicals.py
+│   ├── config.py                           # Configuration settings
 │   └── data/
-│       ├── input/                      # Text datasets (colors, numbers, etc.)
-│       ├── images/                     # Saved visualizations
-│       └── translations/               # Translation pairs
+│       ├── input/                          # Text datasets (colors, numbers, etc.)
+│       ├── images/                         # Saved visualizations
+│       ├── metrics/                        # Analysis results
+│       └── translations/                   # Translation pairs
 ├── requirements.txt
 ├── init_project.sh
+├── CODE_QUALITY_REPORT.md                 # Code quality documentation (NEW)
+├── README-testing.md                      # Testing documentation (NEW)
+├── FEEDBACK-anthropic.md                  # Development feedback (NEW)
 ├── README.md
 └── LICENSE
 ```
 
-## 🎯 Recent Enhancements (Version 2.0)
+## 🎯 Recent Enhancements (Version 3.0)
 
-### Major New Features
-- ✅ **Dedicated Review Images page** with multi-select comparison
-- ✅ **DeepL Translator integration** for international researchers  
-- ✅ **Enhanced filename management** with language tags and sanitization
-- ✅ **Real-time plot rotation** (90° increments)
-- ✅ **Improved UI/UX** with better organization and full filename visibility
+### 🚀 Major New Features
+- ✅ **Advanced Dual View Interface** - Simultaneous overview and detail perspectives
+- ✅ **Publication-Quality Export System** - High-DPI downloads with standardized naming
+- ✅ **Geometric Analysis Integration** - Clustering, branching, and void analysis
+- ✅ **Interactive Zoom & Pan Controls** - Precise navigation through semantic space
+- ✅ **Enhanced Visualization Statistics** - Real-time metrics and word lists
+- ✅ **Professional UI Components** - Shared, reusable interface elements
 
-### Technical Improvements
+### 🏗️ Code Architecture Improvements (NEW!)
+- ✅ **Eliminated Code Duplication** - 120+ lines removed via shared components
+- ✅ **Function Decomposition** - Broke down 500+ line functions into focused modules
+- ✅ **Enhanced Error Handling** - Consistent, professional error management
+- ✅ **Download System Refactoring** - Centralized, extensible download functionality
+- ✅ **Publication Standards** - Code quality suitable for academic publication
+
+### 📊 Technical Improvements
 - ✅ **Fixed torch compatibility** issues (torch 2.x support)
 - ✅ **Streamlined model selection** (removed problematic models)
 - ✅ **Better error handling** and user feedback
@@ -186,12 +220,14 @@ st_semantics/
 - ✅ **Professional code architecture** with component separation
 - ✅ **Performance optimizations** with smart caching (dimensionality reduction, file I/O)
 - ✅ **Memory management** improvements for cleaner resource usage
+- ✅ **Comprehensive Testing Framework** - Documentation and validation procedures
 
-### Research Impact
+### 🔬 Research Impact
 - ✅ **"Geometry of Meaning" discovery** - numbers form linear patterns!
 - ✅ **Cross-lingual semantic alignment** visualization
 - ✅ **Educational applications** for language learning
 - ✅ **Publication-ready** visualizations and methodology
+- ✅ **Advanced Pattern Detection** - Geometric analysis of semantic structures
 
 ## 🌐 Integration Ecosystem
 

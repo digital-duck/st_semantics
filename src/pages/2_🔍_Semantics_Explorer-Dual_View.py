@@ -19,6 +19,7 @@ from config import (
 )
 from pathlib import Path
 from utils.download_helpers import handle_download_button
+from components.shared.publication_settings import PublicationSettingsWidget
 
 # Page config
 st.set_page_config(
@@ -380,90 +381,40 @@ def display_dual_view_geometric_analysis(model_name=None, method_name=None):
             except Exception as e:
                 st.error(f"Error creating comprehensive analysis plot: {str(e)}")
 
-def main():
-    check_login()
+def setup_sidebar_controls():
+    """Setup sidebar controls and return settings"""
+    settings = {}
     
-    st.subheader("🔍 Semantics_Explorer - Dual View")
-    
-    # Initialize components
-    visualizer = EmbeddingVisualizer()
-    reducer = DimensionReducer()
-    dual_manager = EnhancedDualViewManager()
-    geometric_analyzer = GeometricAnalyzer()
-    
-    # Sidebar controls
     with st.sidebar:
         st.header("🎛️ Settings")
         
         # Model and method selection
         with st.expander("Visualization Settings", expanded=False):
-            model_name = st.selectbox(
+            settings['model_name'] = st.selectbox(
                 "Embedding Model:",
                 options=list(MODEL_INFO.keys()),
                 index=list(MODEL_INFO.keys()).index(DEFAULT_MODEL)
             )
             
-            method_name = st.selectbox(
+            settings['method_name'] = st.selectbox(
                 "Reduction Method:",
                 options=list(METHOD_INFO.keys()),
                 index=list(METHOD_INFO.keys()).index(DEFAULT_METHOD)
             )
         
-        # Publication Settings
-        with st.expander("📊 Publication Settings", expanded=False):
-            publication_mode = st.checkbox("Publication Mode", value=False, 
-                                         help="Enable high-quality settings for publication")
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                if publication_mode:
-                    textfont_size = st.number_input("Text Size", min_value=12, max_value=24, value=16, step=1, 
-                                                   help="Font size for labels (12-24pt). Suggested: 16pt for publication, 18pt for presentations")
-                    point_size = st.number_input("Point Size", min_value=8, max_value=20, value=12, step=1, 
-                                                help="Size of data points (8-20pt). Suggested: 12pt for publication, 14-16pt for presentations")
-                else:
-                    textfont_size = st.number_input("Text Size", min_value=8, max_value=20, value=16, step=1, 
-                                                   help="Font size for labels (8-20pt). Default: 16pt for better readability")
-                    point_size = st.number_input("Point Size", min_value=2, max_value=12, value=12, step=1, 
-                                                help="Size of data points (2-12pt). Default: 12pt for clear visibility")
-            
-            with col2:
-                if publication_mode:
-                    plot_width = st.number_input("Width", min_value=800, max_value=1600, value=1000, step=50, 
-                                                help="Plot width in pixels (800-1600px). Suggested: 1000px for papers, 1200px for posters")
-                    plot_height = st.number_input("Height", min_value=600, max_value=1200, value=800, step=50, 
-                                                 help="Plot height in pixels (600-1200px). Suggested: 800px for square plots, 600px for wide plots")
-                else:
-                    plot_width = st.number_input("Width", min_value=600, max_value=1000, value=800, step=50, 
-                                                help="Plot width in pixels (600-1000px). Suggested: 800px for standard view, 900px for detailed analysis")
-                    plot_height = st.number_input("Height", min_value=500, max_value=900, value=700, step=50, 
-                                                 help="Plot height in pixels (500-900px). Suggested: 700px for square plots, 600px for wide plots")
-            
-            # Export options
-            if publication_mode:
-                st.markdown("**Export Options**")
-                col_exp1, col_exp2 = st.columns(2)
-                with col_exp1:
-                    export_format = st.selectbox("Format", ["PNG", "SVG", "PDF"], index=0,
-                                               help="Export format: PNG (raster, good for most uses), SVG (vector, scalable), PDF (vector, publication-ready)")
-                with col_exp2:
-                    export_dpi = st.number_input("DPI", min_value=150, max_value=600, value=300, step=50, 
-                                               help="Dots per inch (150-600). Suggested: 300 DPI for journals, 150-200 for web, 600 for high-quality prints")
-            else:
-                export_format = "PNG"
-                export_dpi = 150
-            
-            # Store settings in session state for potential future use
-            st.session_state.dual_view_publication_settings = {
-                'publication_mode': publication_mode,
-                'textfont_size': textfont_size,
-                'point_size': point_size,
-                'plot_width': plot_width,
-                'plot_height': plot_height,
-                'export_format': export_format,
-                'export_dpi': export_dpi
-            }
+        # Publication Settings (using shared component)
+        publication_settings = PublicationSettingsWidget.render_publication_settings("dual_view")
         
+        # Store settings in session state for backward compatibility
+        st.session_state.dual_view_publication_settings = publication_settings
+        settings['publication_settings'] = publication_settings
+        
+        return settings
+
+
+def handle_text_input():
+    """Handle text input UI and return processed text data"""
+    with st.sidebar:
         # Text input areas - same as Semantics Explorer
         with st.expander("Enter Text Data (Word/Phrase):", expanded=False):
             input_dir = Path("data/input")
@@ -529,7 +480,6 @@ def main():
                     key='chinese_text_input'
                 )
                 chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
-                chinese_words = visualizer.process_text(chinese_text) if chinese_selected else []
 
             with col2:
                 english_text = st.text_area(
@@ -539,8 +489,12 @@ def main():
                     key='english_text_input'
                 )
                 english_selected = st.checkbox("English", value=True, key="english")
-                english_words = visualizer.process_text(english_text) if english_selected else []
 
+            # Process text into word lists
+            visualizer = EmbeddingVisualizer()
+            chinese_words = visualizer.process_text(chinese_text) if chinese_selected else []
+            english_words = visualizer.process_text(english_text) if english_selected else []
+            
             # Save functionality
             col_input_enter, col_save_txt = st.columns([3, 1])
             with col_input_enter:
@@ -588,6 +542,12 @@ def main():
                 else:
                     st.warning("No text to save")
 
+            return chinese_words, english_words, chinese_selected, english_selected
+
+
+def setup_geometric_analysis_controls():
+    """Setup geometric analysis controls and return parameters"""
+    with st.sidebar:
         # Geometric Analysis Controls
         with st.expander("🔬 Geometric Analysis", expanded=False):
             enable_geometric_analysis = st.checkbox(
@@ -597,66 +557,17 @@ def main():
             )
             
             if enable_geometric_analysis:
+                geometric_analyzer = GeometricAnalyzer()
                 analysis_params = geometric_analyzer.render_controls()
             else:
                 analysis_params = None
-
-        # Generate button
-        btn_vis_col, btn_pan_col, btn_save_img_col = st.columns([2, 2, 2])
-        with btn_vis_col:
-            btn_vis = st.button("Visualize", type="primary", help="Generate visualization", key="btn_visualize")
-        with btn_pan_col:
-            btn_pan = st.button("Panning", type="secondary", help="Apply pan movement from zoom controls", key="btn_panning")
-        with btn_save_img_col:
-            btn_save_detail_img = st.button("Save Image", type="secondary", help="Save Detail View to Image File", key="btn_save_detail_img")
-
-        if btn_vis:
-            if chinese_words or english_words:
-                st.session_state.generate_requested = True
-                st.rerun()
-
-        # Handle save detail image
-        if btn_save_detail_img:
-            if 'enhanced_data' in st.session_state:
-                # Get current input name from session state or use a default
-                current_input_name = st.session_state.get('cfg_input_text_entered', 'dual-view')
-                if not current_input_name or current_input_name == 'untitled':
-                    current_input_name = 'dual-view'
                 
-                # Recreate the detail figure for saving
-                data = st.session_state.enhanced_data
-                # Get dataset name
-                dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
-                
-                overview_fig, detail_fig, points_count, viewport_mask = dual_manager.create_enhanced_dual_view(
-                    data['embeddings'],
-                    data['labels'], 
-                    data['colors'],
-                    data['title'],
-                    st.session_state.zoom_params,
-                    model_name,
-                    method_name,
-                    dataset_name
-                )
-                
-                # Save the detail view image
-                filename = visualizer.save_detail_view_image(
-                    detail_fig,
-                    current_input_name,
-                    model_name,
-                    method_name,
-                    chinese_selected,
-                    english_selected
-                )
-                
-                if filename:
-                    st.success(f"Detail view saved as: {filename}")
-                else:
-                    st.error("Failed to save detail view image")
-            else:
-                st.warning("No visualization to save. Please generate a visualization first.")
+            return enable_geometric_analysis, analysis_params
 
 
+def setup_zoom_controls():
+    """Setup zoom controls and return zoom parameters"""  
+    with st.sidebar:
         # Zoom controls
         with st.expander("Zoom Controls", expanded=True):
             # Global box size parameters
@@ -727,10 +638,93 @@ def main():
             4. **Update View**: Click 'Update Zoom' to apply center + pan changes
             5. **Detail View**: Shows large labels with 10% margin around zoom area
             """)
-        
 
+
+def setup_action_buttons():
+    """Setup action buttons and return button states"""
+    with st.sidebar:
+        # Generate button
+        btn_vis_col, btn_pan_col, btn_save_img_col = st.columns([2, 2, 2])
+        
+        with btn_vis_col:
+            btn_vis = st.button("Visualize", type="primary", help="Generate visualization", key="btn_visualize")
+        with btn_pan_col:
+            btn_pan = st.button("Panning", type="secondary", help="Apply pan movement from zoom controls", key="btn_panning")
+        with btn_save_img_col:
+            btn_save_detail_img = st.button("Save Image", type="secondary", help="Save Detail View to Image File", key="btn_save_detail_img")
+            
+        return btn_vis, btn_pan, btn_save_detail_img
+
+
+def main():
+    check_login()
     
-    # Main content area
+    st.subheader("🔍 Semantics_Explorer - Dual View")
+    
+    # Initialize components
+    visualizer = EmbeddingVisualizer()
+    reducer = DimensionReducer()
+    dual_manager = EnhancedDualViewManager()
+    geometric_analyzer = GeometricAnalyzer()
+    
+    # Setup all sidebar components
+    settings = setup_sidebar_controls()
+    model_name = settings['model_name']
+    method_name = settings['method_name']
+    
+    chinese_words, english_words, chinese_selected, english_selected = handle_text_input()
+    enable_geometric_analysis, analysis_params = setup_geometric_analysis_controls()
+    setup_zoom_controls()
+    btn_vis, btn_pan, btn_save_detail_img = setup_action_buttons()
+    
+    # Handle button actions
+    if btn_vis:
+        if chinese_words or english_words:
+            st.session_state.generate_requested = True
+            st.rerun()
+
+    # Handle save detail image
+    if btn_save_detail_img:
+        if 'enhanced_data' in st.session_state:
+            # Get current input name from session state or use a default
+            current_input_name = st.session_state.get('cfg_input_text_entered', 'dual-view')
+            if not current_input_name or current_input_name == 'untitled':
+                current_input_name = 'dual-view'
+            
+            # Recreate the detail figure for saving
+            data = st.session_state.enhanced_data
+            # Get dataset name
+            dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
+            
+            overview_fig, detail_fig, points_count, viewport_mask = dual_manager.create_enhanced_dual_view(
+                data['embeddings'],
+                data['labels'], 
+                data['colors'],
+                data['title'],
+                st.session_state.zoom_params,
+                model_name,
+                method_name,
+                dataset_name
+            )
+            
+            # Save the detail view image
+            filename = visualizer.save_detail_view_image(
+                detail_fig,
+                current_input_name,
+                model_name,
+                method_name,
+                chinese_selected,
+                english_selected
+            )
+            
+            if filename:
+                st.success(f"Detail view saved as: {filename}")
+            else:
+                st.error("Failed to save detail view image")
+        else:
+            st.warning("No visualization to save. Please generate a visualization first.")
+
+    # Display existing visualization if available
     if 'enhanced_data' in st.session_state:
         data = st.session_state.enhanced_data
         
@@ -773,7 +767,6 @@ def main():
         with st.expander("📊 Overview", expanded=True):
             st.plotly_chart(overview_fig, use_container_width=True, config={'displayModeBar': False})
       
-
         # Stats in collapsible expander
         with st.expander("📊 Statistics", expanded=False):
             col1, col2, col3 = st.columns(3)
@@ -879,6 +872,7 @@ def main():
                     st.error("Failed to generate embeddings")
         else:
             st.warning("Please enter some text to visualize")
+
 
 if __name__ == "__main__":
     main()

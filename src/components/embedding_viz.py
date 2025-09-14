@@ -14,6 +14,7 @@ from config import (
 )
 from models.model_manager import get_model
 from utils.error_handling import handle_errors
+from components.shared.publication_settings import PublicationSettingsWidget
 
 from components.plotting import PlotManager
 
@@ -94,61 +95,13 @@ class EmbeddingVisualizer:
                 if do_clustering:
                     n_clusters = st.slider("Number of Clusters", min_value=3, max_value=10, value=5)
 
-            with st.expander("📊 Publication Settings", expanded=False):
-                publication_mode = st.checkbox("Publication Mode", value=False, 
-                                             help="Enable high-quality settings for publication")
-                
-                col1, col2 = st.columns(2)
-                with col1:
-                    if publication_mode:
-                        textfont_size = st.number_input("Text Size", min_value=12, max_value=24, value=16, step=1, 
-                                                       help="Font size for labels (12-24pt). Suggested: 16pt for publication, 18pt for presentations")
-                        point_size = st.number_input("Point Size", min_value=8, max_value=20, value=12, step=1, 
-                                                    help="Size of data points (8-20pt). Suggested: 12pt for publication, 14-16pt for presentations")
-                    else:
-                        textfont_size = st.number_input("Text Size", min_value=8, max_value=20, value=16, step=1, 
-                                                       help="Font size for labels (8-20pt). Default: 16pt for better readability")
-                        point_size = st.number_input("Point Size", min_value=2, max_value=12, value=12, step=1, 
-                                                    help="Size of data points (2-12pt). Default: 12pt for clear visibility")
-                
-                with col2:
-                    if publication_mode:
-                        plot_width = st.number_input("Width", min_value=800, max_value=1600, value=1000, step=50, 
-                                                    help="Plot width in pixels (800-1600px). Suggested: 1000px for papers, 1200px for posters")
-                        plot_height = st.number_input("Height", min_value=600, max_value=1200, value=800, step=50, 
-                                                     help="Plot height in pixels (600-1200px). Suggested: 800px for square plots, 600px for wide plots")
-                    else:
-                        plot_width = st.number_input("Width", min_value=600, max_value=1000, value=800, step=50, 
-                                                    help="Plot width in pixels (600-1000px). Suggested: 800px for standard view, 900px for detailed analysis")
-                        plot_height = st.number_input("Height", min_value=500, max_value=900, value=700, step=50, 
-                                                     help="Plot height in pixels (500-900px). Suggested: 700px for square plots, 600px for wide plots")
-                
-                # Export options
-                if publication_mode:
-                    st.markdown("**Export Options**")
-                    col_exp1, col_exp2 = st.columns(2)
-                    with col_exp1:
-                        export_format = st.selectbox("Format", ["PNG", "SVG", "PDF"], index=0,
-                                                   help="Export format: PNG (raster, good for most uses), SVG (vector, scalable), PDF (vector, publication-ready)")
-                    with col_exp2:
-                        export_dpi = st.number_input("DPI", min_value=150, max_value=600, value=300, step=50, 
-                                                   help="Dots per inch (150-600). Suggested: 300 DPI for journals, 150-200 for web, 600 for high-quality prints")
-                else:
-                    export_format = "PNG"
-                    export_dpi = 150
-                
-                # Store settings in session state for PlotManager to access
-                st.session_state.publication_settings = {
-                    'publication_mode': publication_mode,
-                    'textfont_size': textfont_size,
-                    'point_size': point_size,
-                    'plot_width': plot_width,
-                    'plot_height': plot_height,
-                    'export_format': export_format,
-                    'export_dpi': export_dpi
-                }
+            # Publication Settings (using shared component)
+            publication_settings = PublicationSettingsWidget.render_publication_settings("main_viz")
+            
+            # Store settings in session state for PlotManager to access
+            st.session_state.publication_settings = publication_settings
 
-                return model_name, method_name, dimensions, do_clustering, n_clusters
+        return model_name, method_name, dimensions, do_clustering, n_clusters
 
     @handle_errors
     def process_text(self, text: str, dedup: bool = True) -> List[str]:

@@ -1,0 +1,5 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,timestamp,transitivity
+1.0,,,,,,子-family,23,,,,PHATE,connectivity_graph,Sentence-BERT Multilingual,1,253,,,,,20250914_210212,
+,,0,,,,子-family,,,,,PHATE,linearity_analysis,Sentence-BERT Multilingual,,,,,0.9875,,20250914_210212,
+,,,,1.0,,子-family,,22,22.0,,PHATE,topology_analysis,Sentence-BERT Multilingual,,,0,,,,20250914_210212,1.0
+,,,仔;厚;好;子;孔;孕;字;存;孙;孝;孟;孢;季;孤;学;孩;孪;孱;孳;孺;孽;李;籽,,,子-family,,,,0.2443,PHATE,alphabetical_ordering,Sentence-BERT Multilingual,,,,23,,0.2253,20250914_210212,

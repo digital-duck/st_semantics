@@ -1,0 +1,6 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_digits,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_digits,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,step_distance_std,timestamp,transitivity
+0.5539561099960251,,,,,,,ascii-words,116,,,,MDS,connectivity_graph,Sentence-BERT Multilingual,3,,686,,,,,,20250914_205053,
+,3;5;26;33;48;49;68;85;106;111,0.7938,,,,,ascii-words,,,,,MDS,linearity_analysis,Sentence-BERT Multilingual,,,,,,0.5129,,,20250914_205053,
+,,,,,0.09770687936191426,1;7;8;11;14;17;20;21;23;39;41;47;50;55;60;67;69;70;72;77;81;83;90;97;110;112;113;115;116,ascii-words,,31,11.529411764705882,,MDS,topology_analysis,Sentence-BERT Multilingual,,,,29,,,,,20250914_205053,0.7362262311067772
+,,,0;1;2;3;4;5;6;7;8;9,,,,ascii-words,,,,1.2202,MDS,digit_ordering,Sentence-BERT Multilingual,,10,,,,,0.0383,1.1734,20250914_205053,
+,,,,a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z,,,ascii-words,,,,1.7115,MDS,alphabetical_ordering,Sentence-BERT Multilingual,,,,,26,,0.5814,,20250914_205053,

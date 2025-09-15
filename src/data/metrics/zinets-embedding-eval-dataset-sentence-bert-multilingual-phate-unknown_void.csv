@@ -1,4 +1,4 @@
 chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
-,,zinets-embedding-eval-dataset,,,0.06381607551761323,PHATE,void_regions,Sentence-BERT Multilingual,20,,,,20250831_134244,,
-0.0,20.0,zinets-embedding-eval-dataset,False,,,PHATE,void_significance,Sentence-BERT Multilingual,,20,1.0,0.050000000000000044,20250831_134244,,
-,,zinets-embedding-eval-dataset,,0.0823,,PHATE,void_geometry,Sentence-BERT Multilingual,,,,,20250831_134244,0.20000000000000004,0.0121
+,,zinets-embedding-eval-dataset,,,0.09006575734515405,PHATE,void_regions,Sentence-BERT Multilingual,17,,,,20250914_215900,,
+0.0,20.0,zinets-embedding-eval-dataset,False,,,PHATE,void_significance,Sentence-BERT Multilingual,,20,1.0,0.050000000000000044,20250914_215900,,
+,,zinets-embedding-eval-dataset,,0.1017,,PHATE,void_geometry,Sentence-BERT Multilingual,,,,,20250914_215900,0.17000000000000004,0.0074

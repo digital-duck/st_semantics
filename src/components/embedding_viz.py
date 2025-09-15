@@ -228,19 +228,15 @@ class EmbeddingVisualizer:
             with st.expander("Enter Text Data (Word/Phrase):", expanded=True):
                 
                 # Language selection
-                st.markdown("**Language Configuration:**")
-                col_source, col_target = st.columns(2)
-                with col_source:
-                    st.info("**Source:** Chinese (chn)")
-                with col_target:
-                    # Multi-target language selection
-                    target_languages = st.multiselect(
-                        "**Target Language(s)**",
-                        options=["English", "French", "Spanish", "German"],
-                        default=st.session_state.get('target_languages', ["English"]),
-                        help="Select target languages for comparison with Chinese",
-                        key='target_languages'
-                    )
+                st.markdown("Source Language: Chinese (chn)")
+                # Multi-target language selection
+                target_languages = st.multiselect(
+                    "**Target Language(s)**",
+                    options=["English", "French", "Spanish", "German"],
+                    default=st.session_state.get('target_languages', ["English"]),
+                    help="Select target languages for comparison with Chinese",
+                    key='target_languages'
+                )
                 
                 # Language code mapping
                 lang_code_map = {
@@ -250,8 +246,7 @@ class EmbeddingVisualizer:
                     "German": "deu"
                 }
                 target_lang_codes = [lang_code_map[lang] for lang in target_languages]
-                
-                st.divider()
+
 
                 col_input_select, col_load_txt = st.columns([3, 1])
                 with col_input_select:
@@ -278,23 +273,22 @@ class EmbeddingVisualizer:
                 
                 # Load text if button is clicked
                 if btn_load_txt:
-                    files_found = 0
                     # Load Chinese (source)
                     loaded_chinese = self.load_text_from_file(input_name_selected, "chn")
-                    if loaded_chinese:
-                        default_texts["chn"] = loaded_chinese
-                        st.session_state.chinese_text_area = loaded_chinese
-                        files_found += 1
+                    # if loaded_chinese:
+                    default_texts["chn"] = loaded_chinese
+                    st.session_state.chinese_text_area = loaded_chinese
                     
                     # Load target languages
+                    files_found = 0
                     for lang_code in target_lang_codes:
                         loaded_text = self.load_text_from_file(input_name_selected, lang_code)
+                        default_texts[lang_code] = loaded_text
+                        st.session_state[f'{lang_code}_text_area'] = loaded_text
                         if loaded_text:
-                            default_texts[lang_code] = loaded_text
-                            st.session_state[f'{lang_code}_text_area'] = loaded_text
                             files_found += 1
                     
-                    if files_found == 0:
+                    if not loaded_chinese and files_found == 0:
                         st.warning(f"No text files found for '{input_name_selected}'")
 
                 # Dynamic text areas based on selected languages
@@ -309,7 +303,8 @@ class EmbeddingVisualizer:
                         height=200,
                         key='chinese_text_input'
                     )
-                    chinese_selected = st.checkbox("Chinese", value=True, key="chinese")
+                    chinese_text = chinese_text.strip()
+                    chinese_selected = st.checkbox("Chinese", value=(len(chinese_text) > 0), key="chn_selected")
                     chinese_words = self.process_text(chinese_text) if chinese_selected else []
 
                 # Target languages
@@ -331,7 +326,8 @@ class EmbeddingVisualizer:
                             height=200,
                             key=text_area_key
                         )
-                        lang_selected = st.checkbox(lang_name, value=True, key=checkbox_key)
+                        lang_text = lang_text.strip()
+                        lang_selected = st.checkbox(lang_name, value=(len(lang_text) > 0), key=checkbox_key)
                         target_words_dict[lang_code] = self.process_text(lang_text) if lang_selected else []
                         target_selected_dict[lang_code] = lang_selected
                     

@@ -1,0 +1,5 @@
+davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
+0.6135,,,,0.1223,子-network,,,,,,PHATE,basic_clustering,,Sentence-BERT Multilingual,5,0.5319,20250914_211307,
+,0.0,,,,子-network,,114,114.0,,,PHATE,density_analysis,114,Sentence-BERT Multilingual,,,20250914_211307,
+,,0.004505645973880151;0.0035651421049304193;0.004882961959270779;0.0011085305551180934;0.0007504731998231629,0.28660131488645085;0.24548566675143202;0.26907018798188836;0.1788318405794658;0.2093311532363704,,子-network,,,,0.002962550758604521,,PHATE,boundary_analysis,,Sentence-BERT Multilingual,,,20250914_211307,0.014812753793022606
+,,,,,子-network,1.0;1.0;1.0;1.0;1.0,,,,1.0,PHATE,language_coherence,,Sentence-BERT Multilingual,,,20250914_211307,

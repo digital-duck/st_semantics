@@ -393,9 +393,8 @@ def display_dual_view_geometric_analysis(model_name=None, method_name=None):
                     clean_method = (method_name or "unknown-method").lower().replace(" ", "-").replace(",", "").replace("_", "-")
                     clean_model = (model_name or "unknown-model").lower().replace(" ", "-").replace(",", "").replace("_", "-")
                     clean_dataset = dataset_name.lower().replace(" ", "-").replace(",", "").replace("_", "-")
-                    clean_input = current_input.lower().replace(" ", "-").replace(",", "").replace("_", "-")
                     
-                    clustering_filename = f"{clean_method}-{clean_model}-{clean_dataset}-{clean_input}-dpi-{export_dpi}-text-{textfont_size}-point-{point_size}-clustering-auto.{export_format}"
+                    clustering_filename = f"{clean_method}-{clean_model}-{clean_dataset}-dpi-{export_dpi}-text-{textfont_size}-point-{point_size}-clustering.{export_format}"
                     
                     # Auto-save the clustering chart
                     from pathlib import Path

@@ -22,8 +22,8 @@ class PlotManager:
             'textfont_size': 16,
             'point_size': 12,
             'width': 1200,
-            'height': 900,
-            'dpi': 300,
+            'height': 1200,  # Square aspect ratio for manifold learning
+            'dpi': 300,  # 300 DPI for publication quality
             'grid_color': '#D0D0D0',
             'grid_width': 1,
             'background_color': 'white',

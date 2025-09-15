@@ -23,7 +23,7 @@ DEFAULT_MODEL = f"Sentence-BERT Multilingual"
 DEFAULT_METHOD = f"PHATE"
 DEFAULT_DIMENSIONS = "2D"
 DEFAULT_WIDTH = 800
-DEFAULT_HEIGHT = 1200
+DEFAULT_HEIGHT = 800  # Square aspect ratio for manifold learning visualizations
 
 
 # Plot Settings

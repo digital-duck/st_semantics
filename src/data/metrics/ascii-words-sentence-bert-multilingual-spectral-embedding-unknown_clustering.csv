@@ -1,0 +1,5 @@
+davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
+0.6176,,,,0.0364,ascii-words,,,,,,Spectral Embedding,basic_clustering,,Sentence-BERT Multilingual,5,0.5219,20250914_204811,
+,0.0,,,,ascii-words,,118,118.0,,,Spectral Embedding,density_analysis,118,Sentence-BERT Multilingual,,,20250914_204811,
+,,0.00023954364590335293;0.0014138304958625073;0.0025336439656008345;0.001039004355782517;0.0010752911622551953,0.09275334804122477;0.1550612258152413;0.20957088947995273;0.14410555001947672;0.13630087978808128,,ascii-words,,,,0.0012602627250808812,,Spectral Embedding,boundary_analysis,,Sentence-BERT Multilingual,,,20250914_204811,0.0063013136254044064
+,,,,,ascii-words,,,,,0,Spectral Embedding,language_coherence,,Sentence-BERT Multilingual,,,20250914_204811,

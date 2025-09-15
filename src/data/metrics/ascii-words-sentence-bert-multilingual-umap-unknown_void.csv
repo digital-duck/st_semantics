@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,ascii-words,,,1.4293073911816079,UMAP,void_regions,Sentence-BERT Multilingual,11,,,,20250914_204414,,
+0.0,20.0,ascii-words,False,,,UMAP,void_significance,Sentence-BERT Multilingual,,20,1.0,0.050000000000000044,20250914_204414,,
+,,ascii-words,,1.8216,,UMAP,void_geometry,Sentence-BERT Multilingual,,,,,20250914_204414,0.11000000000000001,0.2206

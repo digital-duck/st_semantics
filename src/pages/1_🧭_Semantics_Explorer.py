@@ -107,13 +107,13 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
             current_input = st.session_state.get('cfg_input_text_selected', 'sample_1')
         
         # Determine language selections from colors
-        chinese_selected = 'chinese' in colors if colors else False
-        english_selected = 'english' in colors if colors else False
+        chinese_selected = st.session_state.get('chn_selected', False)
+        english_selected = st.session_state.get('enu_selected', False)
         
         # Auto-save the plot
         saved_filename = visualizer.save_plot_image(current_input, model_name, method_name, chinese_selected, english_selected)
         if saved_filename:
-            st.success(f"📸 Visualization auto-saved as: {saved_filename}")
+            st.success(f"📸 **Visualization auto-saved as**: {saved_filename}")
         
     except Exception as auto_save_error:
         st.warning(f"Could not auto-save visualization: {str(auto_save_error)}")

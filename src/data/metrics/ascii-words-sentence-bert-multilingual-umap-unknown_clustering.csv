@@ -1,0 +1,5 @@
+davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
+0.7646,,,,57.9764,ascii-words,,,,,,UMAP,basic_clustering,,Sentence-BERT Multilingual,5,0.4002,20250914_204414,
+,2.3560303850331583,,,,ascii-words,,11,5.19327731092437,,,UMAP,density_analysis,1,Sentence-BERT Multilingual,,,20250914_204414,
+,,2.826415597818368;1.4894101644667879;1.9946074289723588;2.2830115275348812;0.788939855856142,6.5450683;4.861581;5.700355;5.904569;3.5990536,,ascii-words,,,,1.8764769149297078,,UMAP,boundary_analysis,,Sentence-BERT Multilingual,,,20250914_204414,9.382384574648539
+,,,,,ascii-words,,,,,0,UMAP,language_coherence,,Sentence-BERT Multilingual,,,20250914_204414,

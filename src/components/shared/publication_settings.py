@@ -62,28 +62,28 @@ class PublicationSettingsWidget:
             with col2:
                 if publication_mode:
                     plot_width = st.number_input(
-                        "Width", 
-                        min_value=800, max_value=1600, value=1000, step=50,
-                        help="Plot width in pixels (800-1600px). Suggested: 1000px for papers, 1200px for posters",
+                        "Width",
+                        min_value=800, max_value=1600, value=1200, step=50,
+                        help="Plot width in pixels (800-1600px). Square aspect ratio recommended for manifold learning",
                         key=f"{session_key_prefix}_plot_width_pub"
                     )
                     plot_height = st.number_input(
-                        "Height", 
-                        min_value=600, max_value=1200, value=800, step=50,
-                        help="Plot height in pixels (600-1200px). Suggested: 800px for square plots, 600px for wide plots",
+                        "Height",
+                        min_value=800, max_value=1600, value=1200, step=50,
+                        help="Plot height in pixels (800-1600px). Square aspect ratio preserves geometric relationships",
                         key=f"{session_key_prefix}_plot_height_pub"
                     )
                 else:
                     plot_width = st.number_input(
-                        "Width", 
+                        "Width",
                         min_value=600, max_value=1000, value=800, step=50,
-                        help="Plot width in pixels (600-1000px). Suggested: 800px for standard view, 900px for detailed analysis",
+                        help="Plot width in pixels (600-1000px). Square aspect ratio recommended for manifold learning",
                         key=f"{session_key_prefix}_plot_width_std"
                     )
                     plot_height = st.number_input(
-                        "Height", 
-                        min_value=500, max_value=900, value=700, step=50,
-                        help="Plot height in pixels (500-900px). Suggested: 700px for square plots, 600px for wide plots",
+                        "Height",
+                        min_value=600, max_value=1000, value=800, step=50,
+                        help="Plot height in pixels (600-1000px). Square aspect ratio preserves geometric relationships",
                         key=f"{session_key_prefix}_plot_height_std"
                     )
             
@@ -131,7 +131,7 @@ class PublicationSettingsWidget:
             'textfont_size': 16,
             'point_size': 12,
             'plot_width': 800,
-            'plot_height': 700,
+            'plot_height': 800,  # Square aspect ratio for manifold learning
             'export_format': 'PNG',
-            'export_dpi': 300
+            'export_dpi': 300  # 300 DPI default for publication quality
         }

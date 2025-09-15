@@ -1,0 +1,4 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,method_name,metric_type,model_name,num_components,num_edges,num_hubs,overall_linearity,timestamp,transitivity
+1.0,,,,,子-network,115,,,PHATE,connectivity_graph,Sentence-BERT Multilingual,1,6555,,,20250914_211307,
+,,0,,,子-network,,,,PHATE,linearity_analysis,Sentence-BERT Multilingual,,,,0.6071,20250914_211307,
+,,,1.0,,子-network,,114,114.0,PHATE,topology_analysis,Sentence-BERT Multilingual,,,0,,20250914_211307,1.0

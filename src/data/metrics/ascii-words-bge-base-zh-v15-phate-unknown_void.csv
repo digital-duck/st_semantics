@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,ascii-words,,,0.08347038784389499,PHATE,void_regions,BGE-Base-ZH-v1.5,9,,,,20250914_203121,,
+0.0,20.0,ascii-words,False,,,PHATE,void_significance,BGE-Base-ZH-v1.5,,20,1.0,0.050000000000000044,20250914_203121,,
+,,ascii-words,,0.0972,,PHATE,void_geometry,BGE-Base-ZH-v1.5,,,,,20250914_203121,0.09000000000000002,0.0071

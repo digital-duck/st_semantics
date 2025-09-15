@@ -1,0 +1,5 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,timestamp,transitivity
+1.0,,,,,,元字-pure-radicals,112,,,,PHATE,connectivity_graph,Sentence-BERT Multilingual,1,6216,,,,,20250914_210023,
+,,0,,,,元字-pure-radicals,,,,,PHATE,linearity_analysis,Sentence-BERT Multilingual,,,,,0.9777,,20250914_210023,
+,,,,1.0,,元字-pure-radicals,,111,111.0,,PHATE,topology_analysis,Sentence-BERT Multilingual,,,0,,,,20250914_210023,1.0
+,,,㐬;㔾;㕻;丨;丬;丶;丷;丿;乀;乁;乂;乚;乛;亅;亍;亠;亢;亻;佥;兀;冂;冖;冫;凵;刂;刍;勹;匚;匸;卜;卩;厶;呙;囟;坙;夂;夆;夊;奂;孚;宀;尢;屮;屰;巛;幷;廴;廾;彐;彑;彡;彳;忄;戋;扌;攴;攵;旡;曰;朩;殳;氵;氺;灬;爫;爻;爿;牜;犭;畐;疋;疒;癶;礻;禸;纟;罒;罓;耂;耒;聿;肙;臼;舛;艹;虍;衤;覀;讠;豕;豸;辶;钅;门;阝;隹;饣;黾;龴;龺;𤴔,,,元字-pure-radicals,,,,0.0739,PHATE,alphabetical_ordering,Sentence-BERT Multilingual,,,,101,,0,20250914_210023,

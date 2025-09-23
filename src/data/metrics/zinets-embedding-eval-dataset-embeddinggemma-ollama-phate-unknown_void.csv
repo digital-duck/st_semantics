@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,zinets-embedding-eval-dataset,,,0.06213531231738299,PHATE,void_regions,EmbeddingGemma (Ollama),18,,,,20250923_160600,,
+0.0,20.0,zinets-embedding-eval-dataset,False,,,PHATE,void_significance,EmbeddingGemma (Ollama),,20,1.0,0.050000000000000044,20250923_160600,,
+,,zinets-embedding-eval-dataset,,0.0746,,PHATE,void_geometry,EmbeddingGemma (Ollama),,,,,20250923_160600,0.18000000000000005,0.008

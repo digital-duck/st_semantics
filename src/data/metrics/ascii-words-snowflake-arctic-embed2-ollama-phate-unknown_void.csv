@@ -1,4 +1,4 @@
 chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
-,,ascii-words,,,0.09186900218695877,PHATE,void_regions,Snowflake-Arctic-Embed2 (Ollama),17,,,,20250914_204106,,
-0.0,20.0,ascii-words,False,,,PHATE,void_significance,Snowflake-Arctic-Embed2 (Ollama),,20,1.0,0.050000000000000044,20250914_204106,,
-,,ascii-words,,0.146,,PHATE,void_geometry,Snowflake-Arctic-Embed2 (Ollama),,,,,20250914_204106,0.17000000000000004,0.0335
+,,ASCII-words,,,0.0919004945809544,PHATE,void_regions,Snowflake-Arctic-Embed2 (Ollama),17,,,,20250923_230937,,
+0.0,20.0,ASCII-words,False,,,PHATE,void_significance,Snowflake-Arctic-Embed2 (Ollama),,20,1.0,0.050000000000000044,20250923_230937,,
+,,ASCII-words,,0.1461,,PHATE,void_geometry,Snowflake-Arctic-Embed2 (Ollama),,,,,20250923_230937,0.17000000000000004,0.0335

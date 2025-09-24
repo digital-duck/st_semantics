@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,ASCII-words,,,0.12735490344750336,PHATE,void_regions,BGE-M3 (Ollama),10,,,,20250923_231457,,
+0.0,20.0,ASCII-words,False,,,PHATE,void_significance,BGE-M3 (Ollama),,20,1.0,0.050000000000000044,20250923_231457,,
+,,ASCII-words,,0.1768,,PHATE,void_geometry,BGE-M3 (Ollama),,,,,20250923_231457,0.10000000000000002,0.0324

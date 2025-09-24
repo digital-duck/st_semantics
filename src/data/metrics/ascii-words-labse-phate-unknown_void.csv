@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,ASCII-words,,,0.11874845928104209,PHATE,void_regions,LaBSE,24,,,,20250923_225334,,
+0.0,20.0,ASCII-words,False,,,PHATE,void_significance,LaBSE,,20,1.0,0.050000000000000044,20250923_225334,,
+,,ASCII-words,,0.1461,,PHATE,void_geometry,LaBSE,,,,,20250923_225334,0.24000000000000005,0.0131

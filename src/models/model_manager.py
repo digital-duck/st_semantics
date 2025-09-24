@@ -100,11 +100,31 @@ class HuggingFaceModel(EmbeddingModel):
             embeddings.append(outputs.last_hidden_state.mean(dim=1).detach().numpy())
         return np.vstack(embeddings)
 
+def get_active_models():
+    """Get only active models for UI display"""
+    active_models = {}
+
+    # Add active Ollama models
+    for name, info in OLLAMA_MODELS.items():
+        if info.get("is_active", True):  # Default to True for backward compatibility
+            active_models[name] = info
+
+    # Add active Hugging Face models
+    for name, info in MODEL_INFO.items():
+        if info.get("is_active", True):  # Default to True for backward compatibility
+            active_models[name] = info
+
+    return active_models
+
 def get_model(model_name: str) -> EmbeddingModel:
     """Factory function for creating embedding models"""
     if model_name in OLLAMA_MODELS:
+        if not OLLAMA_MODELS[model_name].get("is_active", True):
+            raise ModelNotFoundError(f"Model {model_name} is currently inactive")
         return OllamaModel(OLLAMA_MODELS[model_name]["path"])
     elif model_name in MODEL_INFO:
+        if not MODEL_INFO[model_name].get("is_active", True):
+            raise ModelNotFoundError(f"Model {model_name} is currently inactive")
         return HuggingFaceModel(model_name, MODEL_INFO[model_name]["path"])
     else:
         raise ModelNotFoundError(f"Model {model_name} not found")

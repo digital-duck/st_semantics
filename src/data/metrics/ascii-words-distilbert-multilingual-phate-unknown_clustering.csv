@@ -1,5 +1,5 @@
 davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
-0.4971,,,,0.0437,ascii-words,,,,,,PHATE,basic_clustering,,DistilBERT Multilingual,5,0.6404,20250914_203836,
-,0.0,,,,ascii-words,,118,118.0,,,PHATE,density_analysis,118,DistilBERT Multilingual,,,20250914_203836,
-,,0.0009549682024029766;0.0019318130550746474;0.002067389414302607;0.00010242019620522164;0.0016964707265967882,0.13275581484801874;0.2343292719447752;0.1978111255524322;0.08400912740767712;0.16609916108442602,,ascii-words,,,,0.0013506123189164483,,PHATE,boundary_analysis,,DistilBERT Multilingual,,,20250914_203836,0.006753061594582241
-,,,,,ascii-words,,,,,0,PHATE,language_coherence,,DistilBERT Multilingual,,,20250914_203836,
+0.4973,,,,0.0437,ASCII-words,,,,,,PHATE,basic_clustering,,DistilBERT Multilingual,5,0.6403,20250923_223631,
+,0.0,,,,ASCII-words,,118,118.0,,,PHATE,density_analysis,118,DistilBERT Multilingual,,,20250923_223631,
+,,0.0009563166817654413;0.0019310705154404566;0.0020718108995647494;9.840143957779182e-05;0.0016991124974092765,0.13294327280956147;0.2339678784312865;0.19798255322305028;0.0840398405689365;0.1660928804523531,,ASCII-words,,,,0.001351342406751543,,PHATE,boundary_analysis,,DistilBERT Multilingual,,,20250923_223631,0.006756712033757715
+,,,,,ASCII-words,,,,,0,PHATE,language_coherence,,DistilBERT Multilingual,,,20250923_223631,

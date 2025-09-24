@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,ASCII-words,,,0.10948014388577706,PHATE,void_regions,Universal-Sentence-Encoder-Multilingual,28,,,,20250923_225634,,
+0.0,20.0,ASCII-words,False,,,PHATE,void_significance,Universal-Sentence-Encoder-Multilingual,,20,1.0,0.050000000000000044,20250923_225634,,
+,,ASCII-words,,0.1433,,PHATE,void_geometry,Universal-Sentence-Encoder-Multilingual,,,,,20250923_225634,0.28,0.0181

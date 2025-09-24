@@ -1,0 +1,6 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_digits,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_digits,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,step_distance_std,timestamp,transitivity
+1.0,,,,,,,ASCII-words,119,,,,PHATE,connectivity_graph,Nomic-Embed-Text (Ollama),1,,7021,,,,,,20250923_231109,
+,3;6;16;26;54;67;86;101;106;116,0.9877,,,,,ASCII-words,,,,,PHATE,linearity_analysis,Nomic-Embed-Text (Ollama),,,,,,0.6362,,,20250923_231109,
+,,,,,1.0,,ASCII-words,,118,118.0,,PHATE,topology_analysis,Nomic-Embed-Text (Ollama),,,,0,,,,,20250923_231109,1.0
+,,,0;1;2;3;4;5;6;7;8;9,,,,ASCII-words,,,,0.0225,PHATE,digit_ordering,Nomic-Embed-Text (Ollama),,10,,,,,0.3741,0.0141,20250923_231109,
+,,,,a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z,,,ASCII-words,,,,0.1195,PHATE,alphabetical_ordering,Nomic-Embed-Text (Ollama),,,,,26,,0.4669,,20250923_231109,

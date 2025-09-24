@@ -1,5 +1,5 @@
 davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
-0.442,,,,0.0219,ascii-words,,,,,,PHATE,basic_clustering,,Snowflake-Arctic-Embed2 (Ollama),5,0.6256,20250914_204106,
-,0.0,,,,ascii-words,,118,118.0,,,PHATE,density_analysis,118,Snowflake-Arctic-Embed2 (Ollama),,,20250914_204106,
-,,0.00022862877973045797;0.0012971449597190762;2.0467549399585903e-05;0.0004563260984759304;0.00020082622070420673,0.06837141775009292;0.24956463583311772;0.07283257809182514;0.08484167692305909;0.09724185819397643,,ascii-words,,,,0.00044067872160585136,,PHATE,boundary_analysis,,Snowflake-Arctic-Embed2 (Ollama),,,20250914_204106,0.002203393608029257
-,,,,,ascii-words,,,,,0,PHATE,language_coherence,,Snowflake-Arctic-Embed2 (Ollama),,,20250914_204106,
+0.4418,,,,0.0218,ASCII-words,,,,,,PHATE,basic_clustering,,Snowflake-Arctic-Embed2 (Ollama),5,0.6257,20250923_230937,
+,0.0,,,,ASCII-words,,118,118.0,,,PHATE,density_analysis,118,Snowflake-Arctic-Embed2 (Ollama),,,20250923_230937,
+,,0.00022861662177633832;2.0812946732433148e-05;0.001294040565860212;0.000456300490786468;0.0001998907481472715,0.06849386515888907;0.07255925083329753;0.24932292000692202;0.08477154521098273;0.09725190085057214,,ASCII-words,,,,0.00043993227466054455,,PHATE,boundary_analysis,,Snowflake-Arctic-Embed2 (Ollama),,,20250923_230937,0.002199661373302723
+,,,,,ASCII-words,,,,,0,PHATE,language_coherence,,Snowflake-Arctic-Embed2 (Ollama),,,20250923_230937,

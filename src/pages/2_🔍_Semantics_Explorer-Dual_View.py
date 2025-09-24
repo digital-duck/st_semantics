@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from components.embedding_viz import EmbeddingVisualizer
+from components.embedding_viz import EmbeddingVisualizer, get_active_methods
 from components.dimension_reduction import DimensionReducer
 from components.geometric_analysis import GeometricAnalyzer
 from config import (
@@ -434,10 +434,12 @@ def setup_sidebar_controls():
                 index=list(MODEL_INFO.keys()).index(DEFAULT_MODEL)
             )
             
+            active_methods = get_active_methods()
+            active_method_names = sorted(list(active_methods.keys()))
             settings['method_name'] = st.selectbox(
                 "Reduction Method:",
-                options=list(METHOD_INFO.keys()),
-                index=list(METHOD_INFO.keys()).index(DEFAULT_METHOD)
+                options=active_method_names,
+                index=active_method_names.index(DEFAULT_METHOD) if DEFAULT_METHOD in active_method_names else 0
             )
         
         # Publication Settings (using shared component)

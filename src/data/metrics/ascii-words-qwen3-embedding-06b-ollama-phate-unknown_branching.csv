@@ -1,0 +1,6 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_digits,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_digits,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,step_distance_std,timestamp,transitivity
+1.0,,,,,,,ASCII-words,119,,,,PHATE,connectivity_graph,Qwen3-Embedding-0.6B (Ollama),1,,7021,,,,,,20250923_214613,
+,10;15;25;39;57;78;90;91;114;117,0.8387,,,,,ASCII-words,,,,,PHATE,linearity_analysis,Qwen3-Embedding-0.6B (Ollama),,,,,,0.6566,,,20250923_214613,
+,,,,,1.0,,ASCII-words,,118,118.0,,PHATE,topology_analysis,Qwen3-Embedding-0.6B (Ollama),,,,0,,,,,20250923_214613,1.0
+,,,0;1;2;3;4;5;6;7;8;9,,,,ASCII-words,,,,0.0198,PHATE,digit_ordering,Qwen3-Embedding-0.6B (Ollama),,10,,,,,0.6174,0.0076,20250923_214613,
+,,,,a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z,,,ASCII-words,,,,0.05,PHATE,alphabetical_ordering,Qwen3-Embedding-0.6B (Ollama),,,,,26,,0.1541,,20250923_214613,

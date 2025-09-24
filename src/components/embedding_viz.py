@@ -8,15 +8,23 @@ from pathlib import Path
 import unicodedata
 
 from config import (
-    MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD, 
-    COLOR_MAP, 
+    MODEL_INFO, METHOD_INFO, DEFAULT_MODEL, DEFAULT_METHOD,
+    COLOR_MAP,
     sample_chn_input_data, sample_enu_input_data
 )
-from models.model_manager import get_model
+from models.model_manager import get_model, get_active_models
 from utils.error_handling import handle_errors
 from components.shared.publication_settings import PublicationSettingsWidget
 
 from components.plotting import PlotManager
+
+def get_active_methods():
+    """Get only active methods for UI display"""
+    active_methods = {}
+    for name, info in METHOD_INFO.items():
+        if info.get("is_active", True):  # Default to True for backward compatibility
+            active_methods[name] = info
+    return active_methods
 
 def rearrange_by_ollama(models):
     l1 = []
@@ -30,8 +38,12 @@ def rearrange_by_ollama(models):
 
 class EmbeddingVisualizer:
     def __init__(self):
-        self.model_names = rearrange_by_ollama(sorted(list(MODEL_INFO.keys())))
-        self.method_names = sorted(list(METHOD_INFO.keys()))
+        # Use only active models and methods
+        active_models = get_active_models()
+        self.model_names = rearrange_by_ollama(sorted(list(active_models.keys())))
+
+        self.active_methods = get_active_methods()
+        self.method_names = sorted(list(self.active_methods.keys()))
         self.input_dir = Path("data/input")
         self.images_dir = Path("data/images")
         
@@ -70,9 +82,9 @@ class EmbeddingVisualizer:
                     key="cfg_dim_reduc_method_name"
                 )
                 if method_name == DEFAULT_METHOD:
-                    info_msg = f"**{method_name}** (default): {METHOD_INFO[method_name]['help']}"
+                    info_msg = f"**{method_name}** (default): {self.active_methods[method_name]['help']}"
                 else:
-                    info_msg = f"**{method_name}**: {METHOD_INFO[method_name]['help']}"
+                    info_msg = f"**{method_name}**: {self.active_methods[method_name]['help']}"
                 st.info(info_msg)
 
                 # Dimensions

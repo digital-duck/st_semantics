@@ -1,0 +1,6 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_digits,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_digits,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,step_distance_std,timestamp,transitivity
+1.0,,,,,,,ASCII-words,119,,,,PHATE,connectivity_graph,BGE-M3 (Ollama),1,,7021,,,,,,20250923_231457,
+,3;6;16;26;54;67;86;101;106;116,0.9658,,,,,ASCII-words,,,,,PHATE,linearity_analysis,BGE-M3 (Ollama),,,,,,0.6122,,,20250923_231457,
+,,,,,1.0,,ASCII-words,,118,118.0,,PHATE,topology_analysis,BGE-M3 (Ollama),,,,0,,,,,20250923_231457,1.0
+,,,0;1;2;3;4;5;6;7;8;9,,,,ASCII-words,,,,0.0211,PHATE,digit_ordering,BGE-M3 (Ollama),,10,,,,,0,0.0313,20250923_231457,
+,,,,a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z,,,ASCII-words,,,,0.0205,PHATE,alphabetical_ordering,BGE-M3 (Ollama),,,,,26,,0.2088,,20250923_231457,

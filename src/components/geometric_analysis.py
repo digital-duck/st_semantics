@@ -17,6 +17,8 @@ import json
 import csv
 from datetime import datetime
 from pathlib import Path
+from config import SRC_DIR
+
 import re
 warnings.filterwarnings('ignore')
 
@@ -31,7 +33,7 @@ class GeometricAnalyzer:
     def __init__(self):
         self.min_clusters = 2
         self.max_clusters = 15
-        self.metrics_dir = Path("data/metrics")
+        self.metrics_dir = SRC_DIR / "data/metrics"
         
     def render_controls(self) -> Dict[str, Any]:
         """Render geometric analysis control widgets"""
@@ -884,7 +886,7 @@ class GeometricAnalyzer:
         """Save the summary plot as PNG file"""
         try:
             # Create metrics directory if it doesn't exist
-            metrics_dir = Path("data/metrics")
+            metrics_dir = SRC_DIR / "data/metrics"
             metrics_dir.mkdir(parents=True, exist_ok=True)
             
             # Generate filename

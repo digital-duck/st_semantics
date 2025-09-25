@@ -1,4 +1,4 @@
 chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
-,,子-family,,,0.10324078080801528,PHATE,void_regions,Sentence-BERT Multilingual,20,,,,20250914_210212,,
-0.0,20.0,子-family,False,,,PHATE,void_significance,Sentence-BERT Multilingual,,20,1.0,0.050000000000000044,20250914_210212,,
-,,子-family,,0.1327,,PHATE,void_geometry,Sentence-BERT Multilingual,,,,,20250914_210212,0.20000000000000004,0.017
+,,子-family,,,0.10424126876225484,PHATE,void_regions,Sentence-BERT Multilingual,18,,,,20250924_173803,,
+0.0,20.0,子-family,False,,,PHATE,void_significance,Sentence-BERT Multilingual,,20,1.0,0.050000000000000044,20250924_173803,,
+,,子-family,,0.1336,,PHATE,void_geometry,Sentence-BERT Multilingual,,,,,20250924_173803,0.18000000000000005,0.0168

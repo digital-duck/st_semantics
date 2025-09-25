@@ -1,0 +1,6 @@
+clustering_coefficient,digit_indices,digit_sequence_linearity,found_digits,found_letters,graph_density,hub_nodes,input_name,largest_component_size,max_degree,mean_degree,mean_step_distance,method_name,metric_type,model_name,num_components,num_digits,num_edges,num_hubs,num_letters,overall_linearity,sequential_consistency,step_distance_std,timestamp,transitivity
+1.0,,,,,,,sample_1,119,,,,PHATE,connectivity_graph,E5-Base-v2,1,,7021,,,,,,20250924_223813,
+,13;20;23;31;44;51;74;92;103;118,0.8366,,,,,sample_1,,,,,PHATE,linearity_analysis,E5-Base-v2,,,,,,0.602,,,20250924_223813,
+,,,,,1.0,,sample_1,,118,118.0,,PHATE,topology_analysis,E5-Base-v2,,,,0,,,,,20250924_223813,1.0
+,,,0;1;2;3;4;5;6;7;8;9,,,,sample_1,,,,0.0074,PHATE,digit_ordering,E5-Base-v2,,10,,,,,0.0791,0.0068,20250924_223813,
+,,,,a;b;c;d;e;f;g;h;i;j;k;l;m;n;o;p;q;r;s;t;u;v;w;x;y;z,,,sample_1,,,,0.0249,PHATE,alphabetical_ordering,E5-Base-v2,,,,,26,,0,,20250924_223813,

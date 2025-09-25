@@ -12,12 +12,14 @@ from config import (
 )
 try:
     from transformers import AutoTokenizer, AutoModel
+    import torch
 except ImportError as e:
     import streamlit as st
     st.error(f"Failed to import transformers: {e}")
     # Fallback - only support Ollama models
     AutoTokenizer = None
     AutoModel = None
+    torch = None
 
 @st.cache_resource
 def get_ollama_session():
@@ -88,17 +90,95 @@ class HuggingFaceModel(EmbeddingModel):
         #     except Exception as e:
         #         st.error(f"Unsupported model: {self.model_name}")
         #         return None
-                  
+
         self._lazy_load()
         embeddings = []
-        for text in texts:
-            # Tokenize the input word
+        print(f"[DEBUG] Processing {len(texts)} texts with E5-Base-v2")
+        for i, text in enumerate(texts):
+            # Skip empty texts that could cause NaN issues
+            if not text or not text.strip():
+                st.warning(f"Empty text detected, using zero embedding")
+                # Create a zero embedding with the model's hidden size
+                dummy_inputs = self.tokenizer("dummy", return_tensors="pt")
+                dummy_outputs = self.model(**dummy_inputs)
+                zero_embedding = np.zeros_like(dummy_outputs.last_hidden_state.mean(dim=1).detach().numpy())
+                embeddings.append(zero_embedding)
+                continue
+
+            # Chinese character preprocessing for E5 models
+            if self.model_name in ["E5-Base-v2"] and any('\u4e00' <= char <= '\u9fff' for char in text):
+                # Add a space before Chinese text for better E5 tokenization
+                text = f" {text}"
+
+            # Tokenize the input text with proper attention masks
             inputs = self.tokenizer(text, return_tensors="pt", truncation=True, padding=True)
-            # Get the encoder outputs (no need for decoder inputs here)
+
+            # Debug tokenization issues with Chinese text
+            if any('\u4e00' <= char <= '\u9fff' for char in text):
+                token_count = inputs['input_ids'].size(1)
+                if token_count > 100:  # Very long tokenization might indicate issues
+                    st.warning(f"Chinese text '{text[:20]}...' tokenized to {token_count} tokens")
+
+            # Get the encoder outputs
             outputs = self.model(**inputs)
-            # Use the last hidden state as the embedding
-            embeddings.append(outputs.last_hidden_state.mean(dim=1).detach().numpy())
-        return np.vstack(embeddings)
+
+            print(f"[DEBUG] Text {i}: '{text[:30]}...'")
+            print(f"[DEBUG] Token count: {inputs['input_ids'].size(1)}")
+
+            # Proper mean pooling using attention masks to avoid NaN from padding tokens
+            attention_mask = inputs['attention_mask']
+            token_embeddings = outputs.last_hidden_state
+
+            # Debug raw embeddings
+            print(f"[DEBUG] Raw embeddings shape: {token_embeddings.shape}")
+            print(f"[DEBUG] Raw embeddings range: {token_embeddings.min().item():.4f} to {token_embeddings.max().item():.4f}")
+            print(f"[DEBUG] Raw embeddings has NaN: {torch.isnan(token_embeddings).any().item()}")
+
+            # Mask out padding tokens and compute mean
+            input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+            sum_embeddings = (token_embeddings * input_mask_expanded).sum(dim=1)
+            sum_mask = input_mask_expanded.sum(dim=1)
+
+            print(f"[DEBUG] Sum mask: {sum_mask}")
+            print(f"[DEBUG] Sum embeddings has NaN: {torch.isnan(sum_embeddings).any().item()}")
+
+            # Avoid division by zero
+            sum_mask = sum_mask.clamp(min=1e-9)
+            mean_pooled = sum_embeddings / sum_mask
+
+            print(f"[DEBUG] Mean pooled shape: {mean_pooled.shape}")
+            print(f"[DEBUG] Mean pooled range: {mean_pooled.min().item():.4f} to {mean_pooled.max().item():.4f}")
+            print(f"[DEBUG] Mean pooled has NaN: {torch.isnan(mean_pooled).any().item()}")
+
+            # Check for NaN values and extreme values before adding to embeddings
+            embedding_array = mean_pooled.detach().numpy()
+            if np.isnan(embedding_array).any():
+                st.warning(f"NaN detected in embedding for text: '{text[:50]}...', using zero embedding")
+                embedding_array = np.zeros_like(embedding_array)
+            elif np.isinf(embedding_array).any():
+                st.warning(f"Infinite values detected in embedding for text: '{text[:50]}...', clipping values")
+                embedding_array = np.clip(embedding_array, -10.0, 10.0)
+            elif np.abs(embedding_array).max() > 100:
+                st.warning(f"Extreme values detected in embedding for text: '{text[:50]}...', normalizing")
+                # L2 normalize to prevent extreme values
+                norm = np.linalg.norm(embedding_array, axis=1, keepdims=True)
+                embedding_array = embedding_array / (norm + 1e-8)
+
+            embeddings.append(embedding_array)
+
+        # Final debugging before returning
+        final_embeddings = np.vstack(embeddings)
+        print(f"[DEBUG] Final embeddings shape: {final_embeddings.shape}")
+        print(f"[DEBUG] Final embeddings range: {final_embeddings.min():.4f} to {final_embeddings.max():.4f}")
+        print(f"[DEBUG] Final embeddings has NaN: {np.isnan(final_embeddings).any()}")
+        print(f"[DEBUG] Final embeddings has Inf: {np.isinf(final_embeddings).any()}")
+
+        # Force replace any remaining NaN or Inf values
+        if np.isnan(final_embeddings).any() or np.isinf(final_embeddings).any():
+            st.error("Final embeddings still contain NaN/Inf values, replacing with zeros")
+            final_embeddings = np.nan_to_num(final_embeddings, nan=0.0, posinf=10.0, neginf=-10.0)
+
+        return final_embeddings
 
 def get_active_models():
     """Get only active models for UI display"""

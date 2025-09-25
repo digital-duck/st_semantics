@@ -1,0 +1,4 @@
+chi_statistic,expected_voids,input_name,is_significant,max_void_distance,mean_void_distance,method_name,metric_type,model_name,num_voids,observed_voids,p_value,significance_level,timestamp,total_void_area_estimate,void_distance_std
+,,sample_1,,,0.09893199329619116,PHATE,void_regions,Qwen3-Embedding-0.6B (Ollama),12,,,,20250924_225050,,
+0.0,20.0,sample_1,False,,,PHATE,void_significance,Qwen3-Embedding-0.6B (Ollama),,20,1.0,0.050000000000000044,20250924_225050,,
+,,sample_1,,0.1538,,PHATE,void_geometry,Qwen3-Embedding-0.6B (Ollama),,,,,20250924_225050,0.12000000000000002,0.0345

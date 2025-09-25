@@ -379,7 +379,7 @@ def main():
         file_png = save_plot_image(visualizer, current_input, model_name, method_name, chinese_selected, english_selected)
         if file_png:
             st.sidebar.success(f"Image saved as: {file_png}")
-            st.image(f"data/images/{file_png}", caption=f"{file_png}", use_column_width=True)
+            st.image(f"data/images/{file_png}", caption=f"{file_png}", use_container_width=True)
         else:
             st.error("Failed to save image.")
 

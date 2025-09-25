@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from typing import Tuple, Optional, Dict
 
-from config import check_login
+from config import check_login, SRC_DIR
 
 # Load environment variables
 load_dotenv()
@@ -208,7 +208,7 @@ def main():
             with col_save:
                 if st.button("💾 Save", help="Save translation pair"):
                     # Create translations directory if it doesn't exist
-                    translations_dir = Path("data/translations")
+                    translations_dir = SRC_DIR / "data/translations"
                     translations_dir.mkdir(parents=True, exist_ok=True)
                     
                     # Save translation pair

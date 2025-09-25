@@ -1,5 +1,5 @@
 import streamlit as st
-from config import ST_APP_NAME, ST_ICON
+from config import ST_APP_NAME, ST_ICON, SRC_DIR
 from pathlib import Path
 
 # Set page config
@@ -128,11 +128,11 @@ def main():
             st.subheader("📈 Application Statistics")
             
             # Count saved images
-            images_dir = Path("data/images")
+            images_dir = SRC_DIR / "data/images"
             image_count = len(list(images_dir.glob("*.png"))) if images_dir.exists() else 0
             
             # Count input datasets  
-            input_dir = Path("data/input")
+            input_dir = SRC_DIR / "data/input"
             if input_dir.exists():
                 dataset_names = set()
                 for file_path in input_dir.glob("*.txt"):

@@ -1,0 +1,5 @@
+davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
+0.5894,,,,0.0667,sample_1,,,,,,PHATE,basic_clustering,,EmbeddingGemma (Ollama),5,0.4611,20250924_225433,
+,0.0,,,,sample_1,,120,120.0,,,PHATE,density_analysis,120,EmbeddingGemma (Ollama),,,20250924_225433,
+,,0.003501944302267698;0.000106254408923237;0.0020583828807651636;6.192108920292707e-05;0.003145546812050755,0.24460172165598945;0.13340002960406167;0.19316115522858288;0.055564314749171534;0.21721089954769593,,sample_1,,,,0.001774809898641956,,PHATE,boundary_analysis,,EmbeddingGemma (Ollama),,,20250924_225433,0.00887404949320978
+,,,,,sample_1,1.0;1.0;1.0;1.0;1.0,,,,1.0,PHATE,language_coherence,,EmbeddingGemma (Ollama),,,20250924_225433,

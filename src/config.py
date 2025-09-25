@@ -1,8 +1,8 @@
 # config.py
 import streamlit as st 
 import os
-
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -12,6 +12,10 @@ load_dotenv()
 ST_APP_NAME = "Semantics Explorer"
 
 ST_ICON = "🧭"
+
+SRC_DIR = Path(__file__).parent
+# print(f"[DBG] src dir: {SRC_DIR}")
+
 
 # Default Settings
 DEFAULT_N_CLUSTERS = 5
@@ -44,34 +48,23 @@ PLOT_WIDTH, PLOT_HEIGHT = PLOT_CONFIG["width"], PLOT_CONFIG["height"]
 
 # Sample Data
 SAMPLE_DATA = {
-    "chinese": """你好
-天气
-晴朗
-""",
-    "english": """Hello
-Weather
-Sunny
-"""
+    "chinese": "",
+    "english": "",
+
+#     "chinese": """你好
+# 天气
+# 晴朗
+# """,
+#     "english": """Hello
+# Weather
+# Sunny
+# """
+
 }
 
-# File Paths
-FILE_PATHS = {
-    "images_dir": Path("images"),
-    "chinese_file": Path("data/data-1-chn.txt"),
-    "english_file": Path("data/data-1-enu.txt")
-}
 
-file_path_chn = FILE_PATHS["chinese_file"]
-file_path_enu = FILE_PATHS["english_file"]
-if file_path_chn.exists():
-    sample_chn_input_data = open(file_path_chn).read()
-else:
-    sample_chn_input_data = SAMPLE_DATA["chinese"]
-
-if file_path_enu.exists():
-    sample_enu_input_data = open(file_path_enu).read()
-else:
-    sample_enu_input_data = SAMPLE_DATA["english"]
+sample_chn_input_data = SAMPLE_DATA["chinese"]
+sample_enu_input_data = SAMPLE_DATA["english"]
 
 
 # Cache Settings
@@ -87,19 +80,16 @@ OLLAMA_MODELS = {
         "help": "BGE-M3 is a new model from BAAI distinguished for its versatility in Multi-Functionality, Multi-Linguality, and Multi-Granularity.",
         "is_active": True
     },
-    # "Paraphrase-Multilingual (Ollama)": {
-    #     "path": "paraphrase-multilingual",
-    #     "help": "Sentence-transformers model (multilingual) that can be used for tasks like clustering or semantic search."
-    # },
+    "Paraphrase-Multilingual (Ollama)": {
+        "path": "paraphrase-multilingual",
+        "help": "Sentence-transformers model (multilingual) that can be used for tasks like clustering or semantic search.",
+        "is_active": False
+    },
     "Snowflake-Arctic-Embed2 (Ollama)": {
         "path": "snowflake-arctic-embed2",
         "help": "Snowflake Arctic model through Ollama offering efficient embedding generation with strong multilingual capabilities, especially for Chinese-English pairs.",
         "is_active": True
     },
-    # "Snowflake-Arctic-Embed (Ollama)": {
-    #     "path": "snowflake-arctic-embed",
-    #     "help": "Original Snowflake Arctic model through Ollama for multilingual embeddings."
-    # },
     "EmbeddingGemma (Ollama)": {
         "path": "embeddinggemma",
         "help": "Google's EmbeddingGemma - 300M parameter state-of-the-art embedding model built from Gemma 3 with T5Gemma initialization. Trained on 100+ languages using Gemini model technology. Optimized for search, retrieval, classification, clustering, and semantic similarity tasks.",
@@ -120,16 +110,16 @@ OLLAMA_MODELS = {
         "help": "Qwen3 4B embedding model through Ollama - larger variant with enhanced capabilities. Part of MTEB #1 multilingual series (8B variant scores 70.58). Excellent for studying parameter scaling effects on semantic geometry.",
         "is_active": True
     },
-    # "Mistral (Ollama)": {
-    #     "path": "mistral",
-    #     "help": "Mistral model through Ollama offering efficient embedding generation with good multilingual capabilities.",
-    #     "is_active": False
-    # },
-    # "Neural-Chat (Ollama)": {
-    #     "path": "neural-chat",
-    #     "help": "Neural Chat model through Ollama, optimized for conversational and semantic understanding tasks.",
-    #     "is_active": False
-    # },
+    "Mistral (Ollama)": {
+        "path": "mistral",
+        "help": "Mistral model through Ollama offering efficient embedding generation with good multilingual capabilities.",
+        "is_active": False
+    },
+    "Neural-Chat (Ollama)": {
+        "path": "neural-chat",
+        "help": "Neural Chat model through Ollama, optimized for conversational and semantic understanding tasks.",
+        "is_active": False
+    },
 }
 
 # Model information (name, Hugging Face path, and help text)
@@ -163,7 +153,6 @@ MODEL_INFO = {
         "error": """Error in get_embeddings: Due to a serious vulnerability issue in torch.load, even with weights_only=True, we now require users to upgrade torch to at least v2.6 in order to use the function. This version restriction does not apply when loading files with safetensors. See the vulnerability report here https://nvd.nist.gov/vuln/detail/CVE-2025-32434
 """
     },
-
     # === 2025 MTEB LEADERS: TIER 2 ARCHITECTURAL INNOVATION ===
     "Nomic-Embed-Text-v2": {
         "path": "nomic-ai/nomic-embed-text-v2",
@@ -183,7 +172,8 @@ MODEL_INFO = {
         "path": "intfloat/e5-base-v2",
         "help": "Balanced accuracy-speed trade-off (83-85% accuracy, 79-82ms latency). Strong performer without prefix prompts, ideal for studying geometric consistency.",
         "is_active": True,
-        "note": "very good"
+        "note": "very good",
+        "warning": "Known to produce NaN values with Chinese text. Use Sentence-BERT Multilingual or BGE-M3 for Chinese-English datasets."
     },
     "Qwen3-Embedding-0.6B": {
         "path": "Qwen/Qwen3-Embedding-0.6B",

@@ -1,0 +1,5 @@
+davies_bouldin_score,density_std,hull_areas,hull_perimeters,inertia,input_name,language_separation_scores,max_density,mean_density,mean_hull_area,mean_language_coherence,method_name,metric_type,min_density,model_name,num_clusters,silhouette_score,timestamp,total_hull_area
+0.4107,,,,0.0606,子-network,,,,,,PHATE,basic_clustering,,BGE-M3 (Ollama),5,0.7049,20250924_221800,
+,0.0,,,,子-network,,118,118.0,,,PHATE,density_analysis,118,BGE-M3 (Ollama),,,20250924_221800,
+,,0.0009458917647670218;0.0044767159435652164;0.00034314073273680236;0.0005734669777145999;3.056744381006925e-05,0.14728512479367645;0.27486423817166994;0.23350664292060155;0.12043198804470398;0.06905645379202824,,子-network,,,,0.0012739565725187417,,PHATE,boundary_analysis,,BGE-M3 (Ollama),,,20250924_221800,0.006369782862593709
+,,,,,子-network,,,,,0,PHATE,language_coherence,,BGE-M3 (Ollama),,,20250924_221800,

@@ -70,8 +70,11 @@ def generate_visualization(visualizer, reducer, chinese_words, english_words, co
     if 'current_figure' in st.session_state:
         st.session_state.current_figure = None
         
-    # Get dataset name from selected input
-    dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
+    # Get dataset name from selected input (use same key as selectbox widget)
+    dataset_name = st.session_state.get('input_name_selected', 'User Input')
+    # Fallback to cfg_input_text_selected for dual-view page compatibility
+    if not dataset_name:
+        dataset_name = st.session_state.get('cfg_input_text_selected', 'User Input')
     
     # Store data in session state for rotation
     st.session_state.visualization_data = {

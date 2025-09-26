@@ -57,8 +57,9 @@ class EmbeddingVisualizer:
     def render_sidebar(self) -> Tuple[str, str, str, bool, Optional[int]]:
         """Render sidebar controls and return settings"""
         with st.sidebar:
-            
-            with st.expander("Visualization Settings", expanded=False):
+            st.subheader("⚙️ Settings")
+
+            with st.expander("🎨 Visualization Settings", expanded=False):
 
                 # Model selection
                 model_name = st.radio(
@@ -240,7 +241,7 @@ class EmbeddingVisualizer:
     def render_input_areas(self) -> Tuple[List[str], List[str], List[str]]:
         """Render text input areas and return processed words"""
         with st.sidebar:
-            with st.expander("Enter Text Data (Word/Phrase):", expanded=True):
+            with st.expander("✏️ Enter Text Data (Word/Phrase)", expanded=True):
                 
                 # Language selection
                 st.markdown("Source Language: Chinese (chn)")
@@ -439,8 +440,8 @@ class EmbeddingVisualizer:
         return sanitized if sanitized else "untitled"
 
     
-    def save_plot_image(self, input_name: str, model_name: str, method_name: str, chinese_selected: bool, english_selected: bool):
-        """Save the current plot as PNG image with language tags"""
+    def save_plot_image(self, input_name: str, model_name: str, method_name: str, chinese_selected: bool, english_selected: bool, dimensions: str = "2D"):
+        """Save the current plot as PNG image with language tags and dimension suffix"""
         if st.session_state.current_figure is None:
             st.warning("No plot to save. Please generate a visualization first.")
             return ""
@@ -461,8 +462,11 @@ class EmbeddingVisualizer:
             lang_tags.append("enu")
         
         lang_suffix = "-".join(lang_tags) if lang_tags else "none"
-        
-        filename = f"{safe_input}-{safe_model}-{safe_method}-{lang_suffix}.png"
+
+        # Add 3D suffix if it's a 3D visualization
+        dim_suffix = "-3d" if dimensions == "3D" else ""
+
+        filename = f"{safe_input}-{safe_model}-{safe_method}{dim_suffix}-{lang_suffix}.png"
         file_path = self.images_dir / filename
         
         try:
@@ -590,7 +594,7 @@ class EmbeddingVisualizer:
                 
                 # Display image
                 try:
-                    st.image(str(image_file), caption=image_file.stem, use_container_width=True)
+                    st.image(str(image_file), caption=image_file.stem, width='stretch')
                     
                     # Add download button
                     with open(image_file, "rb") as file:

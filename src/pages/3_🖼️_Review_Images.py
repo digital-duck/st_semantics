@@ -59,7 +59,7 @@ def main():
     with st.sidebar:
         st.subheader("📐 Display Options")
 
-        layout_option = st.radio(
+        layout_option = st.selectbox(
             "Grid Layout:",
             options=["1 per row", "2 per row", "3 per row"],
             index=0,
@@ -246,7 +246,7 @@ def main():
                 st.image(
                     str(image_path),
                     caption=filename if not show_filename else None,
-                    use_container_width=True
+                    width='stretch'
                 )
 
                 # Action buttons

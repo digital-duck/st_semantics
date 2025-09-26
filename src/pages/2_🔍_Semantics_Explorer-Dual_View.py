@@ -374,7 +374,7 @@ def display_dual_view_geometric_analysis(model_name=None, method_name=None):
                     results.get('void', {}),
                     model_name, method_name, dataset_name
                 )
-                st.plotly_chart(comprehensive_fig, use_container_width=True)
+                st.plotly_chart(comprehensive_fig, width='stretch')
                 
                 # Auto-save the clustering chart (saves user from having to click download)
                 try:
@@ -424,10 +424,10 @@ def setup_sidebar_controls():
     settings = {}
     
     with st.sidebar:
-        st.header("🎛️ Settings")
+        st.header("⚙️ Settings")
         
         # Model and method selection
-        with st.expander("Visualization Settings", expanded=False):
+        with st.expander("🎨 Visualization Settings", expanded=False):
             settings['model_name'] = st.selectbox(
                 "Embedding Model:",
                 options=list(MODEL_INFO.keys()),
@@ -456,7 +456,7 @@ def handle_text_input():
     """Handle text input UI and return processed text data"""
     with st.sidebar:
         # Text input areas - same as Semantics Explorer
-        with st.expander("Enter Text Data (Word/Phrase):", expanded=False):
+        with st.expander("✏️ Enter Text Data (Word/Phrase)", expanded=False):
             input_dir = SRC_DIR / "data/input"
             
             # File loading section
@@ -617,7 +617,7 @@ def setup_zoom_controls():
     """Setup zoom controls and return zoom parameters"""  
     with st.sidebar:
         # Zoom controls
-        with st.expander("Zoom Controls", expanded=True):
+        with st.expander("🔭 Zoom Controls", expanded=True):
             # Global box size parameters
             global_width = 0.8
             global_height = 0.3
@@ -792,7 +792,7 @@ def main():
         )
         
         # Detail view below (no container) with pan button
-        st.plotly_chart(detail_fig, use_container_width=True, key="detail_view")
+        st.plotly_chart(detail_fig, width='stretch', key="detail_view")
         
         # Add download button for detail view (always available)
         handle_download_button(detail_fig, model_name, method_name, dataset_name, "detail", "dual_view")
@@ -813,7 +813,7 @@ def main():
 
         # Overview in expandable container
         with st.expander("📊 Overview", expanded=True):
-            st.plotly_chart(overview_fig, use_container_width=True, config={'displayModeBar': False})
+            st.plotly_chart(overview_fig, width='stretch', config={'displayModeBar': False})
       
         # Stats in collapsible expander
         with st.expander("📊 Statistics", expanded=False):

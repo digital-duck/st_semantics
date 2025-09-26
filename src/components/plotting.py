@@ -266,7 +266,7 @@ class PlotManager:
             margin=dict(l=60, r=60, t=80, b=60)  # Reduce margins for less white space
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         return fig
 
     def _plot_2d_simple(self, embeddings, labels, colors, title, settings):
@@ -321,7 +321,7 @@ class PlotManager:
             margin=dict(l=60, r=60, t=80, b=60)  # Reduce margins for less white space
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         return fig
 
 
@@ -393,7 +393,7 @@ class PlotManager:
             font=dict(family=self.publication_settings['font_family'])
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         return fig
 
     def _plot_3d_cluster(self, embeddings, labels, colors, title, n_clusters, settings):
@@ -468,7 +468,7 @@ class PlotManager:
             font=dict(family=self.publication_settings['font_family'])
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         return fig
     
     def _plot_semantic_forces(self, embeddings, labels, title, max_words, settings):
@@ -544,5 +544,5 @@ class PlotManager:
             margin=dict(l=60, r=60, t=80, b=60)  # Reduce margins for less white space
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         return fig

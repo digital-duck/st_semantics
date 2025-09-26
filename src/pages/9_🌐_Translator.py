@@ -165,7 +165,7 @@ def main():
         # st.subheader("🔄 Translation")
         
         # Translation button
-        if st.button("🔄 Translate", type="primary", use_container_width=False):
+        if st.button("🔄 Translate", type="primary", width='content'):
             if not source_text.strip():
                 st.warning("Please enter text to translate.")
             else:

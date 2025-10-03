@@ -34,15 +34,16 @@ This tool serves multiple important purposes across different domains:
 
 ## 🚀 Key Features
 
-### 🔤 **Semantics Explorer**
+### 🔤 **Semantics Explorer** (Now with ECharts!)
 - **Multiple Embedding Models**: 15+ models including Sentence-BERT Multilingual, E5-Base-v2, BGE-M3, Ollama models
 - **Advanced Dimensionality Reduction**: PHATE, t-SNE, UMAP, Isomap, PCA, MDS, LLE, Kernel PCA, Spectral Embedding
-- **Interactive 2D/3D Visualizations**: Real-time plotting with clustering analysis, zoom, rotate, and pan controls
+- **Superior ECharts Visualizations**: Revolutionary 3D interaction controls, smooth rotation/zoom, superior to Plotly
+- **Automatic PNG Export**: Selenium-powered automatic PNG generation for 2D charts (optional dependencies)
 - **Robust Chinese Character Support**: Enhanced tokenization with NaN error detection and handling
 - **Multilingual Support**: Chinese (source) + selectable target languages (English, French, Spanish, German)
 - **ISO Language Codes**: Standardized 3-letter codes (chn, enu, fra, spa, deu) for consistent file naming
 - **Smart File Management**: Load/save text datasets with sanitized filenames and session persistence
-- **Publication-Quality Export**: High-DPI PNG, SVG, PDF export with customizable styling
+- **Publication-Quality Export**: High-DPI PNG export with optimal spacing and no cropping
 - **Advanced Image Management**: Search, filter, and organize generated visualizations
 
 ### 🔍 **Semantics Explorer - Dual View** (Enhanced!)
@@ -112,6 +113,13 @@ ollama pull bge-m3
 ollama pull paraphrase-multilingual
 ```
 
+### Optional: Automatic PNG Export (ECharts)
+
+```bash
+# For automatic PNG export of 2D ECharts visualizations
+pip install selenium webdriver-manager
+```
+
 ### API Keys Setup
 
 Create `.env` file in project root:
@@ -177,7 +185,8 @@ st_semantics/
 │   ├── pages/
 │   │   ├── 1_🔤_Semantics_Explorer.py      # Core visualization (v2.8 compatible)
 │   │   ├── 2_🔍_Semantics_Explorer-Dual_View.py  # Advanced dual-view interface
-│   │   ├── 3_🖼️_Review_Images.py           # Enhanced image management system
+│   │   ├── 3_📊_Semantics_Explorer-ECharts.py  # Superior ECharts visualization with auto PNG export
+│   │   ├── 4_🖼️_Review_Images.py           # Enhanced image management system
 │   │   └── 9_🌐_Translator.py              # Translation services
 │   ├── components/
 │   │   ├── shared/                         # Shared UI components
@@ -216,11 +225,14 @@ st_semantics/
 - ✅ **Enhanced Text Area Handling**: Proper value initialization and persistence
 - ✅ **Consistent State Management**: Unified approach to widget state handling
 
-### 🎨 **3D Visualization Improvements**
-- ✅ **Fixed Plotly Errors**: Removed unsupported griddash property from 3D scene axes
-- ✅ **Interactive 3D Exploration**: Full zoom, rotate, and pan functionality
-- ✅ **Clustering in 3D**: Advanced pattern discovery with color-coded clusters
-- ✅ **Performance Optimization**: Smooth 3D rendering with large datasets
+### 🎨 **Superior ECharts 3D Visualization**
+- ✅ **ECharts 3D Engine**: Revolutionary upgrade from Plotly - dramatically improved interaction controls
+- ✅ **Intuitive Rotation**: Smooth, natural mouse-based 3D rotation with precise control
+- ✅ **Enhanced Zoom**: More responsive and precise zoom functionality for detailed exploration
+- ✅ **Better Camera Controls**: Superior perspective manipulation and viewing angle control
+- ✅ **High Performance**: Optimized rendering for complex 3D semantic manifolds
+- ✅ **Clean Visual Design**: Polished, professional appearance with dark blue point styling
+- ✅ **Clustering in 3D**: Advanced pattern discovery with color-coded clusters and clear axis labels (X/Y/Z)
 
 ### 🈵 **Enhanced Chinese Character Processing**
 - ✅ **Robust Tokenization**: Proper attention mask handling for Chinese text
@@ -320,5 +332,5 @@ If you use this tool in your research, please cite:
 ### **The Numbers Discovery**
 Chinese numerical concepts (零, 一, 二, 三...) form perfect linear patterns in semantic space, revealing the mathematical structure underlying human language cognition.
 
-### **3D Interactive Visualization**
-Rotate, zoom, and explore semantic manifolds in three dimensions - discover hidden clustering patterns that are invisible in 2D projections!
+### **3D Interactive Visualization - ECharts Revolution**
+Experience the breakthrough ECharts 3D engine with intuitive rotation controls, responsive zoom, and superior camera manipulation. Explore semantic manifolds with unprecedented ease - discover hidden clustering patterns that are invisible in 2D projections! The ECharts upgrade delivers dramatically improved user experience compared to traditional Plotly 3D visualizations.

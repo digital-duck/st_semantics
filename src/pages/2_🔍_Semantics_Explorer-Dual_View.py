@@ -456,7 +456,7 @@ def handle_text_input():
     """Handle text input UI and return processed text data"""
     with st.sidebar:
         # Text input areas - same as Semantics Explorer
-        with st.expander("✏️ Enter Text Data (Word/Phrase)", expanded=False):
+        with st.expander("✏️ Enter Text Data (Word/Phrase)", expanded=True):
             input_dir = SRC_DIR / "data/input"
             
             # File loading section
@@ -617,7 +617,7 @@ def setup_zoom_controls():
     """Setup zoom controls and return zoom parameters"""  
     with st.sidebar:
         # Zoom controls
-        with st.expander("🔭 Zoom Controls", expanded=True):
+        with st.expander("🔭 Zoom Controls", expanded=False):
             # Global box size parameters
             global_width = 0.8
             global_height = 0.3
@@ -676,16 +676,6 @@ def setup_zoom_controls():
                     }
                     st.rerun()
         
-        # Usage tips
-        with st.expander("Usage Tips"):
-            st.markdown("""
-            **How to use Enhanced Dual Viewer:**
-            1. **Zoom Center**: Set the center point of your zoom region
-            2. **Zoom Size**: Define width/height of the zoom box
-            3. **Pan Movement**: Use Delta X/Y to move the viewport
-            4. **Update View**: Click 'Update Zoom' to apply center + pan changes
-            5. **Detail View**: Shows large labels with 10% margin around zoom area
-            """)
 
 
 def setup_action_buttons():
@@ -921,6 +911,19 @@ def main():
         else:
             st.warning("Please enter some text to visualize")
 
+
+
+    with st.sidebar:
+        st.markdown("---")
+        with st.expander("Usage Tips"):
+            st.markdown("""
+            **How to use Enhanced Dual Viewer:**
+            1. **Zoom Center**: Set the center point of your zoom region
+            2. **Zoom Size**: Define width/height of the zoom box
+            3. **Pan Movement**: Use Delta X/Y to move the viewport
+            4. **Update View**: Click 'Update Zoom' to apply center + pan changes
+            5. **Detail View**: Shows large labels with 10% margin around zoom area
+            """)
 
 if __name__ == "__main__":
     main()

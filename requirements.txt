@@ -17,6 +17,9 @@ kaleido>=0.2.1
 deepl>=1.15.0
 pillow>=7.1.0  # Streamlit compatibility
 altair>=4.0.0  # streamlit-aggrid compatibility
+streamlit-echarts>=0.4.0  # Apache ECharts integration for interactive visualizations
+selenium>=4.15.0  # Browser automation for automatic PNG export (optional)
+webdriver-manager>=4.0.0  # Automatic webdriver management (optional)
 
 # Security upgrade notes:
 # - torch>=2.6.0 required for CVE-2025-32434 fix

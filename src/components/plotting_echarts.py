@@ -40,10 +40,10 @@ class EChartsPlotManager:
         # ECharts styling configuration
         self.echarts_theme = {
             'background_color': '#ffffff',
-            'text_color': '#333333',
+            'text_color': '#000000',
             'grid_color': '#e0e0e0',
-            'chinese_color': '#1f4e79',
-            'english_color': '#1f4e79',
+            'chinese_color': '#ff0000',
+            'english_color': '#ff0000',
             'cluster_colors': [
                 '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4',
                 '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'
@@ -387,7 +387,7 @@ class EChartsPlotManager:
             },
             'zAxis3D': {
                 'type': 'value',
-                'name': 'Dimension 3'
+                'name': 'Z'
             },
             'series': [{
                 'type': 'scatter3D',
@@ -503,7 +503,7 @@ class EChartsPlotManager:
             },
             'zAxis3D': {
                 'type': 'value',
-                'name': 'Dimension 3'
+                'name': 'Z'
             },
             'series': series_data,
             'animation': settings.get('animation_enabled', True),
